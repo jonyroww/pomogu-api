@@ -94,14 +94,14 @@ export class Organisation {
   comment_for_dev: string;
 
   @Column({
-    type: "double"
+    type: "numeric"
   })
-  location_lat: Double;
+  location_lat: number;
 
   @Column({
-    type: "double"
+    type: "numeric"
   })
-  location_log: Double;
+  location_long: number;
 
   @Column({
     type: "varchar"
