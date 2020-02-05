@@ -4,10 +4,14 @@ import {
   Column,
   OneToMany,
   ManyToMany,
-  Double
+  JoinTable
 } from "typeorm";
+import { HelpTypes } from "../../help-types/entities/help-types.entity";
+import { CitezenTypes } from "../../citezen-types/entities/citezen-types.entity";
+import { CitezenTypesModule } from "src/citezen-types/citezen-types.module";
+import { CitezenTypesController } from "src/citezen-types/citezen-types.controller";
 
-@Entity({ name: "organisations" })
+@Entity({ name: "organisation" })
 export class Organisation {
   @PrimaryColumn({
     type: "int",
@@ -112,4 +116,23 @@ export class Organisation {
     type: "text"
   })
   need_help: string;
+
+  @Column({
+    type: "text"
+  })
+  organisation_type: string;
+
+  @ManyToMany(
+    () => HelpTypes,
+    (helpTypes: HelpTypes) => helpTypes.id
+  )
+  @JoinTable()
+  helpTypes: HelpTypes[];
+
+  @ManyToMany(
+    () => CitezenTypes,
+    (citezenTypes: CitezenTypes) => citezenTypes.id
+  )
+  @JoinTable()
+  citezenTypes: CitezenTypes[];
 }
