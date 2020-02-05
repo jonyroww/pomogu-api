@@ -11,7 +11,7 @@ import { CitezenTypes } from "../../citezen-types/entities/citezen-types.entity"
 import { CitezenTypesModule } from "src/citezen-types/citezen-types.module";
 import { CitezenTypesController } from "src/citezen-types/citezen-types.controller";
 
-@Entity({ name: "organisation" })
+@Entity({ name: "organisations" })
 export class Organisation {
   @PrimaryColumn({
     type: "int",
@@ -124,15 +124,25 @@ export class Organisation {
 
   @ManyToMany(
     () => HelpTypes,
-    (helpTypes: HelpTypes) => helpTypes.id
+    (helpTypes: HelpTypes) => helpTypes.id,
+    { eager: true }
   )
-  @JoinTable()
+  @JoinTable({
+    name: "organisation_help_types",
+    joinColumn: { name: "organisation_id", referencedColumnName: "id" },
+    inverseJoinColumn: { name: "help_types_id", referencedColumnName: "id" }
+  })
   helpTypes: HelpTypes[];
 
   @ManyToMany(
     () => CitezenTypes,
-    (citezenTypes: CitezenTypes) => citezenTypes.id
+    (citezenTypes: CitezenTypes) => citezenTypes.id,
+    { eager: true }
   )
-  @JoinTable()
+  @JoinTable({
+    name: "organisation_citezen_types",
+    joinColumn: {name: "organisation_id", referencedColumnName: "id"},
+    inverseJoinColumn: {name:"citezen_types_id", referencedColumnName: "id"}
+  })
   citezenTypes: CitezenTypes[];
 }

@@ -9,7 +9,7 @@ export class OrganisationsService {
     @InjectRepository(Organisation)
     private readonly organisationsRepository: Repository<Organisation>
   ) {}
-  findAll(): Promise<Organisation[]> {
-    return this.organisationsRepository.find();
+  findAll(limit: number, offset: number): Promise<Organisation[]> {
+    return this.organisationsRepository.find({ take: limit, skip: offset });
   }
 }
