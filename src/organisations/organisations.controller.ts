@@ -7,14 +7,17 @@ import {
 } from "@nestjs/common";
 import { OrganisationsService } from "./organisations.service";
 import { Organisation } from "./entities/Organisation.entity";
-import { PaginationFilterDto } from "../common/dto/pagination-filter.dto";
+import { QueryFilterDto } from "./dto/query-filter.dto";
+import { ApiOkResponse, ApiTags } from "@nestjs/swagger";
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 @Controller("organisations")
 export class OrganisationsController {
   constructor(private readonly organisationsService: OrganisationsService) {}
+  @ApiTags("Organisations")
+  @ApiOkResponse({ type: Organisation })
   @Get()
-  findAll(@Query() params: PaginationFilterDto): Promise<Organisation[]> {
-    return this.organisationsService.findAll(params.limit, params.offset);
+  findAll(@Query() params: QueryFilterDto): Promise<Organisation[]> {
+    return this.organisationsService.findAll(params);
   }
 }
