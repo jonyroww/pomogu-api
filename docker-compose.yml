@@ -1,0 +1,27 @@
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+      - '3000:80'
+    env_file: ./.env
+    environment:
+      HOST: 0.0.0.0
+      PORT: 80
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:11.2-alpine
+    ports:
+      - '3001:5432'
+    env_file:
+      - ./.postgres.env
+    volumes:
+      - /data/pomogu-api/postgres:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    env_file: ./.pgadmin.env
+    ports:
+      - '3002:80'
