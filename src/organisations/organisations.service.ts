@@ -13,29 +13,31 @@ export class OrganisationsService {
   findAll(params: QueryFilterDto): Promise<Organisation[]> {
     const qb = this.organisationsRepository.createQueryBuilder("organisations");
 
-    qb.innerJoinAndSelect("organisations.helpTypes", "helpTypes")
-      .innerJoinAndSelect("organisations.citezenTypes", "citezenTypes")
+    qb.leftJoinAndSelect("organisations.helpTypes", "helpTypes")
+      .leftJoinAndSelect("organisations.citezenTypes", "citezenTypes")
       .where("1=1");
 
     if (params.help_type_ids && params.help_type_ids.length != 0) {
-      qb.innerJoin(
-        "organisations.helpTypes",
-        "organisation_help_types"
-      ).orWhere("organisation_help_types.id IN (:...helpTypesId)", {
-        helpTypesId: params.help_type_ids
-      });
+      qb.leftJoin("organisations.helpTypes", "organisation_help_types").orWhere(
+        "organisation_help_types.id IN (:...helpTypesId)",
+        {
+          helpTypesId: params.help_type_ids
+        }
+      );
     }
 
     if (params.citizen_type_ids && params.citizen_type_ids.length != 0) {
-      qb.innerJoin(
+      qb.leftJoin(
         "organisations.citezenTypes",
         "organisation_citezen_types"
       ).orWhere("organisation_citezen_types.id IN (:...citezenTypes)", {
         citezenTypes: params.citizen_type_ids
       });
     }
-    qb.take(params.limit).skip(params.offset);
 
-    return qb.getMany();
+    return qb
+      .take(params.limit)
+      .skip(params.offset)
+      .getMany();
   }
 }
