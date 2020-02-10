@@ -10,6 +10,9 @@ import {
 } from "typeorm";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { PhoneVerification } from "./../../auth/entities/Phone-verification.entity";
+import { HelpTypes } from "../../help-types/entities/help-types.entity";
+import { CitezenTypes } from "../../citezen-types/entities/citezen-types.entity";
+import { Organisation } from "../../organisations/entities/Organisation.entity";
 
 @Entity({ name: "users" })
 export class User {
@@ -120,4 +123,43 @@ export class User {
     (registration: PhoneVerification) => registration.user
   )
   registration: PhoneVerification;
+
+  @ApiPropertyOptional({ type: () => CitezenTypes })
+  @ManyToMany(
+    () => CitezenTypes,
+    (citezenTypes: CitezenTypes) => citezenTypes.id,
+    { eager: true }
+  )
+  @JoinTable({
+    name: "users_citezen_types",
+    joinColumn: { name: "user_id", referencedColumnName: "id" },
+    inverseJoinColumn: { name: "citezen_type_id", referencedColumnName: "id" }
+  })
+  citezenTypes: CitezenTypes[];
+
+  @ApiPropertyOptional({ type: () => HelpTypes })
+  @ManyToMany(
+    () => HelpTypes,
+    (helpTypes: HelpTypes) => helpTypes.id,
+    { eager: true }
+  )
+  @JoinTable({
+    name: "users_help_types",
+    joinColumn: { name: "user_id", referencedColumnName: "id" },
+    inverseJoinColumn: { name: "help_type_id", referencedColumnName: "id" }
+  })
+  helpTypes: HelpTypes[];
+
+  @ApiPropertyOptional({ type: () => Organisation })
+  @ManyToMany(
+    () => Organisation,
+    (organisation: Organisation) => organisation.id,
+    { eager: true }
+  )
+  @JoinTable({
+    name: "users_organisations",
+    joinColumn: { name: "user_id", referencedColumnName: "id" },
+    inverseJoinColumn: { name: "organisation_id", referencedColumnName: "id" }
+  })
+  organisations: Organisation[];
 }
