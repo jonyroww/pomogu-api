@@ -13,7 +13,7 @@ import { Organisation } from "../../organisations/entities/Organisation.entity";
 import { HelpTypes } from "../../help-types/entities/help-types.entity";
 import { CitezenTypes } from "../../citezen-types/entities/citezen-types.entity";
 
-@Entity({ name: "volunteer-requests" })
+@Entity({ name: "volunteer_requests" })
 export class VolunteerRequest {
   @ApiProperty()
   @PrimaryColumn({

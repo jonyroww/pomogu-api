@@ -4,6 +4,7 @@ import { OrganisationsModule } from "../organisations/organisations.module";
 import { CitezenTypesModule } from "src/citezen-types/citezen-types.module";
 import { HelpTypesModule } from "src/help-types/help-types.module";
 import { ConfigModule } from "./../config/config.module";
+import { VolunteerRequestsModule } from "../volunteer-requests/volunteer-requests.module";
 
 @Module({
   imports: [
@@ -11,7 +12,8 @@ import { ConfigModule } from "./../config/config.module";
     OrganisationsModule,
     CitezenTypesModule,
     HelpTypesModule,
-    ConfigModule
+    ConfigModule,
+    VolunteerRequestsModule
   ],
   controllers: [],
   providers: []

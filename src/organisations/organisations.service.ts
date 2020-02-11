@@ -1,8 +1,10 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Organisation } from "./entities/Organisation.entity";
 import { Repository } from "typeorm";
 import { QueryFilterDto } from "./dto/query-filter.dto";
+import { ApiForbiddenResponse } from "@nestjs/swagger";
+import { GetOneQueryDto } from "./dto/get-one-query.dto";
 
 @Injectable()
 export class OrganisationsService {
@@ -39,5 +41,14 @@ export class OrganisationsService {
       .take(params.limit)
       .skip(params.offset)
       .getMany();
+  }
+
+  async findOne(params: GetOneQueryDto) {
+    const organisation = await this.organisationsRepository.findOne(params.id);
+    if (organisation) {
+      return organisation;
+    } else {
+      throw new NotFoundException("No such organisation");
+    }
   }
 }
