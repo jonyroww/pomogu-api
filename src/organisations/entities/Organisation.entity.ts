@@ -9,6 +9,7 @@ import {
 import { HelpTypes } from "../../help-types/entities/help-types.entity";
 import { CitezenTypes } from "../../citezen-types/entities/citezen-types.entity";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { OrganisationPhoneNumber } from "./OrganisationPhoneNumbers.entity";
 
 @Entity({ name: "organisations" })
 export class Organisation {
@@ -56,14 +57,6 @@ export class Organisation {
     type: "text"
   })
   address: string;
-
-  @ApiProperty({ type: "string", example: "+9999999999" })
-  @Column({
-    nullable: false,
-    type: "varchar",
-    length: 255
-  })
-  phone_number: string;
 
   @ApiProperty({ type: "string", example: "График работы" })
   @Column({
@@ -139,6 +132,15 @@ export class Organisation {
     type: "text"
   })
   organisation_type: string;
+
+  @ApiProperty()
+  @OneToMany(
+    () => OrganisationPhoneNumber,
+    (organisationPhoneNumbers: OrganisationPhoneNumber) =>
+      organisationPhoneNumbers.organisation,
+    { eager: true }
+  )
+  phone_numbers: OrganisationPhoneNumber[];
 
   @ApiPropertyOptional({ type: () => HelpTypes })
   @ManyToMany(
