@@ -1,7 +1,17 @@
-import { Module } from "@nestjs/common";
+import {
+  Module,
+  NestModule,
+  MiddlewareConsumer,
+  RequestMethod,
+  HttpAdapterHost
+} from "@nestjs/common";
 import { PhotosController } from "./photos.controller";
 import { PhotosService } from "./photos.service";
-import { MulterModule } from "@nestjs/platform-express";
+import { MulterModule, ExpressAdapter } from "@nestjs/platform-express";
+import express from "express";
+import { join } from "path";
+import { path } from "app-root-path";
+import { AbstractHttpAdapter } from "@nestjs/core";
 
 @Module({
   imports: [MulterModule.register({})],

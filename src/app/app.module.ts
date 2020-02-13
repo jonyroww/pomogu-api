@@ -6,6 +6,7 @@ import { HelpTypesModule } from "src/help-types/help-types.module";
 import { ConfigModule } from "./../config/config.module";
 import { VolunteerRequestsModule } from "../volunteer-requests/volunteer-requests.module";
 import { PhotosModule } from "../photos/photos.module";
+import { ServeStaticModule } from "@nestjs/serve-static";
 
 @Module({
   imports: [

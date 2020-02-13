@@ -25,7 +25,10 @@ export class ConfigService {
       DB_USERNAME: Joi.string().required(),
       DB_PASSWORD: Joi.string().required(),
       DB_NAME: Joi.string().required(),
-      JWT_SECRET: Joi.string().required()
+      JWT_SECRET: Joi.string().required(),
+      BASE_URL: Joi.string()
+        .uri()
+        .required()
     }).options({
       stripUnknown: true
     });
@@ -47,4 +50,5 @@ export interface EnvironmentConfig {
   DB_PASSWORD: string;
   DB_NAME: string;
   JWT_SECRET: string;
+  BASE_URL: string;
 }
