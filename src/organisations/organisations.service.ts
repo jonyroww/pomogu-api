@@ -5,6 +5,7 @@ import { Repository } from "typeorm";
 import { QueryFilterDto } from "./dto/query-filter.dto";
 import { ApiForbiddenResponse } from "@nestjs/swagger";
 import { GetOneQueryDto } from "./dto/get-one-query.dto";
+import _ from "lodash";
 
 @Injectable()
 export class OrganisationsService {
@@ -17,10 +18,16 @@ export class OrganisationsService {
 
     qb.leftJoinAndSelect("organisations.helpTypes", "helpTypes")
       .leftJoinAndSelect("organisations.citezenTypes", "citezenTypes")
-      .leftJoinAndSelect("organisations.phone_numbers", "phone_numbers")
-      .where("FALSE");
+      .leftJoinAndSelect("organisations.phone_numbers", "phone_numbers");
 
-    if (params.help_type_ids && params.help_type_ids.length != 0) {
+    if (
+      !_.isEmpty(params.help_type_ids) ||
+      !_.isEmpty(params.citizen_type_ids)
+    ) {
+      qb.where("FALSE");
+    }
+
+    if (!_.isEmpty(params.help_type_ids)) {
       qb.leftJoin("organisations.helpTypes", "organisation_help_types").orWhere(
         "organisation_help_types.id IN (:...helpTypesId)",
         {
@@ -29,7 +36,7 @@ export class OrganisationsService {
       );
     }
 
-    if (params.citizen_type_ids && params.citizen_type_ids.length != 0) {
+    if (!_.isEmpty(params.citizen_type_ids)) {
       qb.leftJoin(
         "organisations.citezenTypes",
         "organisation_citezen_types"
