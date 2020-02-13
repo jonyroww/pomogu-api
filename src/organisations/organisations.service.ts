@@ -18,7 +18,7 @@ export class OrganisationsService {
     qb.leftJoinAndSelect("organisations.helpTypes", "helpTypes")
       .leftJoinAndSelect("organisations.citezenTypes", "citezenTypes")
       .leftJoinAndSelect("organisations.phone_numbers", "phone_numbers")
-      .where("1=1");
+      .where("FALSE");
 
     if (params.help_type_ids && params.help_type_ids.length != 0) {
       qb.leftJoin("organisations.helpTypes", "organisation_help_types").orWhere(
