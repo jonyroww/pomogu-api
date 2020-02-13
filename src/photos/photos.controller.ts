@@ -22,8 +22,7 @@ export class PhotosController {
       storage: multer.diskStorage({
         destination: "photos",
         filename: (req, file, callback) => {
-          const extension = file.mimetype;
-          const filename = uuid() + "." + mime.getExtension(extension);
+          const filename = uuid() + "." + mime.getExtension(file.mimetype);
           callback(null, filename);
         }
       })
