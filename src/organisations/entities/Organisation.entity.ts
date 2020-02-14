@@ -10,6 +10,7 @@ import { HelpTypes } from "../../help-types/entities/help-types.entity";
 import { CitezenTypes } from "../../citezen-types/entities/citezen-types.entity";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { OrganisationPhoneNumber } from "./OrganisationPhoneNumbers.entity";
+import { OrganisationWebsite } from "./OrganisationWebsite.entity";
 
 @Entity({ name: "organisations" })
 export class Organisation {
@@ -141,6 +142,15 @@ export class Organisation {
     { eager: true }
   )
   phone_numbers: OrganisationPhoneNumber[];
+
+  @ApiProperty()
+  @OneToMany(
+    () => OrganisationWebsite,
+    (organisationWebsite: OrganisationWebsite) =>
+      organisationWebsite.organisation,
+    { eager: true }
+  )
+  websites: OrganisationWebsite[];
 
   @ApiPropertyOptional({ type: () => HelpTypes })
   @ManyToMany(

@@ -11,7 +11,7 @@ import {
 } from "typeorm";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { User } from "./../../users/entities/User.entity";
-import { StringChain } from "lodash";
+import { PurposeType } from "../../constants/PurposeType.enum";
 
 @Entity({ name: "phone_verifications" })
 export class PhoneVerification {
@@ -42,6 +42,10 @@ export class PhoneVerification {
   @Column({ type: "varchar" })
   key: string;
 
+  @ApiProperty({ type: "varchar", nullable: false })
+  @Column({ type: "varchar", nullable: false })
+  phone: string;
+
   @ApiProperty({ type: "int", nullable: false, default: 0 })
   @Column({ type: "int" })
   sms_sent_count: number;
@@ -55,8 +59,8 @@ export class PhoneVerification {
   sms_code: string;
 
   @ApiProperty({ type: "varchar" })
-  @Column({ type: "varchar", nullable: false })
-  purpose: string;
+  @Column("enum", { enum: PurposeType, nullable: false })
+  purpose: PurposeType;
 
   @ApiProperty({ type: "boolean" })
   @Column({ type: "boolean", nullable: false, default: false })
@@ -66,6 +70,7 @@ export class PhoneVerification {
   @Column({ type: "boolean", nullable: false, default: false })
   success: boolean;
 
+  @ApiProperty()
   @Column({ type: "int" })
   user_id: number;
 
