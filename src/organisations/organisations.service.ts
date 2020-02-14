@@ -6,6 +6,7 @@ import { QueryFilterDto } from "./dto/query-filter.dto";
 import { ApiForbiddenResponse } from "@nestjs/swagger";
 import { GetOneQueryDto } from "./dto/get-one-query.dto";
 import _ from "lodash";
+import { makeError } from "../common/errors/index";
 
 @Injectable()
 export class OrganisationsService {
@@ -56,7 +57,7 @@ export class OrganisationsService {
     if (organisation) {
       return organisation;
     } else {
-      throw new NotFoundException("No such organisation");
+      throw makeError("NO_SUCH_ORGANISATION");
     }
   }
 }
