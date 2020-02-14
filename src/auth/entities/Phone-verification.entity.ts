@@ -11,6 +11,7 @@ import {
 } from "typeorm";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { User } from "./../../users/entities/User.entity";
+import { StringChain } from "lodash";
 
 @Entity({ name: "phone_verifications" })
 export class PhoneVerification {
@@ -52,6 +53,14 @@ export class PhoneVerification {
   @ApiPropertyOptional({ type: "string" })
   @Column({ type: "varchar" })
   sms_code: string;
+
+  @ApiProperty({ type: "varchar" })
+  @Column({ type: "varchar", nullable: false })
+  purpose: string;
+
+  @ApiProperty({ type: "boolean" })
+  @Column({ type: "boolean", nullable: false, default: false })
+  used: boolean;
 
   @ApiProperty({ type: "boolean" })
   @Column({ type: "boolean", nullable: false, default: false })
