@@ -24,7 +24,7 @@ export class PhotosController {
   @Post()
   @UseInterceptors(
     FileInterceptor("photo", {
-      limits: { fileSize: 5 * 1024 * 1024 },
+      limits: { fileSize: 5000000 },
       storage: multer.diskStorage({
         destination: "photos",
         filename: (req, file, callback) => {
