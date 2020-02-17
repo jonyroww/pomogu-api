@@ -8,6 +8,8 @@ services:
     environment:
       HOST: 0.0.0.0
       PORT: 80
+    volumes:
+      - /data/pomogu-api/photos:/usr/src/app/photos
     restart: always
     depends_on:
       - postgres
