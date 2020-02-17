@@ -5,7 +5,9 @@ export const errors = {
   WRONG_LOGIN_OR_PASSWORD: HttpStatus.UNAUTHORIZED,
   NO_SUCH_ORGANISATION: HttpStatus.NOT_FOUND,
   UNAUTHORIZED: HttpStatus.UNAUTHORIZED,
-  NOT_FOUND: HttpStatus.NOT_FOUND
+  NOT_FOUND: HttpStatus.NOT_FOUND,
+  BAD_REQUEST: HttpStatus.BAD_REQUEST,
+  FORBIDDEN: HttpStatus.FORBIDDEN
 };
 
 export type ErrorCode = keyof typeof errors;
