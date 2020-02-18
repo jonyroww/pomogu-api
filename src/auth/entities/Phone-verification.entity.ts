@@ -50,9 +50,13 @@ export class PhoneVerification {
   @Column({ type: "int" })
   sms_sent_count: number;
 
+  @ApiProperty({ type: "int", nullable: false, default: 0 })
+  @Column({ type: "int" })
+  wrong_attempts_count: number;
+
   @ApiPropertyOptional({ type: "string" })
-  @Column({ type: "timestamp with time zone" })
-  sms_last_sent_at: string;
+  @Column({ type: "timestamp with time zone", default: Date.now() })
+  sms_last_sent_at: Date;
 
   @ApiPropertyOptional({ type: "string" })
   @Column({ type: "varchar" })
