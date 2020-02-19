@@ -7,7 +7,6 @@ import { PhoneVerificationRequestDto } from "./dto/phone-verification-request.dt
 import { VerificationPhoneDto } from "./dto/verfication-phone.dto";
 import { VerificationResendDto } from "./dto/verification-resend.dto";
 import { ParamsValidationDto } from "./dto/params-validation.dto";
-import { PurposeType } from "src/constants/PurposeType.enum";
 import { makeError } from "../common/errors/index";
 
 @Injectable()
@@ -23,7 +22,7 @@ export class AuthService {
     phoneVerificationRequest.sms_code = "111111";
     phoneVerificationRequest.sms_sent_count = 1;
     phoneVerificationRequest.sms_last_sent_at = new Date();
-    phoneVerificationRequest.purpose = PurposeType.REGISTRATION;
+    phoneVerificationRequest.purpose = body.purpose;
     await phoneVerificationRepository.save(phoneVerificationRequest);
     return {
       id: phoneVerificationRequest.id,
@@ -42,11 +41,9 @@ export class AuthService {
 
     if (!phoneVerification) {
       throw makeError("RECORD_NOT_FOUND");
-    } else if (phoneVerification.purpose != "REGISTRATION") {
-      throw makeError("PURPOSE_IS_NOT_REGISTRATION");
     } else if (body.key != phoneVerification.key) {
       throw makeError("KEY_IS_NOT_VALID");
-    } else if (phoneVerification.success === true) {
+    } else if (phoneVerification.success !== true) {
       throw makeError("CODE_ALREADY_USED");
     } else if (phoneVerification.used === true) {
       throw makeError("VERIFICATION_ALREADY_USED");
@@ -77,8 +74,6 @@ export class AuthService {
 
     if (!phoneVerification) {
       throw makeError("RECORD_NOT_FOUND");
-    } else if (phoneVerification.purpose != "REGISTRATION") {
-      throw makeError("PURPOSE_IS_NOT_REGISTRATION");
     } else if (body.key != phoneVerification.key) {
       throw makeError("KEY_IS_NOT_VALID");
     } else if (phoneVerification.success === true) {
