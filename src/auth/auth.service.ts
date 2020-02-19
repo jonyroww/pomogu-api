@@ -43,7 +43,7 @@ export class AuthService {
       throw makeError("RECORD_NOT_FOUND");
     } else if (body.key != phoneVerification.key) {
       throw makeError("KEY_IS_NOT_VALID");
-    } else if (phoneVerification.success === true) {
+    } else if (phoneVerification.success !== true) {
       throw makeError("CODE_ALREADY_USED");
     } else if (phoneVerification.used === true) {
       throw makeError("VERIFICATION_ALREADY_USED");

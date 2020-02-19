@@ -1,10 +1,10 @@
 import { MigrationInterface, QueryRunner, TableColumn } from "typeorm";
 
-export class volunteerRequestVerificationId1582114584115
+export class volunteerRequestVerification1582116574592
   implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {
     await queryRunner.addColumn(
-      "phone_verifications",
+      "volunteer_requests",
       new TableColumn({
         name: "verification_id",
         type: "int",
@@ -14,6 +14,6 @@ export class volunteerRequestVerificationId1582114584115
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {
-    await queryRunner.dropTable("phone_verifications");
+    await queryRunner.dropTable("volunteer_requests");
   }
 }
