@@ -23,7 +23,7 @@ export class AuthService {
     phoneVerificationRequest.sms_code = "111111";
     phoneVerificationRequest.sms_sent_count = 1;
     phoneVerificationRequest.sms_last_sent_at = new Date();
-    phoneVerificationRequest.purpose = PurposeType.REGISTRATION;
+    phoneVerificationRequest.purpose = body.purpose;
     await phoneVerificationRepository.save(phoneVerificationRequest);
     return {
       id: phoneVerificationRequest.id,
@@ -42,8 +42,6 @@ export class AuthService {
 
     if (!phoneVerification) {
       throw makeError("RECORD_NOT_FOUND");
-    } else if (phoneVerification.purpose != "REGISTRATION") {
-      throw makeError("PURPOSE_IS_NOT_REGISTRATION");
     } else if (body.key != phoneVerification.key) {
       throw makeError("KEY_IS_NOT_VALID");
     } else if (phoneVerification.success === true) {
@@ -77,8 +75,6 @@ export class AuthService {
 
     if (!phoneVerification) {
       throw makeError("RECORD_NOT_FOUND");
-    } else if (phoneVerification.purpose != "REGISTRATION") {
-      throw makeError("PURPOSE_IS_NOT_REGISTRATION");
     } else if (body.key != phoneVerification.key) {
       throw makeError("KEY_IS_NOT_VALID");
     } else if (phoneVerification.success === true) {
