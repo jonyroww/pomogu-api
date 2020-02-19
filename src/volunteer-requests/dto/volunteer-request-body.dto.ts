@@ -9,11 +9,14 @@ import {
   IsEmail,
   IsPhoneNumber,
   IsBoolean,
-  IsUrl
+  IsUrl,
+  IsEnum
 } from "class-validator";
 import { Transform } from "class-transformer";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { TransformIntArray } from "../../common/utils/transform-array-int.util";
+import { TransformInt } from "../../common/utils/transform-int.util";
+import { PurposeType } from "../../constants/PurposeType.enum";
 
 export class VolunteerRequestBodyDto {
   @ApiPropertyOptional({ type: "varchar" })
@@ -115,4 +118,14 @@ export class VolunteerRequestBodyDto {
   @IsNumber({}, { each: true })
   @Transform(TransformIntArray)
   organisation_ids: Array<number>;
+
+  @ApiProperty({ type: "number" })
+  @Transform(TransformInt)
+  @IsNumber()
+  verification_id: number;
+
+  @ApiProperty({ type: "varchar" })
+  @IsString()
+  @IsAlphanumeric()
+  verification_key: string;
 }

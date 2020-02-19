@@ -7,7 +7,6 @@ import { PhoneVerificationRequestDto } from "./dto/phone-verification-request.dt
 import { VerificationPhoneDto } from "./dto/verfication-phone.dto";
 import { VerificationResendDto } from "./dto/verification-resend.dto";
 import { ParamsValidationDto } from "./dto/params-validation.dto";
-import { PurposeType } from "src/constants/PurposeType.enum";
 import { makeError } from "../common/errors/index";
 
 @Injectable()
