@@ -9,12 +9,14 @@ import { Organisation } from "src/organisations/entities/Organisation.entity";
 import { PhoneVerification } from "../auth/entities/Phone-verification.entity";
 import { makeError } from "../common/errors/index";
 import { PurposeType } from "src/constants/PurposeType.enum";
+import { MailerService } from "@nest-modules/mailer";
 
 @Injectable()
 export class VolunteerRequestsService {
   constructor(
     @InjectRepository(VolunteerRequest)
-    private volunteerRequestRepository: Repository<VolunteerRequest>
+    private volunteerRequestRepository: Repository<VolunteerRequest>,
+    private readonly mailerService: MailerService
   ) {}
   async createVolunteerRequest({
     help_type_ids,
@@ -31,6 +33,8 @@ export class VolunteerRequestsService {
       throw makeError("RECORD_NOT_FOUND");
     } else if (phoneVerification.purpose != PurposeType.NEW_VOLUNTEER_REQUEST) {
       throw makeError("PURPOSE_IS_NOT_CORRECT");
+    } else if (body.verification_id !== phoneVerification.id) {
+      throw makeError("VERIFICATION_ID_IS_NOT_VALID");
     } else if (phoneVerification.key != body.verification_key) {
       throw makeError("KEY_IS_NOT_VALID");
     } else if (phoneVerification.success !== true) {
@@ -76,6 +80,27 @@ export class VolunteerRequestsService {
     await volunteerRequestRepository.save(volunteerRequest);
     phoneVerification.used = true;
     await phoneVerificationRepository.save(phoneVerification);
+
+    if (volunteerRequest.email) {
+      await this.mailerService.sendMail({
+        to: volunteerRequest.email,
+        from: "socqr@mail.ru",
+        subject: "ЯПомогу - анкета волонтера",
+        template: "pomogu1.html",
+        context: {
+          firstName: volunteerRequest.first_name,
+          middleName: volunteerRequest.middle_name,
+          lastName: volunteerRequest.last_name,
+          email: volunteerRequest.email,
+          phone: volunteerRequest.phone,
+          city: volunteerRequest.city,
+          comment: volunteerRequest.comment,
+          citezenTypes: volunteerRequest.citezenTypes,
+          helpTypes: volunteerRequest.helpTypes,
+          organisations: volunteerRequest.organisations
+        }
+      });
+    }
     return volunteerRequest;
   }
 }
