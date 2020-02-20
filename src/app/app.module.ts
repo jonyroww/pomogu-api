@@ -8,17 +8,17 @@ import { VolunteerRequestsModule } from "../volunteer-requests/volunteer-request
 import { PhotosModule } from "../photos/photos.module";
 import { AuthModule } from "../auth/auth.module";
 import { HandlebarsAdapter, MailerModule } from "@nest-modules/mailer";
-import { path } from "app-root-path";
+import path from "path";
+import appRootPath from "app-root-path";
 
 @Module({
   imports: [
     MailerModule.forRoot({
-      transport: "smtp.mail.ru:465",
+      transport: "smtps://socqr%40mail.ru:labado1996@smtp.mail.ru",
       defaults: { from: "socqr@mail.ru" },
       template: {
-        dir: path + "templates",
-        adapter: new HandlebarsAdapter(),
-        options: { strict: true }
+        dir: path.join(appRootPath.toString(), "templates"),
+        adapter: new HandlebarsAdapter()
       }
     }),
     TypeOrmModule.forRoot(),

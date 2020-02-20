@@ -28,7 +28,9 @@ export class ConfigService {
       JWT_SECRET: Joi.string().required(),
       BASE_URL: Joi.string()
         .uri()
-        .required()
+        .required(),
+      SMTP_URL: Joi.string(),
+      EMAIL_FROM: Joi.string()
     }).options({
       stripUnknown: true
     });
@@ -51,4 +53,6 @@ export interface EnvironmentConfig {
   DB_NAME: string;
   JWT_SECRET: string;
   BASE_URL: string;
+  EMAIL_FROM: string;
+  SMTP_URL: string;
 }

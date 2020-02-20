@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus } from "@nestjs/common";
+import { VerificationPhoneDto } from "src/auth/dto/verfication-phone.dto";
 
 export const errors = {
   USER_NOT_FOUND: HttpStatus.NOT_FOUND,
@@ -15,7 +16,9 @@ export const errors = {
   TIME_INTERVAL_IS_NOT_OVER: HttpStatus.BAD_REQUEST,
   SMS_CODE_IS_NOT_CORRECT: HttpStatus.BAD_REQUEST,
   CODE_ALREADY_USED: HttpStatus.BAD_REQUEST,
-  MAX_LIMIT_OF_WRONG_ATTEMPTS: HttpStatus.BAD_REQUEST
+  MAX_LIMIT_OF_WRONG_ATTEMPTS: HttpStatus.BAD_REQUEST,
+  VERIFICATION_ID_IS_NOT_VALID: HttpStatus.BAD_REQUEST,
+  EMAIL_SEND_ERROR: HttpStatus.BAD_REQUEST
 };
 
 export type ErrorCode = keyof typeof errors;
