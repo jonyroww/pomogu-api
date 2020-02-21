@@ -91,6 +91,7 @@ export class AuthService {
     phoneVerification.sms_sent_count += 1;
     phoneVerification.wrong_attempts_count = 0;
     phoneVerification.sms_last_sent_at = new Date();
+    phoneVerification.sms_code = "";
     await phoneVerificationRepository.save(phoneVerification);
 
     return phoneVerification;

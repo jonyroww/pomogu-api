@@ -16,36 +16,34 @@ import { Transform } from "class-transformer";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { TransformIntArray } from "../../common/utils/transform-array-int.util";
 import { TransformInt } from "../../common/utils/transform-int.util";
+import { TransformDate } from "../../common/utils/transform-date.util";
 import { PurposeType } from "../../constants/PurposeType.enum";
 
 export class VolunteerRequestBodyDto {
   @ApiPropertyOptional({ type: "varchar" })
   @IsOptional()
   @IsString()
-  @IsAlphanumeric()
   first_name: string;
 
   @ApiPropertyOptional({ type: "varchar" })
   @IsOptional()
   @IsString()
-  @IsAlphanumeric()
   middle_name: string;
 
   @ApiPropertyOptional({ type: "varchar" })
   @IsOptional()
   @IsString()
-  @IsAlphanumeric()
   last_name: string;
 
-  @ApiPropertyOptional({ type: "Date" })
+  @ApiPropertyOptional({ type: "Date", example: "2012-04-23T18:25:43.511Z" })
   @IsOptional()
   @IsDate()
+  @Transform(TransformDate)
   birth_date: Date;
 
   @ApiPropertyOptional({ type: "varchar" })
   @IsOptional()
   @IsString()
-  @IsAlphanumeric()
   city: string;
 
   @ApiPropertyOptional({ type: "varchar" })
@@ -78,7 +76,6 @@ export class VolunteerRequestBodyDto {
   @ApiPropertyOptional({ type: "varchar" })
   @IsOptional()
   @IsString()
-  @IsAlphanumeric()
   comment: string;
 
   @ApiProperty({ type: "boolean" })
@@ -88,14 +85,12 @@ export class VolunteerRequestBodyDto {
   @ApiPropertyOptional({ type: "varchar" })
   @IsOptional()
   @IsString()
-  @IsAlphanumeric()
   @IsUrl()
   avatar: string;
 
   @ApiPropertyOptional({ type: "varchar" })
   @IsOptional()
   @IsString()
-  @IsAlphanumeric()
   gender: string;
 
   @ApiProperty({ type: "number", isArray: true })
