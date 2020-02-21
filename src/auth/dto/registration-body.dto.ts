@@ -10,16 +10,26 @@ import {
   IsPhoneNumber,
   IsBoolean,
   IsUrl,
+  Length,
   IsEnum
 } from "class-validator";
-import { Transform } from "class-transformer";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { Transform } from "class-transformer";
 import { TransformIntArray } from "../../common/utils/transform-array-int.util";
 import { TransformInt } from "../../common/utils/transform-int.util";
 import { TransformDate } from "../../common/utils/transform-date.util";
-import { PurposeType } from "../../constants/PurposeType.enum";
 
-export class VolunteerRequestBodyDto {
+export class registrationBodyDto {
+  @ApiProperty({ type: "number" })
+  @Transform(TransformInt)
+  @IsNumber()
+  verification_id: number;
+
+  @ApiProperty({ type: "varchar" })
+  @IsString()
+  @IsAlphanumeric()
+  verification_key: string;
+
   @ApiPropertyOptional({ type: "varchar" })
   @IsOptional()
   @IsString()
@@ -51,11 +61,6 @@ export class VolunteerRequestBodyDto {
   @IsString()
   @IsEmail()
   email: string;
-
-  @ApiProperty({ type: "varchar" })
-  @IsString()
-  @IsPhoneNumber("RU")
-  phone: string;
 
   @ApiProperty({ type: "boolean" })
   @IsBoolean()
@@ -93,34 +98,7 @@ export class VolunteerRequestBodyDto {
   @IsString()
   gender: string;
 
-  @ApiProperty({ type: "number", isArray: true })
-  @IsArray()
-  @IsOptional()
-  @IsNumber({}, { each: true })
-  @Transform(TransformIntArray)
-  help_type_ids: Array<number>;
-
-  @ApiProperty({ type: "number", isArray: true })
-  @IsArray()
-  @IsOptional()
-  @IsNumber({}, { each: true })
-  @Transform(TransformIntArray)
-  citizen_type_ids: Array<number>;
-
-  @ApiProperty({ type: "number", isArray: true })
-  @IsArray()
-  @IsOptional()
-  @IsNumber({}, { each: true })
-  @Transform(TransformIntArray)
-  organisation_ids: Array<number>;
-
-  @ApiProperty({ type: "number" })
-  @Transform(TransformInt)
-  @IsNumber()
-  verification_id: number;
-
   @ApiProperty({ type: "varchar" })
   @IsString()
-  @IsAlphanumeric()
-  verification_key: string;
+  password: string;
 }
