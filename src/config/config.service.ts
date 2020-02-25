@@ -29,8 +29,8 @@ export class ConfigService {
       BASE_URL: Joi.string()
         .uri()
         .required(),
-      SMTP_URL: Joi.string(),
-      EMAIL_FROM: Joi.string()
+      SMTP_URL: Joi.string().required(),
+      EMAIL_FROM: Joi.string().required()
     }).options({
       stripUnknown: true
     });
