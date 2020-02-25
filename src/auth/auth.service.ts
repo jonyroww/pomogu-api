@@ -125,10 +125,7 @@ export class AuthService {
     body.password = hashedPassword;
     const userRepository = getRepository(User);
     const user = userRepository.create(body);
-    user.role = "VOLUNTEER";
-    user.phone = phoneVerification.phone;
-    phoneVerification.user_id = user.id;
-    phoneVerification.used = true;
+
     const isPhoneUnique = await userRepository.findOne({
       phone: phoneVerification.phone
     });
@@ -138,8 +135,12 @@ export class AuthService {
     } else if (isEmailUnique) {
       throw makeError("EMAIL_ALREADY_EXISTS");
     }
-    await phoneVerificationRepository.save(phoneVerification);
+    user.role = "VOLUNTEER";
+    user.phone = phoneVerification.phone;
     await userRepository.save(user);
+    phoneVerification.user_id = user.id;
+    phoneVerification.used = true;
+    await phoneVerificationRepository.save(phoneVerification);
 
     const token = this.jwtService.sign({
       sub: user.id,
