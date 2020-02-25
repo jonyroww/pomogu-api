@@ -5,7 +5,9 @@ import {
   ValidationPipe,
   Post,
   Put,
-  Param
+  Param,
+  UseInterceptors,
+  ClassSerializerInterceptor
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { PhoneVerification } from "./entities/Phone-verification.entity";
@@ -14,20 +16,23 @@ import { PhoneVerificationRequestDto } from "./dto/phone-verification-request.dt
 import { VerificationPhoneDto } from "./dto/verfication-phone.dto";
 import { ParamsValidationDto } from "./dto/params-validation.dto";
 import { VerificationResendDto } from "./dto/verification-resend.dto";
+import { User } from "../users/entities/User.entity";
+import { registrationBodyDto } from "./dto/registration-body.dto";
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
-@Controller("auth/phone-verification")
+@UseInterceptors(ClassSerializerInterceptor)
+@Controller("auth")
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
   @ApiTags("Phone verification")
   @ApiCreatedResponse({ type: PhoneVerification })
-  @Post()
+  @Post("/phone-verification")
   createPhoneVerification(@Body() body: PhoneVerificationRequestDto) {
     return this.authService.createPhoneVerification(body);
   }
 
   @ApiCreatedResponse({ type: PhoneVerification })
-  @Put("/:id")
+  @Put("/phone-verification/:id")
   verificationPhone(
     @Body() body: VerificationPhoneDto,
     @Param() params: ParamsValidationDto
@@ -36,11 +41,17 @@ export class AuthController {
   }
 
   @ApiCreatedResponse({ type: PhoneVerification })
-  @Put("/:id/resend")
+  @Put("/phone-verification/:id/resend")
   verificationPhoneResend(
     @Body() body: VerificationResendDto,
     @Param() params: ParamsValidationDto
   ) {
     return this.authService.verificationPhoneResend(body, params);
+  }
+
+  @ApiCreatedResponse({ type: PhoneVerification })
+  @Post("/registration")
+  registrationUser(@Body() body: registrationBodyDto) {
+    return this.authService.registrationUser(body);
   }
 }

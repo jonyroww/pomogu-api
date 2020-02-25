@@ -18,7 +18,9 @@ export const errors = {
   CODE_ALREADY_USED: HttpStatus.BAD_REQUEST,
   MAX_LIMIT_OF_WRONG_ATTEMPTS: HttpStatus.BAD_REQUEST,
   VERIFICATION_ID_IS_NOT_VALID: HttpStatus.BAD_REQUEST,
-  EMAIL_SEND_ERROR: HttpStatus.BAD_REQUEST
+  EMAIL_SEND_ERROR: HttpStatus.BAD_REQUEST,
+  PHONE_ALREADY_EXISTS: HttpStatus.BAD_REQUEST,
+  EMAIL_ALREADY_EXISTS: HttpStatus.BAD_REQUEST
 };
 
 export type ErrorCode = keyof typeof errors;

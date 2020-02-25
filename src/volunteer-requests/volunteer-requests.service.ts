@@ -77,6 +77,7 @@ export class VolunteerRequestsService {
     volunteerRequest.citezenTypes = citezenTypes;
     volunteerRequest.organisations = organisations;
     volunteerRequest.verification_id = body.verification_id;
+    volunteerRequest.phone = phoneVerification.phone;
     await volunteerRequestRepository.save(volunteerRequest);
     phoneVerification.used = true;
     await phoneVerificationRepository.save(phoneVerification);

@@ -10,6 +10,7 @@ import { AuthModule } from "../auth/auth.module";
 import { HandlebarsAdapter, MailerModule } from "@nest-modules/mailer";
 import path from "path";
 import appRootPath from "app-root-path";
+
 import { ConfigService } from "../config/config.service";
 
 @Module({
