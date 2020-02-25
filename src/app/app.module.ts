@@ -10,9 +10,11 @@ import { AuthModule } from "../auth/auth.module";
 import { HandlebarsAdapter, MailerModule } from "@nest-modules/mailer";
 import path from "path";
 import appRootPath from "app-root-path";
+import { JwtModule } from "@nestjs/jwt";
 
 @Module({
   imports: [
+    JwtModule.register({ secret: "hard!to-guess_secret" }),
     MailerModule.forRoot({
       transport: "smtps://socqr%40mail.ru:labado1996@smtp.mail.ru",
       defaults: { from: "socqr@mail.ru" },

@@ -12,12 +12,14 @@ import { registrationBodyDto } from "./dto/registration-body.dto";
 import { User } from "../users/entities/User.entity";
 import { PurposeType } from "src/constants/PurposeType.enum";
 import bcrypt from "bcrypt";
+import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(PhoneVerification)
-    private phoneVerificationRepository: Repository<PhoneVerification>
+    private phoneVerificationRepository: Repository<PhoneVerification>,
+    private readonly jwtService: JwtService
   ) {}
   async createPhoneVerification(body: PhoneVerificationRequestDto) {
     const phoneVerificationRepository = getRepository(PhoneVerification);
@@ -128,5 +130,6 @@ export class AuthService {
     phoneVerification.used = true;
     await phoneVerificationRepository.save(phoneVerification);
     await userRepository.save(user);
+    this.jwtService.sign({});
   }
 }
