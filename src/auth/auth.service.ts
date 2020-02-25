@@ -143,7 +143,7 @@ export class AuthService {
 
     const token = this.jwtService.sign({
       sub: user.id,
-      exp: Math.floor(Date.now() / 1000) + 60 * 60
+      exp: Math.floor(Date.now() / 1000) + 168 * 168
     });
     return { token: token };
   }
