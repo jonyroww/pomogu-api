@@ -12,6 +12,7 @@ WORKDIR /usr/src/app
 
 COPY --from=installer /usr/src/app/ .
 COPY src ./src
+COPY templates ./templates
 COPY tsconfig.json tsconfig.build.json ormconfig.js ./
 
 ENV NODE_ENV production
