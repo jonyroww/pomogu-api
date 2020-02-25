@@ -52,11 +52,6 @@ export class VolunteerRequestBodyDto {
   @IsEmail()
   email: string;
 
-  @ApiProperty({ type: "varchar" })
-  @IsString()
-  @IsPhoneNumber("RU")
-  phone: string;
-
   @ApiProperty({ type: "boolean" })
   @IsBoolean()
   is_individual: boolean;

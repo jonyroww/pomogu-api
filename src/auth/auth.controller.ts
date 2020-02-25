@@ -5,7 +5,9 @@ import {
   ValidationPipe,
   Post,
   Put,
-  Param
+  Param,
+  UseInterceptors,
+  ClassSerializerInterceptor
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { PhoneVerification } from "./entities/Phone-verification.entity";
@@ -18,6 +20,7 @@ import { User } from "../users/entities/User.entity";
 import { registrationBodyDto } from "./dto/registration-body.dto";
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller("auth")
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

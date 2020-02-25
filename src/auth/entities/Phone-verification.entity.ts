@@ -12,6 +12,7 @@ import {
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { User } from "./../../users/entities/User.entity";
 import { PurposeType } from "../../constants/PurposeType.enum";
+import { Exclude } from "class-transformer";
 
 @Entity({ name: "phone_verifications" })
 export class PhoneVerification {
@@ -59,6 +60,7 @@ export class PhoneVerification {
   sms_last_sent_at: Date;
 
   @ApiPropertyOptional({ type: "string" })
+  @Exclude()
   @Column({ type: "varchar" })
   sms_code: string;
 

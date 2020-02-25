@@ -13,6 +13,7 @@ import { User } from "../users/entities/User.entity";
 import { PurposeType } from "src/constants/PurposeType.enum";
 import bcrypt from "bcrypt";
 import { JwtService } from "@nestjs/jwt";
+import { UserRepository } from "src/users/repositories/User.repository";
 
 @Injectable()
 export class AuthService {
@@ -97,7 +98,6 @@ export class AuthService {
     phoneVerification.sms_sent_count += 1;
     phoneVerification.wrong_attempts_count = 0;
     phoneVerification.sms_last_sent_at = new Date();
-    phoneVerification.sms_code = "";
     await phoneVerificationRepository.save(phoneVerification);
 
     return phoneVerification;
@@ -126,10 +126,25 @@ export class AuthService {
     const userRepository = getRepository(User);
     const user = userRepository.create(body);
     user.role = "VOLUNTEER";
+    user.phone = phoneVerification.phone;
     phoneVerification.user_id = user.id;
     phoneVerification.used = true;
+    const isPhoneUnique = await userRepository.findOne({
+      phone: phoneVerification.phone
+    });
+    const isEmailUnique = await userRepository.findOne({ email: body.email });
+    if (isPhoneUnique) {
+      throw makeError("PHONE_ALREADY_EXISTS");
+    } else if (isEmailUnique) {
+      throw makeError("EMAIL_ALREADY_EXISTS");
+    }
     await phoneVerificationRepository.save(phoneVerification);
     await userRepository.save(user);
-    this.jwtService.sign({});
+
+    const token = this.jwtService.sign({
+      sub: user.id,
+      exp: Math.floor(Date.now() / 1000) + 60 * 60
+    });
+    return { token: token };
   }
 }
