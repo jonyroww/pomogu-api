@@ -5,8 +5,10 @@ import express from "express";
 import { join } from "path";
 import { path } from "app-root-path";
 import dotenv from "dotenv";
+import { initializeTransactionalContext } from "typeorm-transactional-cls-hooked";
 dotenv.config();
 async function bootstrap() {
+  initializeTransactionalContext();
   const app = await NestFactory.create(AppModule);
   app.enableCors();
   const options = new DocumentBuilder()

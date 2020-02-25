@@ -10,6 +10,7 @@ import { PhoneVerification } from "../auth/entities/Phone-verification.entity";
 import { makeError } from "../common/errors/index";
 import { PurposeType } from "src/constants/PurposeType.enum";
 import { MailerService } from "@nest-modules/mailer";
+import { Transactional } from "typeorm-transactional-cls-hooked";
 
 @Injectable()
 export class VolunteerRequestsService {
@@ -18,6 +19,8 @@ export class VolunteerRequestsService {
     private volunteerRequestRepository: Repository<VolunteerRequest>,
     private readonly mailerService: MailerService
   ) {}
+
+  @Transactional()
   async createVolunteerRequest({
     help_type_ids,
     citizen_type_ids,

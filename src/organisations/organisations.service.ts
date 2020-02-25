@@ -7,6 +7,7 @@ import { ApiForbiddenResponse } from "@nestjs/swagger";
 import { GetOneQueryDto } from "./dto/get-one-query.dto";
 import _ from "lodash";
 import { makeError } from "../common/errors/index";
+import { Transactional } from "typeorm-transactional-cls-hooked";
 
 @Injectable()
 export class OrganisationsService {
@@ -14,6 +15,8 @@ export class OrganisationsService {
     @InjectRepository(Organisation)
     private readonly organisationsRepository: Repository<Organisation>
   ) {}
+
+  @Transactional()
   findAll(params: QueryFilterDto): Promise<Organisation[]> {
     const qb = this.organisationsRepository.createQueryBuilder("organisations");
 
@@ -53,6 +56,7 @@ export class OrganisationsService {
       .getMany();
   }
 
+  @Transactional()
   async findOne(params: GetOneQueryDto) {
     const organisation = await this.organisationsRepository.findOne(params.id);
     if (organisation) {

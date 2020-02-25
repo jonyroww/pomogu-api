@@ -13,7 +13,7 @@ import { User } from "../users/entities/User.entity";
 import { PurposeType } from "src/constants/PurposeType.enum";
 import bcrypt from "bcrypt";
 import { JwtService } from "@nestjs/jwt";
-import { UserRepository } from "src/users/repositories/User.repository";
+import { Transactional } from "typeorm-transactional-cls-hooked";
 
 @Injectable()
 export class AuthService {
@@ -22,6 +22,7 @@ export class AuthService {
     private phoneVerificationRepository: Repository<PhoneVerification>,
     private readonly jwtService: JwtService
   ) {}
+  @Transactional()
   async createPhoneVerification(body: PhoneVerificationRequestDto) {
     const phoneVerificationRepository = getRepository(PhoneVerification);
     const phoneVerificationRequest = phoneVerificationRepository.create(body);
@@ -37,6 +38,7 @@ export class AuthService {
     };
   }
 
+  @Transactional()
   async verificationPhone(
     body: VerificationPhoneDto,
     params: ParamsValidationDto
@@ -70,6 +72,7 @@ export class AuthService {
     return phoneVerification;
   }
 
+  @Transactional()
   async verificationPhoneResend(
     body: VerificationResendDto,
     params: ParamsValidationDto
@@ -103,6 +106,7 @@ export class AuthService {
     return phoneVerification;
   }
 
+  @Transactional()
   async registrationUser(body: registrationBodyDto) {
     const phoneVerificationRepository = getRepository(PhoneVerification);
     const phoneVerification = await phoneVerificationRepository.findOne(
