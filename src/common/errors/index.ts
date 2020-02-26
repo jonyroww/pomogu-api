@@ -3,7 +3,7 @@ import { VerificationPhoneDto } from "src/auth/dto/verfication-phone.dto";
 
 export const errors = {
   USER_NOT_FOUND: HttpStatus.NOT_FOUND,
-  WRONG_LOGIN_OR_PASSWORD: HttpStatus.UNAUTHORIZED,
+  WRONG_PASSWORD: HttpStatus.UNAUTHORIZED,
   NO_SUCH_ORGANISATION: HttpStatus.NOT_FOUND,
   UNAUTHORIZED: HttpStatus.UNAUTHORIZED,
   RECORD_NOT_FOUND: HttpStatus.NOT_FOUND,
