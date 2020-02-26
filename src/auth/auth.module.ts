@@ -5,6 +5,8 @@ import { JwtModule } from "@nestjs/jwt";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigService } from "./../config/config.service";
 import { PhoneVerification } from "./entities/Phone-verification.entity";
+import { PhoneVerificationRepository } from "./repository/Phone-verification.repository";
+import { UserRepository } from "../users/repositories/User.repository";
 
 @Module({
   imports: [
@@ -14,9 +16,14 @@ import { PhoneVerification } from "./entities/Phone-verification.entity";
       }),
       inject: [ConfigService]
     }),
-    TypeOrmModule.forFeature([PhoneVerification])
+    TypeOrmModule.forFeature([
+      PhoneVerification,
+      PhoneVerificationRepository,
+      UserRepository
+    ])
   ],
   providers: [AuthService],
-  controllers: [AuthController]
+  controllers: [AuthController],
+  exports: [AuthService]
 })
 export class AuthModule {}

@@ -1,19 +1,19 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Organisation } from "./entities/Organisation.entity";
 import { Repository } from "typeorm";
 import { QueryFilterDto } from "./dto/query-filter.dto";
-import { ApiForbiddenResponse } from "@nestjs/swagger";
 import { GetOneQueryDto } from "./dto/get-one-query.dto";
 import _ from "lodash";
 import { makeError } from "../common/errors/index";
 import { Transactional } from "typeorm-transactional-cls-hooked";
+import { OrganisationRepository } from "./repositories/Organisation.repository";
 
 @Injectable()
 export class OrganisationsService {
   constructor(
     @InjectRepository(Organisation)
-    private readonly organisationsRepository: Repository<Organisation>
+    private readonly organisationsRepository: OrganisationRepository
   ) {}
 
   @Transactional()

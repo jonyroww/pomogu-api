@@ -1,22 +1,26 @@
 import { Injectable } from "@nestjs/common";
 import { VolunteerRequest } from "./entities/Volunteer-request.entity";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository, getRepository } from "typeorm";
 import { VolunteerRequestBodyDto } from "./dto/volunteer-request-body.dto";
-import { HelpTypes } from "../help-types/entities/help-types.entity";
-import { CitezenTypes } from "../citezen-types/entities/citezen-types.entity";
-import { Organisation } from "src/organisations/entities/Organisation.entity";
-import { PhoneVerification } from "../auth/entities/Phone-verification.entity";
 import { makeError } from "../common/errors/index";
 import { PurposeType } from "src/constants/PurposeType.enum";
 import { MailerService } from "@nest-modules/mailer";
 import { Transactional } from "typeorm-transactional-cls-hooked";
+import { VolunteerRequestRepository } from "./repositories/Volunteer-request.repositories";
+import { PhoneVerificationRepository } from "../auth/repository/Phone-verification.repository";
+import { HelpTypesRepository } from "../help-types/repositories/Help-types.repository";
+import { CitezenTypesRepository } from "../citezen-types/repositories/Citezen-types.repository";
+import { OrganisationRepository } from "../organisations/repositories/Organisation.repository";
 
 @Injectable()
 export class VolunteerRequestsService {
   constructor(
     @InjectRepository(VolunteerRequest)
-    private volunteerRequestRepository: Repository<VolunteerRequest>,
+    private volunteerRequestRepository: VolunteerRequestRepository,
+    private phoneVerificationRepository: PhoneVerificationRepository,
+    private helpTypesRepository: HelpTypesRepository,
+    private citezenTypesRepository: CitezenTypesRepository,
+    private organisationRepository: OrganisationRepository,
     private readonly mailerService: MailerService
   ) {}
 
@@ -27,8 +31,7 @@ export class VolunteerRequestsService {
     organisation_ids,
     ...body
   }: VolunteerRequestBodyDto) {
-    const phoneVerificationRepository = getRepository(PhoneVerification);
-    const phoneVerification = await phoneVerificationRepository.findOne(
+    const phoneVerification = await this.phoneVerificationRepository.findOne(
       body.verification_id
     );
 
@@ -48,7 +51,7 @@ export class VolunteerRequestsService {
 
     const helpTypes =
       help_type_ids && help_type_ids.length != 0
-        ? await getRepository(HelpTypes)
+        ? await this.helpTypesRepository
             .createQueryBuilder("help_types")
             .where("id IN (:...helpTypesId)", {
               helpTypesId: help_type_ids
@@ -57,7 +60,7 @@ export class VolunteerRequestsService {
         : [];
     const citezenTypes =
       citizen_type_ids && citizen_type_ids.length != 0
-        ? await getRepository(CitezenTypes)
+        ? await this.citezenTypesRepository
             .createQueryBuilder("citezen_types")
             .where("id IN (:...citezenTypesId)", {
               citezenTypesId: citizen_type_ids
@@ -66,7 +69,7 @@ export class VolunteerRequestsService {
         : [];
     const organisations =
       organisation_ids && organisation_ids.length != 0
-        ? await getRepository(Organisation)
+        ? await this.organisationRepository
             .createQueryBuilder("organisations")
             .where("id IN (:...organisationId)", {
               organisationId: organisation_ids
@@ -74,16 +77,15 @@ export class VolunteerRequestsService {
             .getMany()
         : [];
 
-    const volunteerRequestRepository = getRepository(VolunteerRequest);
-    const volunteerRequest = volunteerRequestRepository.create(body);
+    const volunteerRequest = this.volunteerRequestRepository.create(body);
     volunteerRequest.helpTypes = helpTypes;
     volunteerRequest.citezenTypes = citezenTypes;
     volunteerRequest.organisations = organisations;
     volunteerRequest.verification_id = body.verification_id;
     volunteerRequest.phone = phoneVerification.phone;
-    await volunteerRequestRepository.save(volunteerRequest);
+    await this.volunteerRequestRepository.save(volunteerRequest);
     phoneVerification.used = true;
-    await phoneVerificationRepository.save(phoneVerification);
+    await this.phoneVerificationRepository.save(phoneVerification);
 
     if (volunteerRequest.email) {
       await this.mailerService.sendMail({

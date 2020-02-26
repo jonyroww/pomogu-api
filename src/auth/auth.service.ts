@@ -2,36 +2,38 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { PhoneVerification } from "./entities/Phone-verification.entity";
 import cryptoRandomString from "crypto-random-string";
-import { Repository, getRepository } from "typeorm";
 import { PhoneVerificationRequestDto } from "./dto/phone-verification-request.dto";
 import { VerificationPhoneDto } from "./dto/verfication-phone.dto";
 import { VerificationResendDto } from "./dto/verification-resend.dto";
 import { ParamsValidationDto } from "./dto/params-validation.dto";
 import { makeError } from "../common/errors/index";
 import { registrationBodyDto } from "./dto/registration-body.dto";
-import { User } from "../users/entities/User.entity";
 import { PurposeType } from "src/constants/PurposeType.enum";
 import bcrypt from "bcrypt";
 import { JwtService } from "@nestjs/jwt";
 import { Transactional } from "typeorm-transactional-cls-hooked";
+import { PhoneVerificationRepository } from "./repository/Phone-verification.repository";
+import { UserRepository } from "../users/repositories/User.repository";
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(PhoneVerification)
-    private phoneVerificationRepository: Repository<PhoneVerification>,
+    private phoneVerificationRepository: PhoneVerificationRepository,
+    private userRepository: UserRepository,
     private readonly jwtService: JwtService
   ) {}
   @Transactional()
   async createPhoneVerification(body: PhoneVerificationRequestDto) {
-    const phoneVerificationRepository = getRepository(PhoneVerification);
-    const phoneVerificationRequest = phoneVerificationRepository.create(body);
+    const phoneVerificationRequest = this.phoneVerificationRepository.create(
+      body
+    );
     phoneVerificationRequest.key = cryptoRandomString({ length: 32 });
     phoneVerificationRequest.sms_code = "111111";
     phoneVerificationRequest.sms_sent_count = 1;
     phoneVerificationRequest.sms_last_sent_at = new Date();
     phoneVerificationRequest.purpose = body.purpose;
-    await phoneVerificationRepository.save(phoneVerificationRequest);
+    await this.phoneVerificationRepository.save(phoneVerificationRequest);
     return {
       id: phoneVerificationRequest.id,
       key: phoneVerificationRequest.key
@@ -43,8 +45,7 @@ export class AuthService {
     body: VerificationPhoneDto,
     params: ParamsValidationDto
   ) {
-    const phoneVerificationRepository = getRepository(PhoneVerification);
-    const phoneVerification = await phoneVerificationRepository.findOne(
+    const phoneVerification = await this.phoneVerificationRepository.findOne(
       params.id
     );
 
@@ -62,11 +63,11 @@ export class AuthService {
 
     if (phoneVerification.sms_code != body.sms_code) {
       phoneVerification.wrong_attempts_count += 1;
-      await phoneVerificationRepository.save(phoneVerification);
+      await this.phoneVerificationRepository.save(phoneVerification);
       throw makeError("SMS_CODE_IS_NOT_CORRECT");
     } else {
       phoneVerification.success = true;
-      await phoneVerificationRepository.save(phoneVerification);
+      await this.phoneVerificationRepository.save(phoneVerification);
     }
 
     return phoneVerification;
@@ -77,8 +78,7 @@ export class AuthService {
     body: VerificationResendDto,
     params: ParamsValidationDto
   ) {
-    const phoneVerificationRepository = getRepository(PhoneVerification);
-    const phoneVerification = await phoneVerificationRepository.findOne(
+    const phoneVerification = await this.phoneVerificationRepository.findOne(
       params.id
     );
 
@@ -101,15 +101,14 @@ export class AuthService {
     phoneVerification.sms_sent_count += 1;
     phoneVerification.wrong_attempts_count = 0;
     phoneVerification.sms_last_sent_at = new Date();
-    await phoneVerificationRepository.save(phoneVerification);
+    await this.phoneVerificationRepository.save(phoneVerification);
 
     return phoneVerification;
   }
 
   @Transactional()
   async registrationUser(body: registrationBodyDto) {
-    const phoneVerificationRepository = getRepository(PhoneVerification);
-    const phoneVerification = await phoneVerificationRepository.findOne(
+    const phoneVerification = await this.phoneVerificationRepository.findOne(
       body.verification_id
     );
 
@@ -127,13 +126,15 @@ export class AuthService {
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(body.password, salt);
     body.password = hashedPassword;
-    const userRepository = getRepository(User);
-    const user = userRepository.create(body);
 
-    const isPhoneUnique = await userRepository.findOne({
+    const user = this.userRepository.create(body);
+
+    const isPhoneUnique = await this.userRepository.findOne({
       phone: phoneVerification.phone
     });
-    const isEmailUnique = await userRepository.findOne({ email: body.email });
+    const isEmailUnique = await this.userRepository.findOne({
+      email: body.email
+    });
     if (isPhoneUnique) {
       throw makeError("PHONE_ALREADY_EXISTS");
     } else if (isEmailUnique) {
@@ -141,10 +142,10 @@ export class AuthService {
     }
     user.role = "VOLUNTEER";
     user.phone = phoneVerification.phone;
-    await userRepository.save(user);
+    await this.userRepository.save(user);
     phoneVerification.user_id = user.id;
     phoneVerification.used = true;
-    await phoneVerificationRepository.save(phoneVerification);
+    await this.phoneVerificationRepository.save(phoneVerification);
 
     const token = this.jwtService.sign({
       sub: user.id,
