@@ -56,7 +56,6 @@ export class OrganisationsService {
       .getMany();
   }
 
-  @Transactional()
   async findOne(params: GetOneQueryDto) {
     const organisation = await this.organisationsRepository.findOne(params.id);
     if (organisation) {
