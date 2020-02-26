@@ -8,7 +8,9 @@ import {
   Param,
   UseInterceptors,
   ClassSerializerInterceptor,
-  Header
+  Header,
+  Get,
+  UseGuards
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { PhoneVerification } from "./entities/Phone-verification.entity";
@@ -19,6 +21,7 @@ import { ParamsValidationDto } from "./dto/params-validation.dto";
 import { VerificationResendDto } from "./dto/verification-resend.dto";
 import { registrationBodyDto } from "./dto/registration-body.dto";
 import { UserLoginDto } from "./dto/login-body.dto";
+import { AuthGuard } from "@nestjs/passport";
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 @UseInterceptors(ClassSerializerInterceptor)
@@ -57,6 +60,7 @@ export class AuthController {
   }
 
   @ApiOkResponse()
+  @UseGuards(AuthGuard("local"))
   @Post("/login")
   userLogin(@Body() body: UserLoginDto) {
     return this.authService.userLogin(body);

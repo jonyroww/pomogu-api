@@ -15,7 +15,7 @@ import { Transactional } from "typeorm-transactional-cls-hooked";
 import { PhoneVerificationRepository } from "./repository/Phone-verification.repository";
 import { UserRepository } from "../users/repositories/User.repository";
 import { UserLoginDto } from "./dto/login-body.dto";
-import { throwError } from "rxjs";
+import { ConfigService } from "../config/config.service";
 
 @Injectable()
 export class AuthService {
@@ -23,7 +23,8 @@ export class AuthService {
     @InjectRepository(PhoneVerification)
     private phoneVerificationRepository: PhoneVerificationRepository,
     private userRepository: UserRepository,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService
   ) {}
   @Transactional()
   async createPhoneVerification(body: PhoneVerificationRequestDto) {
@@ -156,22 +157,16 @@ export class AuthService {
     return { token: token };
   }
 
-  async userLogin(body: UserLoginDto) {
-    const user = await this.userRepository.findOne({ phone: body.phone });
+  async validateUser(phone: string, password: string) {
+    const user = await this.userRepository.findOne({ phone: phone });
 
-    if (!user) {
-      throw makeError("USER_NOT_FOUND");
-    }
-
-    const isPasswordValid = await bcrypt.compare(body.password, user.password);
-    if (isPasswordValid) {
-      const token = this.jwtService.sign({
-        sub: user.id,
-        exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7
-      });
-      return { token: token };
-    } else {
-      throw makeError("WRONG_PASSWORD");
+    if (user) {
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (isPasswordValid) {
+        return user || null;
+      }
     }
   }
+
+  async userLogin(body: UserLoginDto) {}
 }
