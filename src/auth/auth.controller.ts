@@ -7,17 +7,18 @@ import {
   Put,
   Param,
   UseInterceptors,
-  ClassSerializerInterceptor
+  ClassSerializerInterceptor,
+  Header
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { PhoneVerification } from "./entities/Phone-verification.entity";
-import { ApiTags, ApiCreatedResponse } from "@nestjs/swagger";
+import { ApiTags, ApiCreatedResponse, ApiOkResponse } from "@nestjs/swagger";
 import { PhoneVerificationRequestDto } from "./dto/phone-verification-request.dto";
 import { VerificationPhoneDto } from "./dto/verfication-phone.dto";
 import { ParamsValidationDto } from "./dto/params-validation.dto";
 import { VerificationResendDto } from "./dto/verification-resend.dto";
-import { User } from "../users/entities/User.entity";
 import { registrationBodyDto } from "./dto/registration-body.dto";
+import { UserLoginDto } from "./dto/login-body.dto";
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 @UseInterceptors(ClassSerializerInterceptor)
@@ -53,5 +54,11 @@ export class AuthController {
   @Post("/registration")
   registrationUser(@Body() body: registrationBodyDto) {
     return this.authService.registrationUser(body);
+  }
+
+  @ApiOkResponse()
+  @Post("/login")
+  userLogin(@Body() body: UserLoginDto) {
+    return this.authService.userLogin(body);
   }
 }

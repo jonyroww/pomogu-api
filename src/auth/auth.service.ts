@@ -14,6 +14,8 @@ import { JwtService } from "@nestjs/jwt";
 import { Transactional } from "typeorm-transactional-cls-hooked";
 import { PhoneVerificationRepository } from "./repository/Phone-verification.repository";
 import { UserRepository } from "../users/repositories/User.repository";
+import { UserLoginDto } from "./dto/login-body.dto";
+import { throwError } from "rxjs";
 
 @Injectable()
 export class AuthService {
@@ -152,5 +154,24 @@ export class AuthService {
       exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7
     });
     return { token: token };
+  }
+
+  async userLogin(body: UserLoginDto) {
+    const user = await this.userRepository.findOne({ phone: body.phone });
+
+    if (!user) {
+      throw makeError("USER_NOT_FOUND");
+    }
+
+    const isPasswordValid = await bcrypt.compare(body.password, user.password);
+    if (isPasswordValid) {
+      const token = this.jwtService.sign({
+        sub: user.id,
+        exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7
+      });
+      return { token: token };
+    } else {
+      throw makeError("WRONG_PASSWORD");
+    }
   }
 }
