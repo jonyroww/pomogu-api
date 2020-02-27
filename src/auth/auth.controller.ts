@@ -18,7 +18,8 @@ import {
   ApiTags,
   ApiCreatedResponse,
   ApiOkResponse,
-  ApiBody
+  ApiBody,
+  ApiBearerAuth
 } from "@nestjs/swagger";
 import { PhoneVerificationRequestDto } from "./dto/phone-verification-request.dto";
 import { VerificationPhoneDto } from "./dto/verification-phone.dto";
@@ -35,15 +36,16 @@ import { User } from "../users/entities/User.entity";
 @Controller("auth")
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @Post("/phone-verification")
   @ApiTags("Phone verification")
   @ApiCreatedResponse({ type: PhoneVerification })
-  @Post("/phone-verification")
   createPhoneVerification(@Body() body: PhoneVerificationRequestDto) {
     return this.authService.createPhoneVerification(body);
   }
 
-  @ApiCreatedResponse({ type: PhoneVerification })
   @Put("/phone-verification/:id")
+  @ApiCreatedResponse({ type: PhoneVerification })
   verificationPhone(
     @Body() body: VerificationPhoneDto,
     @Param() params: ParamsValidationDto
@@ -51,8 +53,8 @@ export class AuthController {
     return this.authService.verificationPhone(body, params);
   }
 
-  @ApiCreatedResponse({ type: PhoneVerification })
   @Put("/phone-verification/:id/resend")
+  @ApiCreatedResponse({ type: PhoneVerification })
   verificationPhoneResend(
     @Body() body: VerificationResendDto,
     @Param() params: ParamsValidationDto
@@ -60,16 +62,16 @@ export class AuthController {
     return this.authService.verificationPhoneResend(body, params);
   }
 
+  @Post("/registration")
   @ApiTags("Auth")
   @ApiCreatedResponse({ type: PhoneVerification })
-  @Post("/registration")
   registrationUser(@Body() body: registrationBodyDto) {
     return this.authService.registrationUser(body);
   }
 
+  @Post("/login")
   @ApiTags("Auth")
   @ApiOkResponse()
-  @Post("/login")
   @ApiBody({ type: UserLoginDto })
   @UseGuards(AuthGuard("local"))
   async userLogin(@GetUser() user: User) {
