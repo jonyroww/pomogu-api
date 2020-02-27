@@ -77,4 +77,13 @@ export class AuthController {
   async userLogin(@GetUser() user: User) {
     return await this.authService.userLogin(user);
   }
+
+  @Get("/me")
+  @ApiTags("Auth")
+  @UseGuards(AuthGuard("jwt"))
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: User })
+  async me(@GetUser() user: User) {
+    return user;
+  }
 }
