@@ -8,16 +8,15 @@ import { AuthService } from "../auth.service";
 export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(private readonly authService: AuthService) {
     super({
-      phone: "phone",
+      usernameField: "phone",
       passwordField: "password"
+      
     });
   }
 
   async validate(phone: string, password: string) {
     const user = await this.authService.validateUser(phone, password);
-    if (!user) {
-      throw makeError("WRONG_PASSWORD");
-    }
+
     return user;
   }
 }

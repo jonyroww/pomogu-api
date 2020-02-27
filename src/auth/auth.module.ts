@@ -7,6 +7,8 @@ import { ConfigService } from "./../config/config.service";
 import { PhoneVerification } from "./entities/Phone-verification.entity";
 import { PhoneVerificationRepository } from "./repository/Phone-verification.repository";
 import { UserRepository } from "../users/repositories/User.repository";
+import { LocalStrategy } from "./strategies/local.strategy";
+import { PassportModule } from "@nestjs/passport";
 
 @Module({
   imports: [
@@ -20,9 +22,10 @@ import { UserRepository } from "../users/repositories/User.repository";
       PhoneVerification,
       PhoneVerificationRepository,
       UserRepository
-    ])
+    ]),
+    PassportModule
   ],
-  providers: [AuthService],
+  providers: [AuthService, LocalStrategy],
   controllers: [AuthController],
   exports: [AuthService]
 })
