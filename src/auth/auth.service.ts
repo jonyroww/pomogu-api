@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { PhoneVerification } from "./entities/Phone-verification.entity";
 import cryptoRandomString from "crypto-random-string";
 import { PhoneVerificationRequestDto } from "./dto/phone-verification-request.dto";
-import { VerificationPhoneDto } from "./dto/verfication-phone.dto";
+import { VerificationPhoneDto } from "./dto/verification-phone.dto";
 import { VerificationResendDto } from "./dto/verification-resend.dto";
 import { ParamsValidationDto } from "./dto/params-validation.dto";
 import { makeError } from "../common/errors/index";
@@ -15,7 +15,9 @@ import { Transactional } from "typeorm-transactional-cls-hooked";
 import { PhoneVerificationRepository } from "./repository/Phone-verification.repository";
 import { UserRepository } from "../users/repositories/User.repository";
 import { UserLoginDto } from "./dto/login-body.dto";
-import { throwError } from "rxjs";
+import { ConfigService } from "../config/config.service";
+import { IJwtPayload } from "./interfaces/JwtPayload.interface";
+import { User } from "../users/entities/User.entity";
 
 @Injectable()
 export class AuthService {
@@ -23,7 +25,8 @@ export class AuthService {
     @InjectRepository(PhoneVerification)
     private phoneVerificationRepository: PhoneVerificationRepository,
     private userRepository: UserRepository,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService
   ) {}
   @Transactional()
   async createPhoneVerification(body: PhoneVerificationRequestDto) {
@@ -149,29 +152,31 @@ export class AuthService {
     phoneVerification.used = true;
     await this.phoneVerificationRepository.save(phoneVerification);
 
-    const token = this.jwtService.sign({
+    const token = this.jwtService.signAsync({
       sub: user.id,
       exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7
     });
     return { token: token };
   }
 
-  async userLogin(body: UserLoginDto) {
-    const user = await this.userRepository.findOne({ phone: body.phone });
-
-    if (!user) {
+  async validateUser(phone: string, password: string) {
+    const user = await this.userRepository.findOne({ phone: phone });
+    if (user) {
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (isPasswordValid) {
+        return user;
+      } else {
+        throw makeError("WRONG_PASSWORD");
+      }
+    } else if (user.deleted_at) {
       throw makeError("USER_NOT_FOUND");
     }
+  }
 
-    const isPasswordValid = await bcrypt.compare(body.password, user.password);
-    if (isPasswordValid) {
-      const token = this.jwtService.sign({
-        sub: user.id,
-        exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7
-      });
-      return { token: token };
-    } else {
-      throw makeError("WRONG_PASSWORD");
-    }
+  async userLogin(user: User) {
+    const payload: IJwtPayload = { sub: user.id };
+    return {
+      token: await this.jwtService.signAsync(payload)
+    };
   }
 }
