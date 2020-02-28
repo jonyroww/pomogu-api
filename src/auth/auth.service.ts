@@ -14,10 +14,10 @@ import { JwtService } from "@nestjs/jwt";
 import { Transactional } from "typeorm-transactional-cls-hooked";
 import { PhoneVerificationRepository } from "./repository/Phone-verification.repository";
 import { UserRepository } from "../users/repositories/User.repository";
-import { UserLoginDto } from "./dto/login-body.dto";
 import { ConfigService } from "../config/config.service";
 import { IJwtPayload } from "./interfaces/JwtPayload.interface";
 import { User } from "../users/entities/User.entity";
+import { OrganisationRepository } from "../organisations/repositories/Organisation.repository";
 
 @Injectable()
 export class AuthService {
@@ -152,29 +152,36 @@ export class AuthService {
     phoneVerification.used = true;
     await this.phoneVerificationRepository.save(phoneVerification);
 
-    const token = this.jwtService.signAsync({
+    const token = await this.jwtService.signAsync({
       sub: user.id,
       exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7
     });
+    console.log(user);
     return { token: token };
   }
 
   async validateUser(phone: string, password: string) {
     const user = await this.userRepository.findOne({ phone: phone });
     if (user) {
+      if (user.deleted_at) {
+        throw makeError("USER_NOT_FOUND");
+      }
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (isPasswordValid) {
         return user;
       } else {
         throw makeError("WRONG_PASSWORD");
       }
-    } else if (user.deleted_at) {
+    } else {
       throw makeError("USER_NOT_FOUND");
     }
   }
 
   async userLogin(user: User) {
-    const payload: IJwtPayload = { sub: user.id };
+    const payload: IJwtPayload = {
+      sub: user.id,
+      exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7
+    };
     return {
       token: await this.jwtService.signAsync(payload)
     };
