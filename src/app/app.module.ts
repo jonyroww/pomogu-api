@@ -10,6 +10,7 @@ import { AuthModule } from "../auth/auth.module";
 import { HandlebarsAdapter, MailerModule } from "@nest-modules/mailer";
 import path from "path";
 import appRootPath from "app-root-path";
+import { RequestsModule } from "../requests/requests.module";
 
 import { ConfigService } from "../config/config.service";
 
@@ -35,7 +36,8 @@ import { ConfigService } from "../config/config.service";
     ConfigModule,
     VolunteerRequestsModule,
     PhotosModule,
-    AuthModule
+    AuthModule,
+    RequestsModule
   ],
   controllers: [],
   providers: []
