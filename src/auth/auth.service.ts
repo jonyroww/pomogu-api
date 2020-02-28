@@ -162,13 +162,16 @@ export class AuthService {
   async validateUser(phone: string, password: string) {
     const user = await this.userRepository.findOne({ phone: phone });
     if (user) {
+      if (user.deleted_at) {
+        throw makeError("USER_NOT_FOUND");
+      }
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (isPasswordValid) {
         return user;
       } else {
         throw makeError("WRONG_PASSWORD");
       }
-    } else if (user.deleted_at) {
+    } else {
       throw makeError("USER_NOT_FOUND");
     }
   }
