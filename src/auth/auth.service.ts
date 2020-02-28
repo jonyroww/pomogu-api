@@ -18,6 +18,8 @@ import { ConfigService } from "../config/config.service";
 import { IJwtPayload } from "./interfaces/JwtPayload.interface";
 import { User } from "../users/entities/User.entity";
 import { OrganisationRepository } from "../organisations/repositories/Organisation.repository";
+import { HelpTypesRepository } from "../help-types/repositories/Help-types.repository";
+import { CitezenTypesRepository } from "../citezen-types/repositories/Citezen-types.repository";
 
 @Injectable()
 export class AuthService {
@@ -25,6 +27,9 @@ export class AuthService {
     @InjectRepository(PhoneVerification)
     private phoneVerificationRepository: PhoneVerificationRepository,
     private userRepository: UserRepository,
+    private organisationRepository: OrganisationRepository,
+    private helpTypesRepository: HelpTypesRepository,
+    private citezenTypesRepository: CitezenTypesRepository,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService
   ) {}
@@ -112,7 +117,12 @@ export class AuthService {
   }
 
   @Transactional()
-  async registrationUser(body: registrationBodyDto) {
+  async registrationUser({
+    help_type_ids,
+    citizen_type_ids,
+    organisation_ids,
+    ...body
+  }: registrationBodyDto) {
     const phoneVerification = await this.phoneVerificationRepository.findOne(
       body.verification_id
     );
@@ -128,6 +138,35 @@ export class AuthService {
     } else if (phoneVerification.used === true) {
       throw makeError("VERIFICATION_ALREADY_USED");
     }
+
+    const helpTypes =
+      help_type_ids && help_type_ids.length != 0
+        ? await this.helpTypesRepository
+            .createQueryBuilder("help_types")
+            .where("id IN (:...helpTypesId)", {
+              helpTypesId: help_type_ids
+            })
+            .getMany()
+        : [];
+    const citezenTypes =
+      citizen_type_ids && citizen_type_ids.length != 0
+        ? await this.citezenTypesRepository
+            .createQueryBuilder("citezen_types")
+            .where("id IN (:...citezenTypesId)", {
+              citezenTypesId: citizen_type_ids
+            })
+            .getMany()
+        : [];
+    const organisations =
+      organisation_ids && organisation_ids.length != 0
+        ? await this.organisationRepository
+            .createQueryBuilder("organisations")
+            .where("id IN (:...organisationId)", {
+              organisationId: organisation_ids
+            })
+            .getMany()
+        : [];
+
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(body.password, salt);
     body.password = hashedPassword;
@@ -147,6 +186,9 @@ export class AuthService {
     }
     user.role = "VOLUNTEER";
     user.phone = phoneVerification.phone;
+    user.citezenTypes = citezenTypes;
+    user.helpTypes = helpTypes;
+    user.organisations = organisations;
     await this.userRepository.save(user);
     phoneVerification.user_id = user.id;
     phoneVerification.used = true;
@@ -156,7 +198,6 @@ export class AuthService {
       sub: user.id,
       exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7
     });
-    console.log(user);
     return { token: token };
   }
 

@@ -10,6 +10,9 @@ import { UserRepository } from "../users/repositories/User.repository";
 import { LocalStrategy } from "./strategies/local.strategy";
 import { PassportModule } from "@nestjs/passport";
 import { JwtStrategy } from "./strategies/jwt.strategy";
+import { HelpTypesRepository } from "../help-types/repositories/Help-types.repository";
+import { CitezenTypesRepository } from "../citezen-types/repositories/Citezen-types.repository";
+import { OrganisationRepository } from "../organisations/repositories/Organisation.repository";
 
 @Module({
   imports: [
@@ -22,7 +25,10 @@ import { JwtStrategy } from "./strategies/jwt.strategy";
     TypeOrmModule.forFeature([
       PhoneVerification,
       PhoneVerificationRepository,
-      UserRepository
+      UserRepository,
+      HelpTypesRepository,
+      CitezenTypesRepository,
+      OrganisationRepository
     ]),
     PassportModule
   ],
