@@ -6,11 +6,14 @@ import {
   ManyToMany,
   JoinTable,
   Index,
-  OneToOne
+  OneToOne,
+  JoinColumn,
+  ManyToOne
 } from "typeorm";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { HelpTypes } from "../../help-types/entities/help-types.entity";
 import { CitezenTypes } from "../../citezen-types/entities/citezen-types.entity";
+import { User } from "../../users/entities/User.entity";
 
 @Entity({ name: "requests" })
 export class Request {
@@ -71,7 +74,7 @@ export class Request {
 
   @ApiPropertyOptional({ type: "int" })
   @Column({ type: "int" })
-  volunteer_id: number;
+  user_id: number;
 
   @ApiPropertyOptional({ type: "varchar" })
   @Column({ type: "varchar" })
@@ -102,4 +105,12 @@ export class Request {
     inverseJoinColumn: { name: "citezen_type_id", referencedColumnName: "id" }
   })
   citezenTypes: CitezenTypes[];
+
+  @ApiProperty()
+  @ManyToOne(
+    () => User,
+    (user: User) => user.requests
+  )
+  @JoinColumn({ name: "user_id" })
+  user: User;
 }

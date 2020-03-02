@@ -12,11 +12,11 @@ import { ParamsValidationDto } from "./dto/create-request-params.dto";
 import { BodyValidationDto } from "./dto/create-request-body.dto";
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
-@Controller("volunteers/:id/requests")
+@Controller("volunteers")
 export class RequestsController {
   constructor(private requestsService: RequestsService) {}
 
-  @Post()
+  @Post(":id/requests")
   @ApiTags("Requests")
   @ApiCreatedResponse()
   createRequest(

@@ -7,5 +7,13 @@ import { BodyValidationDto } from "./dto/create-request-body.dto";
 export class RequestsService {
   constructor(private requestRepository: RequestRepository) {}
 
-  createRequest(body: BodyValidationDto, params: ParamsValidationDto) {}
+  async createRequest(
+    { help_type_ids, citizen_type_ids, ...body }: BodyValidationDto,
+    params: ParamsValidationDto
+  ) {
+    const request = this.requestRepository.create(body);
+    request.user_id = params.id;
+    await this.requestRepository.save(request);
+    return request;
+  }
 }
