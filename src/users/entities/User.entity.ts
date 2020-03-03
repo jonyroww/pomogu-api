@@ -122,8 +122,7 @@ export class User {
   @ApiProperty()
   @OneToMany(
     () => Request,
-    (request: Request) => request.user_id,
-    { eager: true }
+    (request: Request) => request.user_id
   )
   requests: Request[];
 
