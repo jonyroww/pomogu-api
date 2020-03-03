@@ -1,9 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { RequestRepository } from "./repositories/Request.repository";
 import { ParamsValidationDto } from "./dto/create-request-params.dto";
+import { Transactional } from "typeorm-transactional-cls-hooked";
 import { BodyValidationDto } from "./dto/create-request-body.dto";
 import { HelpTypesRepository } from "../help-types/repositories/Help-types.repository";
 import { CitezenTypesRepository } from "../citezen-types/repositories/Citezen-types.repository";
+import { GetOneRequestParamsDto } from "./dto/get-one-request-params.dto";
 
 @Injectable()
 export class RequestsService {
@@ -13,6 +15,7 @@ export class RequestsService {
     private citezenTypesRepository: CitezenTypesRepository
   ) {}
 
+  @Transactional()
   async createRequest(
     { help_type_ids, citizen_type_ids, ...body }: BodyValidationDto,
     params: ParamsValidationDto
@@ -46,5 +49,12 @@ export class RequestsService {
   async getAllRequests() {
     const requests = await this.requestRepository.find();
     return requests;
+  }
+
+  async getOneRequest(params: GetOneRequestParamsDto) {
+    const request = await this.requestRepository.findOne({
+      id: params.requestId
+    });
+    return request;
   }
 }

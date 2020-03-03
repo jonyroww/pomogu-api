@@ -19,6 +19,7 @@ import { ParamsValidationDto } from "./dto/create-request-params.dto";
 import { BodyValidationDto } from "./dto/create-request-body.dto";
 import { AuthGuard } from "@nestjs/passport";
 import { AllRequestsReadAccessGuard } from "../common/guards/get-all-requests.guard";
+import { GetOneRequestParamsDto } from "./dto/get-one-request-params.dto";
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 @Controller("volunteers")
@@ -41,5 +42,13 @@ export class RequestsController {
   @ApiOkResponse()
   getAllRequests() {
     return this.requestsService.getAllRequests();
+  }
+
+  @Get(":id/requests/:requestId")
+  @UseGuards(AuthGuard("jwt"), AllRequestsReadAccessGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse()
+  getOneRequest(@Param() params: GetOneRequestParamsDto) {
+    return this.requestsService.getOneRequest(params);
   }
 }
