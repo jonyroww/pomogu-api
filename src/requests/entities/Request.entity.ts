@@ -14,6 +14,7 @@ import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { HelpTypes } from "../../help-types/entities/help-types.entity";
 import { CitezenTypes } from "../../citezen-types/entities/citezen-types.entity";
 import { User } from "../../users/entities/User.entity";
+import { ModerationStatus } from "../../constants/ModerationStatus.enum";
 
 @Entity({ name: "requests" })
 export class Request {
@@ -68,9 +69,13 @@ export class Request {
   @Column({ type: "text" })
   comment: string;
 
-  @ApiProperty({ type: "boolean" })
-  @Column({ type: "boolean", nullable: true, default: null })
-  is_moderated: boolean;
+  @ApiProperty({ type: "string" })
+  @Column("enum", {
+    enum: ModerationStatus,
+    nullable: false,
+    default: ModerationStatus.NOT_MODERATED
+  })
+  moderation_status: ModerationStatus;
 
   @ApiPropertyOptional({ type: "int" })
   @Column({ type: "int" })

@@ -5,7 +5,9 @@ import { Transactional } from "typeorm-transactional-cls-hooked";
 import { BodyValidationDto } from "./dto/create-request-body.dto";
 import { HelpTypesRepository } from "../help-types/repositories/Help-types.repository";
 import { CitezenTypesRepository } from "../citezen-types/repositories/Citezen-types.repository";
-import { GetOneRequestParamsDto } from "./dto/get-one-request-params.dto";
+import { RequestIdParamsDto } from "./dto/requestId-params.dto";
+import { NotModeratedRequestDto } from "./dto/get-not-moderated-query.dto";
+import { ModerationStatus } from "../constants/ModerationStatus.enum";
 
 @Injectable()
 export class RequestsService {
@@ -40,6 +42,7 @@ export class RequestsService {
             .getMany()
         : [];
     request.user_id = params.id;
+    request.moderation_status = ModerationStatus.NOT_MODERATED;
     request.citezenTypes = citezenTypes;
     request.helpTypes = helpTypes;
     await this.requestRepository.save(request);
@@ -51,10 +54,18 @@ export class RequestsService {
     return requests;
   }
 
-  async getOneRequest(params: GetOneRequestParamsDto) {
+  async getOneRequest(params: RequestIdParamsDto) {
     const request = await this.requestRepository.findOne({
       id: params.requestId
     });
     return request;
+  }
+
+  async getNotModeratedRequests(query: NotModeratedRequestDto) {}
+
+  async moderateRequest(params: RequestIdParamsDto) {
+    const request = await this.requestRepository.findOne({
+      id: params.requestId
+    });
   }
 }

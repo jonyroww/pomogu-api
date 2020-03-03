@@ -6,7 +6,9 @@ import {
   Param,
   Post,
   Get,
-  UseGuards
+  UseGuards,
+  Put,
+  Query
 } from "@nestjs/common";
 import {
   ApiOkResponse,
@@ -18,8 +20,10 @@ import { RequestsService } from "./requests.service";
 import { ParamsValidationDto } from "./dto/create-request-params.dto";
 import { BodyValidationDto } from "./dto/create-request-body.dto";
 import { AuthGuard } from "@nestjs/passport";
-import { AllRequestsReadAccessGuard } from "../common/guards/get-all-requests.guard";
-import { GetOneRequestParamsDto } from "./dto/get-one-request-params.dto";
+import { RequestsReadAccessGuard } from "../common/guards/get-all-requests.guard";
+import { RequestIdParamsDto } from "./dto/requestId-params.dto";
+import { ModerateRequestGuard } from "../common/guards/moderate-request.guard";
+import { NotModeratedRequestDto } from "./dto/get-not-moderated-query.dto";
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 @Controller("volunteers")
@@ -37,7 +41,7 @@ export class RequestsController {
   }
 
   @Get(":id/requests")
-  @UseGuards(AuthGuard("jwt"), AllRequestsReadAccessGuard)
+  @UseGuards(AuthGuard("jwt"), RequestsReadAccessGuard)
   @ApiBearerAuth()
   @ApiOkResponse()
   getAllRequests() {
@@ -45,10 +49,26 @@ export class RequestsController {
   }
 
   @Get(":id/requests/:requestId")
-  @UseGuards(AuthGuard("jwt"), AllRequestsReadAccessGuard)
+  @UseGuards(AuthGuard("jwt"), RequestsReadAccessGuard)
   @ApiBearerAuth()
   @ApiOkResponse()
-  getOneRequest(@Param() params: GetOneRequestParamsDto) {
+  getOneRequest(@Param() params: RequestIdParamsDto) {
     return this.requestsService.getOneRequest(params);
+  }
+
+  @Get("all/requests")
+  @UseGuards(AuthGuard("jwt"), ModerateRequestGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse()
+  getNotModeratedRequests(@Query() query: NotModeratedRequestDto) {
+    return this.requestsService.getNotModeratedRequests(query);
+  }
+
+  @Put("all/requests/:requestId")
+  @UseGuards(AuthGuard("jwt"), ModerateRequestGuard)
+  @ApiBearerAuth()
+  @ApiCreatedResponse()
+  moderateRequest(@Param() params: RequestIdParamsDto) {
+    return this.requestsService.moderateRequest(params);
   }
 }
