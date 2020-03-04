@@ -13,6 +13,7 @@ import { PhoneVerification } from "./../../auth/entities/Phone-verification.enti
 import { HelpTypes } from "../../help-types/entities/help-types.entity";
 import { CitezenTypes } from "../../citezen-types/entities/citezen-types.entity";
 import { Organisation } from "../../organisations/entities/Organisation.entity";
+import { Request } from "../../requests/entities/Request.entity";
 
 @Entity({ name: "users" })
 export class User {
@@ -117,6 +118,13 @@ export class User {
   @ApiPropertyOptional({ type: "string" })
   @Column({ type: "varchar" })
   role: string;
+
+  @ApiProperty()
+  @OneToMany(
+    () => Request,
+    (request: Request) => request.user_id
+  )
+  requests: Request[];
 
   @OneToOne(
     () => PhoneVerification,
