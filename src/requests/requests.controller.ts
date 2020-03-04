@@ -23,7 +23,7 @@ import { AuthGuard } from "@nestjs/passport";
 import { RequestsReadAccessGuard } from "../common/guards/get-all-requests.guard";
 import { RequestIdParamsDto } from "./dto/requestId-params.dto";
 import { ModerateRequestGuard } from "../common/guards/moderate-request.guard";
-import { NotModeratedRequestDto } from "./dto/get-not-moderated-query.dto";
+import { ModerateRequestBodyDto } from "./dto/moderate-request-body.dto";
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 @Controller("volunteers")
@@ -43,6 +43,7 @@ export class RequestsController {
   @Get(":id/requests")
   @UseGuards(AuthGuard("jwt"), RequestsReadAccessGuard)
   @ApiBearerAuth()
+  @ApiTags("Requests")
   @ApiOkResponse()
   getAllRequests() {
     return this.requestsService.getAllRequests();
@@ -51,24 +52,30 @@ export class RequestsController {
   @Get(":id/requests/:requestId")
   @UseGuards(AuthGuard("jwt"), RequestsReadAccessGuard)
   @ApiBearerAuth()
+  @ApiTags("Requests")
   @ApiOkResponse()
   getOneRequest(@Param() params: RequestIdParamsDto) {
     return this.requestsService.getOneRequest(params);
   }
 
   @Get("all/requests")
+  @ApiTags("Requests")
   @UseGuards(AuthGuard("jwt"), ModerateRequestGuard)
   @ApiBearerAuth()
   @ApiOkResponse()
-  getNotModeratedRequests(@Query() query: NotModeratedRequestDto) {
-    return this.requestsService.getNotModeratedRequests(query);
+  getNotModeratedRequests() {
+    return this.requestsService.getNotModeratedRequests();
   }
 
   @Put("all/requests/:requestId")
+  @ApiTags("Requests")
   @UseGuards(AuthGuard("jwt"), ModerateRequestGuard)
   @ApiBearerAuth()
   @ApiCreatedResponse()
-  moderateRequest(@Param() params: RequestIdParamsDto) {
-    return this.requestsService.moderateRequest(params);
+  moderateRequest(
+    @Param() params: RequestIdParamsDto,
+    @Body() body: ModerateRequestBodyDto
+  ) {
+    return this.requestsService.moderateRequest(params, body);
   }
 }

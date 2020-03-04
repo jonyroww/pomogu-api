@@ -6,8 +6,8 @@ import { BodyValidationDto } from "./dto/create-request-body.dto";
 import { HelpTypesRepository } from "../help-types/repositories/Help-types.repository";
 import { CitezenTypesRepository } from "../citezen-types/repositories/Citezen-types.repository";
 import { RequestIdParamsDto } from "./dto/requestId-params.dto";
-import { NotModeratedRequestDto } from "./dto/get-not-moderated-query.dto";
 import { ModerationStatus } from "../constants/ModerationStatus.enum";
+import { ModerateRequestBodyDto } from "./dto/moderate-request-body.dto";
 
 @Injectable()
 export class RequestsService {
@@ -61,11 +61,22 @@ export class RequestsService {
     return request;
   }
 
-  async getNotModeratedRequests(query: NotModeratedRequestDto) {}
+  async getNotModeratedRequests() {
+    const requests = await this.requestRepository.find({
+      where: { moderation_status: ModerationStatus.NOT_MODERATED }
+    });
+    return requests;
+  }
 
-  async moderateRequest(params: RequestIdParamsDto) {
+  async moderateRequest(
+    params: RequestIdParamsDto,
+    body: ModerateRequestBodyDto
+  ) {
     const request = await this.requestRepository.findOne({
       id: params.requestId
     });
+    request.moderation_status = body.moderation_status;
+    await this.requestRepository.save(request);
+    return request;
   }
 }
