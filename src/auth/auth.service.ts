@@ -20,6 +20,7 @@ import { User } from "../users/entities/User.entity";
 import { OrganisationRepository } from "../organisations/repositories/Organisation.repository";
 import { HelpTypesRepository } from "../help-types/repositories/Help-types.repository";
 import { CitezenTypesRepository } from "../citezen-types/repositories/Citezen-types.repository";
+import axios from "axios";
 
 @Injectable()
 export class AuthService {
@@ -39,7 +40,11 @@ export class AuthService {
       body
     );
     phoneVerificationRequest.key = cryptoRandomString({ length: 32 });
-    phoneVerificationRequest.sms_code = "111111";
+    const smsCode = cryptoRandomString({ length: 6, type: "numeric" });
+    await axios.get(
+      `https://sms.ru/sms/send?api_id=1318D481-58E0-8388-616E-B0B4B8AF0CB0&to=${phoneVerificationRequest.phone}&msg=${smsCode}`
+    );
+    phoneVerificationRequest.sms_code = smsCode;
     phoneVerificationRequest.sms_sent_count = 1;
     phoneVerificationRequest.sms_last_sent_at = new Date();
     phoneVerificationRequest.purpose = body.purpose;
@@ -107,7 +112,11 @@ export class AuthService {
     if (interval < 2 * 60 * 1000) {
       throw makeError("TIME_INTERVAL_IS_NOT_OVER");
     }
-
+    const smsCode = cryptoRandomString({ length: 6, type: "numeric" });
+    await axios.get(
+      `https://sms.ru/sms/send?api_id=1318D481-58E0-8388-616E-B0B4B8AF0CB0&to=${phoneVerification.phone}&msg=${smsCode}`
+    );
+    phoneVerification.sms_code = smsCode;
     phoneVerification.sms_sent_count += 1;
     phoneVerification.wrong_attempts_count = 0;
     phoneVerification.sms_last_sent_at = new Date();
