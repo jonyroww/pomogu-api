@@ -17,6 +17,8 @@ export class RequestsReadAccessGuard implements CanActivate {
       return true;
     } else if (volunteerId === user.id) {
       return true;
+    } else if (request.query.not_moderated && user.role === RoleName.ADMIN) {
+      return true;
     } else {
       throw makeError("FORBIDDEN");
     }

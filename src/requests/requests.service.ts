@@ -8,6 +8,7 @@ import { CitezenTypesRepository } from "../citezen-types/repositories/Citezen-ty
 import { RequestIdParamsDto } from "./dto/requestId-params.dto";
 import { ModerationStatus } from "../constants/ModerationStatus.enum";
 import { ModerateRequestBodyDto } from "./dto/moderate-request-body.dto";
+import { GetAllQueryFilterDto } from "./dto/get-all-query-params.dto";
 
 @Injectable()
 export class RequestsService {
@@ -49,9 +50,8 @@ export class RequestsService {
     return request;
   }
 
-  async getAllRequests() {
-    const requests = await this.requestRepository.find();
-    return requests;
+  async getAllRequests(query: GetAllQueryFilterDto) {
+    const qb = this.requestRepository.createQueryBuilder("requests");
   }
 
   async getOneRequest(params: RequestIdParamsDto) {

@@ -24,13 +24,14 @@ import { RequestsReadAccessGuard } from "../common/guards/get-all-requests.guard
 import { RequestIdParamsDto } from "./dto/requestId-params.dto";
 import { ModerateRequestGuard } from "../common/guards/moderate-request.guard";
 import { ModerateRequestBodyDto } from "./dto/moderate-request-body.dto";
+import { GetAllQueryFilterDto } from "./dto/get-all-query-params.dto";
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
-@Controller("volunteers")
+@Controller("requests")
 export class RequestsController {
   constructor(private requestsService: RequestsService) {}
 
-  @Post(":id/requests")
+  @Post()
   @ApiTags("Requests")
   @ApiCreatedResponse()
   createRequest(
@@ -40,13 +41,13 @@ export class RequestsController {
     return this.requestsService.createRequest(body, params);
   }
 
-  @Get(":id/requests")
+  @Get()
   @UseGuards(AuthGuard("jwt"), RequestsReadAccessGuard)
   @ApiBearerAuth()
   @ApiTags("Requests")
   @ApiOkResponse()
-  getAllRequests() {
-    return this.requestsService.getAllRequests();
+  getAllRequests(@Query() query: GetAllQueryFilterDto) {
+    return this.requestsService.getAllRequests(query);
   }
 
   @Get(":id/requests/:requestId")
