@@ -42,7 +42,9 @@ export class AuthService {
     phoneVerificationRequest.key = cryptoRandomString({ length: 32 });
     const smsCode = cryptoRandomString({ length: 6, type: "numeric" });
     await axios.get(
-      `https://sms.ru/sms/send?api_id=1318D481-58E0-8388-616E-B0B4B8AF0CB0&to=${phoneVerificationRequest.phone}&msg=${smsCode}`
+      `https://sms.ru/sms/send?api_id=${this.configService.get(
+        "SMS_API_ID"
+      )}&to=${phoneVerificationRequest.phone}&msg=${smsCode}`
     );
     phoneVerificationRequest.sms_code = smsCode;
     phoneVerificationRequest.sms_sent_count = 1;
@@ -114,7 +116,9 @@ export class AuthService {
     }
     const smsCode = cryptoRandomString({ length: 6, type: "numeric" });
     await axios.get(
-      `https://sms.ru/sms/send?api_id=1318D481-58E0-8388-616E-B0B4B8AF0CB0&to=${phoneVerification.phone}&msg=${smsCode}`
+      `https://sms.ru/sms/send?api_id=${this.configService.get(
+        "SMS_API_ID"
+      )}&to=${phoneVerification.phone}&msg=${smsCode}`
     );
     phoneVerification.sms_code = smsCode;
     phoneVerification.sms_sent_count += 1;

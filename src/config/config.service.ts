@@ -30,7 +30,8 @@ export class ConfigService {
         .uri()
         .required(),
       SMTP_URL: Joi.string().required(),
-      EMAIL_FROM: Joi.string().required()
+      EMAIL_FROM: Joi.string().required(),
+      SMS_API_ID: Joi.string().required()
     }).options({
       stripUnknown: true
     });
@@ -55,4 +56,5 @@ export interface EnvironmentConfig {
   BASE_URL: string;
   EMAIL_FROM: string;
   SMTP_URL: string;
+  SMS_API_ID: string;
 }
