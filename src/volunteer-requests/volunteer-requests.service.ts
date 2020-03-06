@@ -11,9 +11,6 @@ import { PhoneVerificationRepository } from "../auth/repository/Phone-verificati
 import { HelpTypesRepository } from "../help-types/repositories/Help-types.repository";
 import { CitezenTypesRepository } from "../citezen-types/repositories/Citezen-types.repository";
 import { OrganisationRepository } from "../organisations/repositories/Organisation.repository";
-import { getHelpTypes } from "../common/utils/get-help-types.util";
-import { getCitezenTypes } from "../common/utils/get-citezen-types.util";
-import { getOrganisations } from "../common/utils/get-organisations.util";
 
 @Injectable()
 export class VolunteerRequestsService {
@@ -51,18 +48,14 @@ export class VolunteerRequestsService {
     } else if (phoneVerification.used === true) {
       throw makeError("VERIFICATION_ALREADY_USED");
     }
-    const helpTypes = await getHelpTypes(
-      this.helpTypesRepository,
-      help_type_ids
-    );
-    const citezenTypes = await getCitezenTypes(
-      this.citezenTypesRepository,
+    const helpTypes = await this.helpTypesRepository.findByIds(help_type_ids);
+    const citezenTypes = await this.citezenTypesRepository.findByIds(
       citizen_type_ids
     );
-    const organisations = await getOrganisations(
-      this.organisationRepository,
+    const organisations = await this.organisationRepository.findByIds(
       organisation_ids
     );
+
     const volunteerRequest = this.volunteerRequestRepository.create(body);
     volunteerRequest.helpTypes = helpTypes;
     volunteerRequest.citezenTypes = citezenTypes;

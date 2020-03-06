@@ -12,8 +12,6 @@ import _ from "lodash";
 import { RequestStatus } from "../constants/RequestStatus.enum";
 import { AcceptRequestParamsDto } from "./dto/accept-request-params.dto";
 import { User } from "../users/entities/User.entity";
-import { getHelpTypes } from "../common/utils/get-help-types.util";
-import { getCitezenTypes } from "../common/utils/get-citezen-types.util";
 import { makeError } from "src/common/errors";
 
 @Injectable()
@@ -31,12 +29,8 @@ export class RequestsService {
     ...body
   }: BodyValidationDto) {
     const request = this.requestRepository.create(body);
-    const helpTypes = await getHelpTypes(
-      this.helpTypesRepository,
-      help_type_ids
-    );
-    const citezenTypes = await getCitezenTypes(
-      this.citezenTypesRepository,
+    const helpTypes = await this.helpTypesRepository.findByIds(help_type_ids);
+    const citezenTypes = await this.citezenTypesRepository.findByIds(
       citizen_type_ids
     );
     request.status = RequestStatus.NO_VOLUNTEER;
