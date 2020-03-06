@@ -21,6 +21,7 @@ import { OrganisationRepository } from "../organisations/repositories/Organisati
 import { HelpTypesRepository } from "../help-types/repositories/Help-types.repository";
 import { CitezenTypesRepository } from "../citezen-types/repositories/Citezen-types.repository";
 import axios from "axios";
+import { RoleName } from "../constants/RoleName.enum";
 
 @Injectable()
 export class AuthService {
@@ -151,41 +152,17 @@ export class AuthService {
     } else if (phoneVerification.used === true) {
       throw makeError("VERIFICATION_ALREADY_USED");
     }
-
-    const helpTypes =
-      help_type_ids && help_type_ids.length != 0
-        ? await this.helpTypesRepository
-            .createQueryBuilder("help_types")
-            .where("id IN (:...helpTypesId)", {
-              helpTypesId: help_type_ids
-            })
-            .getMany()
-        : [];
-    const citezenTypes =
-      citizen_type_ids && citizen_type_ids.length != 0
-        ? await this.citezenTypesRepository
-            .createQueryBuilder("citezen_types")
-            .where("id IN (:...citezenTypesId)", {
-              citezenTypesId: citizen_type_ids
-            })
-            .getMany()
-        : [];
-    const organisations =
-      organisation_ids && organisation_ids.length != 0
-        ? await this.organisationRepository
-            .createQueryBuilder("organisations")
-            .where("id IN (:...organisationId)", {
-              organisationId: organisation_ids
-            })
-            .getMany()
-        : [];
-
+    const helpTypes = await this.helpTypesRepository.findByIds(help_type_ids);
+    const citezenTypes = await this.citezenTypesRepository.findByIds(
+      citizen_type_ids
+    );
+    const organisations = await this.organisationRepository.findByIds(
+      organisation_ids
+    );
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(body.password, salt);
     body.password = hashedPassword;
-
     const user = this.userRepository.create(body);
-
     const isPhoneUnique = await this.userRepository.findOne({
       phone: phoneVerification.phone
     });
@@ -197,7 +174,7 @@ export class AuthService {
     } else if (isEmailUnique) {
       throw makeError("EMAIL_ALREADY_EXISTS");
     }
-    user.role = "VOLUNTEER";
+    user.role = RoleName.VOLUNTEER;
     user.phone = phoneVerification.phone;
     user.citezenTypes = citezenTypes;
     user.helpTypes = helpTypes;

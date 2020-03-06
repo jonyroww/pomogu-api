@@ -48,34 +48,13 @@ export class VolunteerRequestsService {
     } else if (phoneVerification.used === true) {
       throw makeError("VERIFICATION_ALREADY_USED");
     }
-
-    const helpTypes =
-      help_type_ids && help_type_ids.length != 0
-        ? await this.helpTypesRepository
-            .createQueryBuilder("help_types")
-            .where("id IN (:...helpTypesId)", {
-              helpTypesId: help_type_ids
-            })
-            .getMany()
-        : [];
-    const citezenTypes =
-      citizen_type_ids && citizen_type_ids.length != 0
-        ? await this.citezenTypesRepository
-            .createQueryBuilder("citezen_types")
-            .where("id IN (:...citezenTypesId)", {
-              citezenTypesId: citizen_type_ids
-            })
-            .getMany()
-        : [];
-    const organisations =
-      organisation_ids && organisation_ids.length != 0
-        ? await this.organisationRepository
-            .createQueryBuilder("organisations")
-            .where("id IN (:...organisationId)", {
-              organisationId: organisation_ids
-            })
-            .getMany()
-        : [];
+    const helpTypes = await this.helpTypesRepository.findByIds(help_type_ids);
+    const citezenTypes = await this.citezenTypesRepository.findByIds(
+      citizen_type_ids
+    );
+    const organisations = await this.organisationRepository.findByIds(
+      organisation_ids
+    );
 
     const volunteerRequest = this.volunteerRequestRepository.create(body);
     volunteerRequest.helpTypes = helpTypes;

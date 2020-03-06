@@ -20,7 +20,8 @@ export const errors = {
   VERIFICATION_ID_IS_NOT_VALID: HttpStatus.BAD_REQUEST,
   EMAIL_SEND_ERROR: HttpStatus.BAD_REQUEST,
   PHONE_ALREADY_EXISTS: HttpStatus.BAD_REQUEST,
-  EMAIL_ALREADY_EXISTS: HttpStatus.BAD_REQUEST
+  EMAIL_ALREADY_EXISTS: HttpStatus.BAD_REQUEST,
+  REQUEST_ALREADY_IN_PROGRESS: HttpStatus.BAD_REQUEST
 };
 
 export type ErrorCode = keyof typeof errors;
