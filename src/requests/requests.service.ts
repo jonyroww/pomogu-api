@@ -10,6 +10,11 @@ import { ModerateRequestBodyDto } from "./dto/moderate-request-body.dto";
 import { GetAllQueryFilterDto } from "./dto/get-all-query-params.dto";
 import _ from "lodash";
 import { RequestStatus } from "../constants/RequestStatus.enum";
+import { AcceptRequestParamsDto } from "./dto/accept-request-params.dto";
+import { User } from "../users/entities/User.entity";
+import { getHelpTypes } from "../common/utils/get-help-types.util";
+import { getCitezenTypes } from "../common/utils/get-citezen-types.util";
+import { makeError } from "src/common/errors";
 
 @Injectable()
 export class RequestsService {
@@ -26,24 +31,14 @@ export class RequestsService {
     ...body
   }: BodyValidationDto) {
     const request = this.requestRepository.create(body);
-    const helpTypes =
-      help_type_ids && help_type_ids.length != 0
-        ? await this.helpTypesRepository
-            .createQueryBuilder("help_types")
-            .where("id IN (:...helpTypesId)", {
-              helpTypesId: help_type_ids
-            })
-            .getMany()
-        : [];
-    const citezenTypes =
-      citizen_type_ids && citizen_type_ids.length != 0
-        ? await this.citezenTypesRepository
-            .createQueryBuilder("citezen_types")
-            .where("id IN (:...citezenTypesId)", {
-              citezenTypesId: citizen_type_ids
-            })
-            .getMany()
-        : [];
+    const helpTypes = await getHelpTypes(
+      this.helpTypesRepository,
+      help_type_ids
+    );
+    const citezenTypes = await getCitezenTypes(
+      this.citezenTypesRepository,
+      citizen_type_ids
+    );
     request.status = RequestStatus.NO_VOLUNTEER;
     request.moderation_status = ModerationStatus.NOT_MODERATED;
     request.citezenTypes = citezenTypes;
@@ -100,6 +95,20 @@ export class RequestsService {
     const request = await this.requestRepository.findOne({
       id: params.requestId
     });
+    return request;
+  }
+
+  async acceptRequest(params: AcceptRequestParamsDto, user: User) {
+    const request = await this.requestRepository.findOne({
+      id: params.requestId
+    });
+    if (request.status === RequestStatus.NO_VOLUNTEER) {
+      request.status = RequestStatus.IN_PROGRESS;
+      request.user_id = user.id;
+    } else {
+      throw makeError("REQUEST_ALREADY_IN_PROGRESS");
+    }
+    await this.requestRepository.save(request);
     return request;
   }
 

@@ -25,6 +25,10 @@ import { ModerateRequestGuard } from "../common/guards/moderate-request.guard";
 import { ModerateRequestBodyDto } from "./dto/moderate-request-body.dto";
 import { GetAllQueryFilterDto } from "./dto/get-all-query-params.dto";
 import { RequestsReadAccessGuard } from "../common/guards/get-all-requests.guard";
+import { AcceptRequestParamsDto } from "./dto/accept-request-params.dto";
+import { GetUser } from "../common/decorators/get-user.decorator";
+import { User } from "../users/entities/User.entity";
+import { AcceptRequestAccessGuard } from "../common/guards/accept-request.guard";
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 @Controller()
@@ -54,6 +58,18 @@ export class RequestsController {
   @ApiOkResponse()
   getOneRequest(@Param() params: RequestIdParamsDto) {
     return this.requestsService.getOneRequest(params);
+  }
+
+  @Put("/requests/:requestId/accept")
+  @ApiTags("Requests")
+  @UseGuards(AuthGuard("jwt"), AcceptRequestAccessGuard)
+  @ApiBearerAuth()
+  @ApiCreatedResponse()
+  acceptRequest(
+    @Param() params: AcceptRequestParamsDto,
+    @GetUser() user: User
+  ) {
+    return this.requestsService.acceptRequest(params, user);
   }
 
   @Put("/requests/:requestId")
