@@ -10,6 +10,6 @@ export class phoneVerificationsPhone1581677481636
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {
-    await queryRunner.dropTable("phone_verifications");
+    await queryRunner.dropColumn("phone_verifications", "phone");
   }
 }

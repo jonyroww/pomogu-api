@@ -22,6 +22,22 @@ export class volunteerRequestsName1581438324215 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {
-    await queryRunner.dropTable("volunteer_requests");
+    await queryRunner.dropColumns("volunteer_requests", [
+      new TableColumn({
+        name: "first_name",
+        type: "varchar",
+        isNullable: true
+      }),
+      new TableColumn({
+        name: "middle_name",
+        type: "varchar",
+        isNullable: true
+      }),
+      new TableColumn({
+        name: "last_name",
+        type: "varchar",
+        isNullable: true
+      })
+    ]);
   }
 }

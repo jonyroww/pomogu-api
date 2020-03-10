@@ -3,16 +3,9 @@ import { MigrationInterface, QueryRunner, TableColumn } from "typeorm";
 export class phoneVerificationsColumnChanges1582039030687
   implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {
-    await queryRunner.changeColumn(
-      "phone_verifications",
-      "sms_last_sent_at",
-      new TableColumn({
-        name: "sms_last_sent_at",
-        type: "timestamp with time zone",
-        isNullable: true
-      })
+    await queryRunner.query(
+      `ALTER TABLE "phone_verifications" ALTER COLUMN "sms_last_sent_at"  DROP NOT NULL`
     );
-
     await queryRunner.addColumn(
       "phone_verifications",
       new TableColumn({
@@ -25,6 +18,9 @@ export class phoneVerificationsColumnChanges1582039030687
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {
-    await queryRunner.dropTable("phone_verifications");
+    await queryRunner.query(
+      `ALTER TABLE "phone_verifications" ALTER COLUMN "sms_last_sent_at"  SET NOT NULL`
+    );
+    await queryRunner.dropColumn("phone_verifications", "wrong_attempts_count");
   }
 }

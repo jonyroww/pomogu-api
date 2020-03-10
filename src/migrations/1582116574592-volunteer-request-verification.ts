@@ -14,6 +14,6 @@ export class volunteerRequestVerification1582116574592
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {
-    await queryRunner.dropTable("volunteer_requests");
+    await queryRunner.dropColumn("volunteer_requests", "verification_id");
   }
 }

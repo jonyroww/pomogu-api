@@ -3,18 +3,14 @@ import { MigrationInterface, QueryRunner, TableColumn } from "typeorm";
 export class pnoneVerificationsUpdateUserId1581942833469
   implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {
-    await queryRunner.changeColumn(
-      "phone_verifications",
-      "user_id",
-      new TableColumn({
-        name: "user_id",
-        type: "int",
-        isNullable: true
-      })
+    await queryRunner.query(
+      `ALTER TABLE "phone_verifications" ALTER COLUMN "user_id" DROP NOT NULL`
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {
-    await queryRunner.dropTable("phone_verifications");
+    await queryRunner.query(
+      `ALTER TABLE "phone_verifications" ALTER COLUMN "user_id" SET NOT NULL`
+    );
   }
 }

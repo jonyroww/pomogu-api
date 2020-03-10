@@ -28,6 +28,28 @@ export class usersIsModeratedName1581092529692 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {
-    await queryRunner.dropTable("users");
+    await queryRunner.dropColumns("users", [
+      new TableColumn({
+        name: "first_name",
+        type: "varchar",
+        isNullable: true
+      }),
+      new TableColumn({
+        name: "middle_name",
+        type: "varchar",
+        isNullable: true
+      }),
+      new TableColumn({
+        name: "last_name",
+        type: "varchar",
+        isNullable: true
+      }),
+      new TableColumn({
+        name: "is_moderated",
+        type: "boolean",
+        isNullable: false,
+        default: false
+      })
+    ]);
   }
 }

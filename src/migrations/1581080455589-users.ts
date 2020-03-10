@@ -58,14 +58,12 @@ export class users1581080455589 implements MigrationInterface {
           {
             name: "email",
             type: "varchar",
-            isNullable: true,
-            isUnique: true
+            isNullable: true
           },
           {
             name: "phone",
             type: "varchar",
-            isNullable: false,
-            isUnique: true
+            isNullable: false
           },
           {
             name: "is_individual",

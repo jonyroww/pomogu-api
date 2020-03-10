@@ -13,6 +13,6 @@ export class organisationType1580913473819 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {
-    await queryRunner.dropTable("organisations");
+    await queryRunner.dropColumn("organisations", "organisation_type");
   }
 }
