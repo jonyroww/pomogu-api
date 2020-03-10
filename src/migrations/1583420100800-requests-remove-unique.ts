@@ -7,9 +7,9 @@ import {
 
 export class requestsRemoveUnique1583420100800 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {
-    await queryRunner.query(`DROP INDEX "IX_requests_email"`);
+    await queryRunner.query(`DROP INDEX "UQ_requests_email"`);
 
-    await queryRunner.query(`DROP INDEX "IX_requests_phone"`);
+    await queryRunner.query(`DROP INDEX "UQ_requests_phone"`);
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {

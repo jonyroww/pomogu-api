@@ -7,11 +7,11 @@ export class requests1582901731143 implements MigrationInterface {
         name: "requests",
         indices: [
           {
-            name: "IX_requests_email",
+            name: "UQ_requests_email",
             columnNames: ["email"],
             isUnique: true
           },
-          { name: "IX_requests_phone", columnNames: ["phone"], isUnique: true }
+          { name: "UQ_requests_phone", columnNames: ["phone"], isUnique: true }
         ],
         columns: [
           {
