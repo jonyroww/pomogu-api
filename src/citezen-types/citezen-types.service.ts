@@ -44,6 +44,7 @@ export class CitezenTypesService {
     });
     if (citezenType.deleted_at === null) {
       citezenType.title = body.title;
+      citezenType.updated_at = new Date();
       await this.citezenTypesRepository.save(citezenType);
       return citezenType;
     } else {
@@ -55,8 +56,13 @@ export class CitezenTypesService {
     const citezenType = await this.citezenTypesRepository.findOne({
       id: params.id
     });
-    citezenType.deleted_at = new Date();
-    await this.citezenTypesRepository.save(citezenType);
-    return citezenType;
+    if (citezenType.deleted_at === null) {
+      citezenType.deleted_at = new Date();
+      citezenType.updated_at = new Date();
+      await this.citezenTypesRepository.save(citezenType);
+      return citezenType;
+    } else {
+      throw makeError("TYPE_WAS_DELETED");
+    }
   }
 }
