@@ -21,7 +21,7 @@ import { CitezenTypeIdDto } from "./dto/citezen-type-id.dto";
 import { AuthGuard } from "@nestjs/passport";
 import { IsAdminGuard } from "../common/guards/is-admin.guard";
 
-@Controller("citizen-types")
+@Controller("citezen-types")
 export class CitezenTypesController {
   constructor(private readonly citezenTypesService: CitezenTypesService) {}
   @ApiTags("CitezenTypes")

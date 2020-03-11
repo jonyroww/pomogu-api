@@ -14,11 +14,11 @@ export class HelpTypesService {
   ) {}
 
   async findAll(): Promise<HelpTypes[]> {
-    const helpTypes = await this.helpTypesRepository.find();
-    const notDeletedHelpTypes = helpTypes.filter(
-      helpType => helpType.deleted_at === null
-    );
-    return notDeletedHelpTypes;
+    const helpTypes = await this.helpTypesRepository.find({
+      where: { deleted_at: null }
+    });
+
+    return helpTypes;
   }
 
   async createHelpType(body: HelpTypeBodyDto) {
@@ -40,7 +40,6 @@ export class HelpTypesService {
     const helpType = await this.helpTypesRepository.findOne({ id: params.id });
     if (helpType.deleted_at === null) {
       helpType.title = body.title;
-      helpType.updated_at = new Date();
       await this.helpTypesRepository.save(helpType);
       return helpType;
     } else {
@@ -52,7 +51,6 @@ export class HelpTypesService {
     const helpType = await this.helpTypesRepository.findOne({ id: params.id });
     if (helpType.deleted_at === null) {
       helpType.deleted_at = new Date();
-      helpType.updated_at = new Date();
       await this.helpTypesRepository.save(helpType);
       return helpType;
     } else {

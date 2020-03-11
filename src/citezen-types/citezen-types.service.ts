@@ -14,11 +14,10 @@ export class CitezenTypesService {
   ) {}
 
   async findAll(): Promise<CitezenTypes[]> {
-    const citezenTypes = await this.citezenTypesRepository.find();
-    const notDeletedTypes = citezenTypes.filter(
-      citezenType => citezenType.deleted_at === null
-    );
-    return notDeletedTypes;
+    const citezenTypes = await this.citezenTypesRepository.find({
+      where: { deleted_at: null }
+    });
+    return citezenTypes;
   }
 
   async createCitezenType(body: CitezenTypeBodyDto) {
@@ -44,7 +43,6 @@ export class CitezenTypesService {
     });
     if (citezenType.deleted_at === null) {
       citezenType.title = body.title;
-      citezenType.updated_at = new Date();
       await this.citezenTypesRepository.save(citezenType);
       return citezenType;
     } else {
@@ -58,7 +56,6 @@ export class CitezenTypesService {
     });
     if (citezenType.deleted_at === null) {
       citezenType.deleted_at = new Date();
-      citezenType.updated_at = new Date();
       await this.citezenTypesRepository.save(citezenType);
       return citezenType;
     } else {

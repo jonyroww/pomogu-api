@@ -6,7 +6,7 @@ export class typesDeletedAt1583920151007 implements MigrationInterface {
       "citezen_types",
       new TableColumn({
         name: "deleted_at",
-        type: "timestamp without time zone",
+        type: "timestamp with time zone",
         isNullable: true
       })
     );
@@ -15,7 +15,7 @@ export class typesDeletedAt1583920151007 implements MigrationInterface {
       "help_types",
       new TableColumn({
         name: "deleted_at",
-        type: "timestamp without time zone",
+        type: "timestamp with time zone",
         isNullable: true
       })
     );
