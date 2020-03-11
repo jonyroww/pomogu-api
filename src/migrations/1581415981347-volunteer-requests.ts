@@ -5,6 +5,18 @@ export class volunteerRequests1581415981347 implements MigrationInterface {
     await queryRunner.createTable(
       new Table({
         name: "volunteer_requests",
+        indices: [
+          {
+            name: "UQ_volunteer_requests__phone",
+            columnNames: ["phone"],
+            isUnique: true
+          },
+          {
+            name: "UQ_volunteer_requests__email",
+            columnNames: ["email"],
+            isUnique: true
+          }
+        ],
         columns: [
           {
             name: "id",
@@ -42,14 +54,12 @@ export class volunteerRequests1581415981347 implements MigrationInterface {
           {
             name: "email",
             type: "varchar",
-            isNullable: true,
-            isUnique: true
+            isNullable: true
           },
           {
             name: "phone",
             type: "varchar",
-            isNullable: false,
-            isUnique: true
+            isNullable: false
           },
           {
             name: "is_individual",
@@ -102,6 +112,6 @@ export class volunteerRequests1581415981347 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {
-    await queryRunner.dropTable("volunteer-requests");
+    await queryRunner.dropTable("volunteer_requests");
   }
 }

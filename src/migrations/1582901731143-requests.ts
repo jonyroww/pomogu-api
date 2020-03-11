@@ -5,6 +5,14 @@ export class requests1582901731143 implements MigrationInterface {
     await queryRunner.createTable(
       new Table({
         name: "requests",
+        indices: [
+          {
+            name: "UQ_requests_email",
+            columnNames: ["email"],
+            isUnique: true
+          },
+          { name: "UQ_requests_phone", columnNames: ["phone"], isUnique: true }
+        ],
         columns: [
           {
             name: "id",
@@ -47,14 +55,12 @@ export class requests1582901731143 implements MigrationInterface {
           {
             name: "email",
             type: "varchar",
-            isNullable: true,
-            isUnique: true
+            isNullable: true
           },
           {
             name: "phone",
             type: "varchar",
-            isNullable: false,
-            isUnique: true
+            isNullable: false
           },
           {
             name: "comment",
