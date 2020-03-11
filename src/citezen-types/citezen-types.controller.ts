@@ -5,7 +5,8 @@ import {
   Body,
   Param,
   UseGuards,
-  Delete
+  Delete,
+  Put
 } from "@nestjs/common";
 import { CitezenTypesService } from "./citezen-types.service";
 import { CitezenTypes } from "./entities/citezen-types.entity";
@@ -15,7 +16,7 @@ import {
   ApiCreatedResponse,
   ApiBearerAuth
 } from "@nestjs/swagger";
-import { CreateCitezenTypeBodyDto } from "./dto/create-citezen-type-body.dto";
+import { CitezenTypeBodyDto } from "./dto/citezen-type-body.dto";
 import { CitezenTypeIdDto } from "./dto/citezen-type-id.dto";
 import { AuthGuard } from "@nestjs/passport";
 import { IsAdminGuard } from "../common/guards/is-admin.guard";
@@ -37,7 +38,7 @@ export class CitezenTypesController {
   @ApiBearerAuth()
   @ApiCreatedResponse({ type: CitezenTypes })
   @Post()
-  createCitezenType(@Body() body: CreateCitezenTypeBodyDto) {
+  createCitezenType(@Body() body: CitezenTypeBodyDto) {
     return this.citezenTypesService.createCitezenType(body);
   }
 
@@ -48,6 +49,18 @@ export class CitezenTypesController {
   @Get("/:id")
   getOneCitezenType(@Param() params: CitezenTypeIdDto) {
     return this.citezenTypesService.getOneCitezenType(params);
+  }
+
+  @ApiTags("CitezenTypes")
+  @UseGuards(AuthGuard("jwt"), IsAdminGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: CitezenTypes })
+  @Put("/:id")
+  updateCitezenType(
+    @Param() params: CitezenTypeIdDto,
+    @Body() body: CitezenTypeBodyDto
+  ) {
+    return this.citezenTypesService.updateCitezenType(params, body);
   }
 
   @ApiTags("CitezenTypes")

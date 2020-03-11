@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CitezenTypes } from "./entities/citezen-types.entity";
 import { CitezenTypesRepository } from "./repositories/Citezen-types.repository";
-import { CreateCitezenTypeBodyDto } from "./dto/create-citezen-type-body.dto";
+import { CitezenTypeBodyDto } from "./dto/citezen-type-body.dto";
 import { CitezenTypeIdDto } from "./dto/citezen-type-id.dto";
 import { makeError } from "../common/errors/index";
 
@@ -21,7 +21,7 @@ export class CitezenTypesService {
     return notDeletedTypes;
   }
 
-  async createCitezenType(body: CreateCitezenTypeBodyDto) {
+  async createCitezenType(body: CitezenTypeBodyDto) {
     const citezenType = this.citezenTypesRepository.create(body);
     await this.citezenTypesRepository.save(citezenType);
     return citezenType;
@@ -32,6 +32,19 @@ export class CitezenTypesService {
       id: params.id
     });
     if (citezenType.deleted_at === null) {
+      return citezenType;
+    } else {
+      throw makeError("TYPE_WAS_DELETED");
+    }
+  }
+
+  async updateCitezenType(params: CitezenTypeIdDto, body: CitezenTypeBodyDto) {
+    const citezenType = await this.citezenTypesRepository.findOne({
+      id: params.id
+    });
+    if (citezenType.deleted_at === null) {
+      citezenType.title = body.title;
+      await this.citezenTypesRepository.save(citezenType);
       return citezenType;
     } else {
       throw makeError("TYPE_WAS_DELETED");
