@@ -29,6 +29,10 @@ export class CitezenTypes {
   @Column({ type: "timestamp with time zone" })
   updated_at: Date;
 
+  @ApiProperty({ type: "string", example: "2019-11-22T16:03:05Z" })
+  @Column({ type: "timestamp with time zone" })
+  deleted_at: Date;
+
   @ApiProperty({ example: "Название" })
   @Column({
     type: "text"

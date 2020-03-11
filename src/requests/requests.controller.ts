@@ -21,7 +21,7 @@ import { BodyValidationDto } from "./dto/create-request-body.dto";
 import { AuthGuard } from "@nestjs/passport";
 import { OneRequestReadAccessGuard } from "../common/guards/get-one-requests.guard";
 import { RequestIdParamsDto } from "./dto/requestId-params.dto";
-import { ModerateRequestGuard } from "../common/guards/moderate-request.guard";
+import { IsAdminGuard } from "../common/guards/is-admin.guard";
 import { ModerateRequestBodyDto } from "./dto/moderate-request-body.dto";
 import { GetAllQueryFilterDto } from "./dto/get-all-query-params.dto";
 import { RequestsReadAccessGuard } from "../common/guards/get-all-requests.guard";
@@ -74,7 +74,7 @@ export class RequestsController {
 
   @Put("/requests/:requestId")
   @ApiTags("Requests")
-  @UseGuards(AuthGuard("jwt"), ModerateRequestGuard)
+  @UseGuards(AuthGuard("jwt"), IsAdminGuard)
   @ApiBearerAuth()
   @ApiCreatedResponse()
   moderateRequest(
