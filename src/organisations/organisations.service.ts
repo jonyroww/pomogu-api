@@ -3,17 +3,26 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Organisation } from "./entities/Organisation.entity";
 import { Repository } from "typeorm";
 import { QueryFilterDto } from "./dto/query-filter.dto";
-import { GetOneQueryDto } from "./dto/get-one-query.dto";
+import { OrganisationIdDto } from "./dto/organisation-id.dto";
 import _ from "lodash";
 import { makeError } from "../common/errors/index";
 import { Transactional } from "typeorm-transactional-cls-hooked";
 import { OrganisationRepository } from "./repositories/Organisation.repository";
+import { OrganisationBodyDto } from "./dto/organisation-body.dto";
+import { OrganisationPhoneNumberRepository } from "./repositories/OrganisationPhoneNumbers.repository";
+import { OrganisationWebsiteRepository } from "./repositories/OrganisationWebsite.repository";
+import { HelpTypesRepository } from "../help-types/repositories/Help-types.repository";
+import { CitezenTypesRepository } from "../citezen-types/repositories/Citezen-types.repository";
 
 @Injectable()
 export class OrganisationsService {
   constructor(
     @InjectRepository(Organisation)
-    private readonly organisationsRepository: OrganisationRepository
+    private organisationsRepository: OrganisationRepository,
+    private organisationPhoneNumberRepository: OrganisationPhoneNumberRepository,
+    private organisationWebsiteRepository: OrganisationWebsiteRepository,
+    private helpTypesRepository: HelpTypesRepository,
+    private citezenTypesRepository: CitezenTypesRepository
   ) {}
 
   @Transactional()
@@ -49,6 +58,7 @@ export class OrganisationsService {
         citezenTypes: params.citizen_type_ids
       });
     }
+    qb.andWhere("organisations.deleted_at is null");
 
     return qb
       .take(params.limit)
@@ -56,9 +66,58 @@ export class OrganisationsService {
       .getMany();
   }
 
-  async findOne(params: GetOneQueryDto) {
+  @Transactional()
+  async createOrganisation({
+    websites,
+    phone_numbers,
+    help_type_ids,
+    citizen_type_ids,
+    ...body
+  }: OrganisationBodyDto) {
+    const organisation = this.organisationsRepository.create(body);
+    const helpTypes = await this.helpTypesRepository.findByIds(help_type_ids);
+    const citezenTypes = await this.citezenTypesRepository.findByIds(
+      citizen_type_ids
+    );
+    organisation.helpTypes = helpTypes;
+    organisation.citezenTypes = citezenTypes;
+    await this.organisationsRepository.save(organisation);
+
+    websites.map(async website => {
+      const newWebsite = this.organisationWebsiteRepository.create({
+        url: website,
+        organisation_id: organisation.id
+      });
+      await this.organisationWebsiteRepository.save(newWebsite);
+    });
+
+    phone_numbers.map(async phone_number => {
+      const newPhoneNumber = this.organisationPhoneNumberRepository.create({
+        phone_number: phone_number,
+        organisation_id: organisation.id
+      });
+      await this.organisationPhoneNumberRepository.save(newPhoneNumber);
+    });
+
+    return organisation;
+  }
+
+  async findOne(params: OrganisationIdDto) {
     const organisation = await this.organisationsRepository.findOne(params.id);
-    if (organisation) {
+    if (organisation && organisation.deleted_at === null) {
+      return organisation;
+    } else {
+      throw makeError("NO_SUCH_ORGANISATION");
+    }
+  }
+
+  async updateOrganisation(body) {}
+
+  async deleteOrganisation(params: OrganisationIdDto) {
+    const organisation = await this.organisationsRepository.findOne(params.id);
+    if (organisation && organisation.deleted_at === null) {
+      organisation.deleted_at = new Date();
+      await this.organisationsRepository.save(organisation);
       return organisation;
     } else {
       throw makeError("NO_SUCH_ORGANISATION");

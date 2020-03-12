@@ -74,14 +74,6 @@ export class Organisation {
   })
   email: string;
 
-  @ApiProperty({ type: "string", example: "website.com" })
-  @Column({
-    nullable: false,
-    type: "varchar",
-    length: 255
-  })
-  website_address: string;
-
   @ApiProperty({ type: "boolean", example: true })
   @Column({
     nullable: false,
@@ -133,6 +125,13 @@ export class Organisation {
     type: "text"
   })
   organisation_type: string;
+
+  @ApiProperty({ type: "string", example: "2019-11-22T16:03:05Z" })
+  @Column({
+    nullable: false,
+    type: "timestamp with time zone"
+  })
+  deleted_at: Date;
 
   @ApiProperty()
   @OneToMany(
