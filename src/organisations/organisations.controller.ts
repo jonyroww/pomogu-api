@@ -55,8 +55,11 @@ export class OrganisationsController {
   @UseGuards(AuthGuard("jwt"), IsAdminGuard)
   @ApiBearerAuth()
   @Put("/:id")
-  updateOrganisation(@Body() body: OrganisationUpdateBodyDto) {
-    return this.organisationsService.updateOrganisation(body);
+  updateOrganisation(
+    @Param() params: OrganisationIdDto,
+    @Body() body: OrganisationUpdateBodyDto
+  ) {
+    return this.organisationsService.updateOrganisation(body, params);
   }
 
   @ApiOkResponse()

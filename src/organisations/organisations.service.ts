@@ -13,6 +13,7 @@ import { OrganisationPhoneNumberRepository } from "./repositories/OrganisationPh
 import { OrganisationWebsiteRepository } from "./repositories/OrganisationWebsite.repository";
 import { HelpTypesRepository } from "../help-types/repositories/Help-types.repository";
 import { CitezenTypesRepository } from "../citezen-types/repositories/Citezen-types.repository";
+import { OrganisationUpdateBodyDto } from "./dto/organisation-update-body.dto";
 
 @Injectable()
 export class OrganisationsService {
@@ -111,7 +112,27 @@ export class OrganisationsService {
     }
   }
 
-  async updateOrganisation(body) {}
+  async updateOrganisation(
+    {
+      help_type_ids,
+      citizen_type_ids,
+      websites,
+      phone_numbers,
+      ...body
+    }: OrganisationUpdateBodyDto,
+    params: OrganisationIdDto
+  ) {
+    const organisation = await this.organisationsRepository.findOne(params.id);
+    if (organisation && organisation.deleted_at === null) {
+      const mergeOrganisation = this.organisationsRepository.merge(
+        organisation,
+        body
+      );
+      await this.organisationsRepository.save(mergeOrganisation);
+    } else {
+      throw makeError("NO_SUCH_ORGANISATION");
+    }
+  }
 
   async deleteOrganisation(params: OrganisationIdDto) {
     const organisation = await this.organisationsRepository.findOne(params.id);
