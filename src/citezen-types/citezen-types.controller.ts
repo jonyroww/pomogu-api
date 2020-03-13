@@ -25,8 +25,6 @@ import { IsAdminGuard } from "../common/guards/is-admin.guard";
 export class CitezenTypesController {
   constructor(private readonly citezenTypesService: CitezenTypesService) {}
   @ApiTags("CitezenTypes")
-  @UseGuards(AuthGuard("jwt"), IsAdminGuard)
-  @ApiBearerAuth()
   @ApiOkResponse({ type: CitezenTypes })
   @Get()
   findAll(): Promise<CitezenTypes[]> {
@@ -43,8 +41,6 @@ export class CitezenTypesController {
   }
 
   @ApiTags("CitezenTypes")
-  @UseGuards(AuthGuard("jwt"), IsAdminGuard)
-  @ApiBearerAuth()
   @ApiOkResponse({ type: CitezenTypes })
   @Get("/:id")
   getOneCitezenType(@Param() params: CitezenTypeIdDto) {

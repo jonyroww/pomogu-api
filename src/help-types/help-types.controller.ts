@@ -41,8 +41,6 @@ export class HelpTypesController {
   }
 
   @ApiTags("HelpTypes")
-  @UseGuards(AuthGuard("jwt"), IsAdminGuard)
-  @ApiBearerAuth()
   @ApiOkResponse({ type: HelpTypes })
   @Get("/:id")
   getOneHelpType(@Param() params: HelpTypeIdDto) {
