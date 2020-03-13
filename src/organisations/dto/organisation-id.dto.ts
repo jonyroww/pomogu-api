@@ -3,7 +3,7 @@ import { Transform } from "class-transformer";
 import { TransformInt } from "../../common/utils/transform-int.util";
 import { ApiProperty } from "@nestjs/swagger";
 
-export class GetOneQueryDto {
+export class OrganisationIdDto {
   @ApiProperty({ type: "number" })
   @IsNumber()
   @IsInt()
