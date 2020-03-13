@@ -84,21 +84,28 @@ export class OrganisationsService {
     organisation.citezenTypes = citezenTypes;
     await this.organisationsRepository.save(organisation);
 
-    websites.map(async website => {
-      const newWebsite = this.organisationWebsiteRepository.create({
+    const newWebsitesList = websites.map(website => {
+      return {
         url: website,
         organisation_id: organisation.id
-      });
-      await this.organisationWebsiteRepository.save(newWebsite);
+      };
     });
+    const newWebsites = this.organisationWebsiteRepository.create(
+      newWebsitesList
+    );
+    await this.organisationWebsiteRepository.save(newWebsites);
 
-    phone_numbers.map(async phone_number => {
-      const newPhoneNumber = this.organisationPhoneNumberRepository.create({
+    const newPhoneNumbersList = phone_numbers.map(phone_number => {
+      return {
         phone_number: phone_number,
         organisation_id: organisation.id
-      });
-      await this.organisationPhoneNumberRepository.save(newPhoneNumber);
+      };
     });
+
+    const newPhoneNumbers = this.organisationPhoneNumberRepository.create(
+      newPhoneNumbersList
+    );
+    await this.organisationPhoneNumberRepository.save(newPhoneNumbers);
 
     return organisation;
   }
@@ -145,26 +152,33 @@ export class OrganisationsService {
         await this.organisationPhoneNumberRepository.delete({
           organisation_id: params.id
         });
-        phone_numbers.map(async phone_number => {
-          const newPhoneNumber = this.organisationPhoneNumberRepository.create({
+        const newPhoneNumbersList = phone_numbers.map(phone_number => {
+          return {
             phone_number: phone_number,
-            organisation_id: mergeOrganisation.id
-          });
-          await this.organisationPhoneNumberRepository.save(newPhoneNumber);
+            organisation_id: organisation.id
+          };
         });
+
+        const newPhoneNumbers = this.organisationPhoneNumberRepository.create(
+          newPhoneNumbersList
+        );
+        await this.organisationPhoneNumberRepository.save(newPhoneNumbers);
       }
 
       if (websites) {
         await this.organisationWebsiteRepository.delete({
           organisation_id: params.id
         });
-        websites.map(async website => {
-          const newWebsite = this.organisationWebsiteRepository.create({
+        const newWebsitesList = websites.map(website => {
+          return {
             url: website,
-            organisation_id: mergeOrganisation.id
-          });
-          await this.organisationWebsiteRepository.save(newWebsite);
+            organisation_id: organisation.id
+          };
         });
+        const newWebsites = this.organisationWebsiteRepository.create(
+          newWebsitesList
+        );
+        await this.organisationWebsiteRepository.save(newWebsites);
       }
 
       await this.organisationsRepository.save(mergeOrganisation);
