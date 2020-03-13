@@ -37,6 +37,7 @@ export class OrganisationsController {
     return this.organisationsService.findAll(params);
   }
 
+  @ApiTags("Organisations")
   @ApiCreatedResponse()
   @Post()
   @UseGuards(AuthGuard("jwt"), IsAdminGuard)
@@ -45,12 +46,14 @@ export class OrganisationsController {
     return this.organisationsService.createOrganisation(body);
   }
 
+  @ApiTags("Organisations")
   @ApiOkResponse({ type: Organisation })
   @Get("/:id")
   findOne(@Param() params: OrganisationIdDto): Promise<Organisation> {
     return this.organisationsService.findOne(params);
   }
 
+  @ApiTags("Organisations")
   @ApiOkResponse()
   @UseGuards(AuthGuard("jwt"), IsAdminGuard)
   @ApiBearerAuth()
@@ -62,6 +65,7 @@ export class OrganisationsController {
     return this.organisationsService.updateOrganisation(body, params);
   }
 
+  @ApiTags("Organisations")
   @ApiOkResponse()
   @Delete("/:id")
   @UseGuards(AuthGuard("jwt"), IsAdminGuard)
