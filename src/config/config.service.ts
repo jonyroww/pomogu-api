@@ -31,7 +31,8 @@ export class ConfigService {
         .required(),
       SMTP_URL: Joi.string().required(),
       EMAIL_FROM: Joi.string().required(),
-      SMS_API_ID: Joi.string().required()
+      SMS_API_ID: Joi.string().required(),
+      SMS_CODE_GEN: Joi.boolean().required()
     }).options({
       stripUnknown: true
     });
@@ -57,4 +58,5 @@ export interface EnvironmentConfig {
   EMAIL_FROM: string;
   SMTP_URL: string;
   SMS_API_ID: string;
+  SMS_CODE_GEN: boolean;
 }

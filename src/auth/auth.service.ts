@@ -40,13 +40,21 @@ export class AuthService {
     const phoneVerificationRequest = this.phoneVerificationRepository.create(
       body
     );
+
     phoneVerificationRequest.key = cryptoRandomString({ length: 32 });
-    const smsCode = cryptoRandomString({ length: 6, type: "numeric" });
-    await axios.get(
-      `https://sms.ru/sms/send?api_id=${this.configService.get(
-        "SMS_API_ID"
-      )}&to=${phoneVerificationRequest.phone}&msg=${smsCode}`
-    );
+
+    const smsCode = this.configService.get("SMS_CODE_GEN")
+      ? cryptoRandomString({ length: 6, type: "numeric" })
+      : "111111";
+
+    if (this.configService.get("SMS_CODE_GEN")) {
+      await axios.get(
+        `https://sms.ru/sms/send?api_id=${this.configService.get(
+          "SMS_API_ID"
+        )}&to=${phoneVerificationRequest.phone}&msg=${smsCode}`
+      );
+    }
+
     phoneVerificationRequest.sms_code = smsCode;
     phoneVerificationRequest.sms_sent_count = 1;
     phoneVerificationRequest.sms_last_sent_at = new Date();
@@ -115,12 +123,18 @@ export class AuthService {
     if (interval < 2 * 60 * 1000) {
       throw makeError("TIME_INTERVAL_IS_NOT_OVER");
     }
-    const smsCode = cryptoRandomString({ length: 6, type: "numeric" });
-    await axios.get(
-      `https://sms.ru/sms/send?api_id=${this.configService.get(
-        "SMS_API_ID"
-      )}&to=${phoneVerification.phone}&msg=${smsCode}`
-    );
+
+    const smsCode = this.configService.get("SMS_CODE_GEN")
+      ? cryptoRandomString({ length: 6, type: "numeric" })
+      : "111111";
+
+    if (this.configService.get("SMS_CODE_GEN")) {
+      await axios.get(
+        `https://sms.ru/sms/send?api_id=${this.configService.get(
+          "SMS_API_ID"
+        )}&to=${phoneVerification.phone}&msg=${smsCode}`
+      );
+    }
     phoneVerification.sms_code = smsCode;
     phoneVerification.sms_sent_count += 1;
     phoneVerification.wrong_attempts_count = 0;
