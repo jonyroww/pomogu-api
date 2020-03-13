@@ -4,9 +4,18 @@ import { UsersController } from "./users.controller";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { User } from "./entities/User.entity";
 import { UserRepository } from "./repositories/User.repository";
+import { HelpTypesRepository } from "../help-types/repositories/Help-types.repository";
+import { CitezenTypesRepository } from "../citezen-types/repositories/Citezen-types.repository";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, UserRepository])],
+  imports: [
+    TypeOrmModule.forFeature([
+      User,
+      UserRepository,
+      HelpTypesRepository,
+      CitezenTypesRepository
+    ])
+  ],
   providers: [UsersService],
   controllers: [UsersController]
 })

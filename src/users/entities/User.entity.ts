@@ -14,6 +14,7 @@ import { HelpTypes } from "../../help-types/entities/help-types.entity";
 import { CitezenTypes } from "../../citezen-types/entities/citezen-types.entity";
 import { Organisation } from "../../organisations/entities/Organisation.entity";
 import { Request } from "../../requests/entities/Request.entity";
+import { ModerationStatus } from "../../constants/ModerationStatus.enum";
 
 @Entity({ name: "users" })
 export class User {
@@ -112,8 +113,11 @@ export class User {
   password: string;
 
   @ApiProperty({ type: "boolean", nullable: false, default: false })
-  @Column({ type: "boolean" })
-  is_moderated: boolean;
+  @Column("enum", {
+    enum: ModerationStatus,
+    default: ModerationStatus.NOT_MODERATED
+  })
+  moderation_status: ModerationStatus;
 
   @ApiPropertyOptional({ type: "string" })
   @Column({ type: "varchar" })
