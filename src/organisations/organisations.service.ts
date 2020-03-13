@@ -128,6 +128,45 @@ export class OrganisationsService {
         organisation,
         body
       );
+      if (help_type_ids) {
+        const helpTypes = await this.helpTypesRepository.findByIds(
+          help_type_ids
+        );
+        mergeOrganisation.helpTypes = helpTypes;
+      }
+      if (citizen_type_ids) {
+        const citezenTypes = await this.citezenTypesRepository.findByIds(
+          citizen_type_ids
+        );
+        mergeOrganisation.citezenTypes = citezenTypes;
+      }
+
+      if (phone_numbers) {
+        await this.organisationPhoneNumberRepository.delete({
+          organisation_id: params.id
+        });
+        phone_numbers.map(async phone_number => {
+          const newPhoneNumber = this.organisationPhoneNumberRepository.create({
+            phone_number: phone_number,
+            organisation_id: mergeOrganisation.id
+          });
+          await this.organisationPhoneNumberRepository.save(newPhoneNumber);
+        });
+      }
+
+      if (websites) {
+        await this.organisationWebsiteRepository.delete({
+          organisation_id: params.id
+        });
+        websites.map(async website => {
+          const newWebsite = this.organisationWebsiteRepository.create({
+            url: website,
+            organisation_id: mergeOrganisation.id
+          });
+          await this.organisationWebsiteRepository.save(newWebsite);
+        });
+      }
+
       await this.organisationsRepository.save(mergeOrganisation);
     } else {
       throw makeError("NO_SUCH_ORGANISATION");
