@@ -42,6 +42,8 @@ export class OrganisationsService {
       qb.where("FALSE");
     }
 
+    qb.andWhere("organisations.deleted_at is null");
+
     if (!_.isEmpty(params.help_type_ids)) {
       qb.leftJoin("organisations.helpTypes", "organisation_help_types").orWhere(
         "organisation_help_types.id IN (:...helpTypesId)",
@@ -59,7 +61,6 @@ export class OrganisationsService {
         citezenTypes: params.citizen_type_ids
       });
     }
-    qb.andWhere("organisations.deleted_at is null");
 
     return qb
       .take(params.limit)
