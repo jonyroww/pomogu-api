@@ -31,7 +31,12 @@ export class UsersService {
     return this.userRepository.findOne({ id: params.id });
   }
 
-  createUser(body: createUserDto) {
+  createUser({
+    organisation_ids,
+    citizen_type_ids,
+    help_type_ids,
+    ...body
+  }: createUserDto) {
     const user = this.userRepository.create(body);
     user.moderation_status = ModerationStatus.NOT_MODERATED;
   }
