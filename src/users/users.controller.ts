@@ -3,7 +3,10 @@ import {
   UsePipes,
   ValidationPipe,
   Get,
-  Query
+  Query,
+  Param,
+  Post,
+  Body
 } from "@nestjs/common";
 import { User } from "./entities/User.entity";
 import { UsersService } from "./users.service";
@@ -14,6 +17,8 @@ import {
   ApiBearerAuth
 } from "@nestjs/swagger";
 import { GetAllQueryDto } from "./dto/get-all-query.dto";
+import { UserIdDto } from "./dto/user-id.dto";
+import { createUserDto } from "./dto/create-user.dto";
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 @Controller("users")
@@ -24,5 +29,19 @@ export class UsersController {
   @Get()
   findAll(@Query() query: GetAllQueryDto) {
     return this.usersService.findAll(query);
+  }
+
+  @ApiTags("Users")
+  @ApiOkResponse({ type: User })
+  @Get("/:id")
+  findOne(@Param() params: UserIdDto) {
+    return this.usersService.findOne(params);
+  }
+
+  @ApiTags("Users")
+  @ApiCreatedResponse({ type: User })
+  @Post()
+  createUser(@Body() body: createUserDto) {
+    return this.usersService.createUser(body);
   }
 }
