@@ -25,6 +25,7 @@ import { OrganisationBodyDto } from "./dto/organisation-body.dto";
 import { OrganisationUpdateBodyDto } from "./dto/organisation-update-body.dto";
 import { AuthGuard } from "@nestjs/passport";
 import { IsAdminGuard } from "../common/guards/is-admin.guard";
+import { FindAllResponseDto } from "./dto/find-all-response.dto";
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 @Controller("organisations")
@@ -33,7 +34,7 @@ export class OrganisationsController {
   @ApiTags("Organisations")
   @ApiOkResponse({ type: Organisation })
   @Get()
-  findAll(@Query() params: QueryFilterDto) {
+  findAll(@Query() params: QueryFilterDto): Promise<FindAllResponseDto> {
     return this.organisationsService.findAll(params);
   }
 
