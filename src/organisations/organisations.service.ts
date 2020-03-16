@@ -14,6 +14,7 @@ import { OrganisationWebsiteRepository } from "./repositories/OrganisationWebsit
 import { HelpTypesRepository } from "../help-types/repositories/Help-types.repository";
 import { CitezenTypesRepository } from "../citezen-types/repositories/Citezen-types.repository";
 import { OrganisationUpdateBodyDto } from "./dto/organisation-update-body.dto";
+import { FindAllResponseDto } from "./dto/find-all-response.dto";
 
 @Injectable()
 export class OrganisationsService {
@@ -27,7 +28,7 @@ export class OrganisationsService {
   ) {}
 
   @Transactional()
-  async findAll(params: QueryFilterDto) {
+  async findAll(params: QueryFilterDto): Promise<FindAllResponseDto> {
     const qb = this.organisationsRepository.createQueryBuilder("organisations");
 
     qb.leftJoinAndSelect("organisations.helpTypes", "helpTypes")
@@ -64,12 +65,14 @@ export class OrganisationsService {
 
     qb.andWhere("organisations.deleted_at is null");
 
+    const total = await qb.getCount();
+
     const organisations = await qb
       .take(params.limit)
       .skip(params.offset)
       .getMany();
 
-    return { total: organisations.length, data: organisations };
+    return { total: total, data: organisations };
   }
 
   @Transactional()
