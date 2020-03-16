@@ -5,6 +5,6 @@ export class FindAllResponseDto {
   @ApiProperty({ type: "number" })
   total: number;
 
-  @ApiProperty({ type: "object", isArray: true })
+  @ApiProperty({ type: Organisation, isArray: true })
   data: Organisation[];
 }
