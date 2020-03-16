@@ -27,7 +27,7 @@ export class OrganisationsService {
   ) {}
 
   @Transactional()
-  findAll(params: QueryFilterDto): Promise<Organisation[]> {
+  async findAll(params: QueryFilterDto) {
     const qb = this.organisationsRepository.createQueryBuilder("organisations");
 
     qb.leftJoinAndSelect("organisations.helpTypes", "helpTypes")
@@ -64,10 +64,12 @@ export class OrganisationsService {
 
     qb.andWhere("organisations.deleted_at is null");
 
-    return qb
+    const organisations = await qb
       .take(params.limit)
       .skip(params.offset)
       .getMany();
+
+    return { total: organisations.length, data: organisations };
   }
 
   @Transactional()

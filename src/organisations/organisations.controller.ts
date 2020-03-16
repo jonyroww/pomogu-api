@@ -33,7 +33,7 @@ export class OrganisationsController {
   @ApiTags("Organisations")
   @ApiOkResponse({ type: Organisation })
   @Get()
-  findAll(@Query() params: QueryFilterDto): Promise<Organisation[]> {
+  findAll(@Query() params: QueryFilterDto) {
     return this.organisationsService.findAll(params);
   }
 
