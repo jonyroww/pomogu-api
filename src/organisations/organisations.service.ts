@@ -65,17 +65,12 @@ export class OrganisationsService {
 
     qb.andWhere("organisations.deleted_at is null");
 
-    const qbCount = this.organisationsRepository.createQueryBuilder(
-      "organisations"
-    );
-    qbCount.where("organisations.deleted_at is null");
+    const total = await qb.getCount();
 
     const organisations = await qb
       .take(params.limit)
       .skip(params.offset)
       .getMany();
-
-    const total = await qbCount.getCount();
 
     return { total: total, data: organisations };
   }
