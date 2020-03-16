@@ -2,9 +2,9 @@ import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Organisation } from "../entities/Organisation.entity";
 
 export class FindAllResponseDto {
-  @ApiProperty()
+  @ApiProperty({ type: "number" })
   total: number;
 
-  @ApiProperty()
+  @ApiProperty({ type: "object", isArray: true })
   data: Organisation[];
 }
