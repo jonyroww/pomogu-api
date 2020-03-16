@@ -12,6 +12,9 @@ import { UserIdDto } from "./dto/user-id.dto";
 import { createUserDto } from "./dto/create-user.dto";
 import { ModerationStatus } from "../constants/ModerationStatus.enum";
 import { UpdateUserDto } from "./dto/update-user-dto";
+import bcrypt from "bcrypt";
+import { PaginationFilterDto } from "../common/dto/pagination-filter.dto";
+import { ModerationBodyDto } from "./dto/moderation-body.dto";
 
 @Injectable()
 export class UsersService {
@@ -24,14 +27,24 @@ export class UsersService {
   ) {}
 
   @Transactional()
-  findAll(query: GetAllQueryDto) {
-    return this.userRepository.find({
-      where: { moderation_status: query.moderation_status }
-    });
+  async findAll(query: GetAllQueryDto, params: PaginationFilterDto) {
+    let users;
+    if (query.moderation_status) {
+      users = await this.userRepository.find({
+        where: { moderation_status: query.moderation_status, deleted_at: null }
+      });
+    } else {
+      users = await this.userRepository.find({ where: { deleted_at: null } });
+    }
+    return users;
   }
 
   findOne(params: UserIdDto) {
-    return this.userRepository.findOne({ id: params.id });
+    const user = this.userRepository.findOne({ id: params.id });
+    if (!user) {
+      throw makeError("USER_NOT_FOUND");
+    }
+    return user;
   }
 
   async createUser({
@@ -48,6 +61,9 @@ export class UsersService {
     const organisations = await this.organisationRepository.findByIds(
       organisation_ids
     );
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(body.password, salt);
+    user.password = hashedPassword;
     user.helpTypes = helpTypes;
     user.citezenTypes = citezenTypes;
     user.organisations = organisations;
@@ -63,10 +79,14 @@ export class UsersService {
       citizen_type_ids,
       organisation_ids,
       help_type_ids,
+      password,
       ...body
     }: UpdateUserDto
   ) {
     const user = await this.userRepository.findOne({ id: params.id });
+    if (!user) {
+      throw makeError("USER_NOT_FOUND");
+    }
     const megreUser = this.userRepository.merge(user, body);
 
     if (help_type_ids) {
@@ -84,6 +104,35 @@ export class UsersService {
         organisation_ids
       );
       megreUser.organisations = organisations;
+    }
+    if (password) {
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash(password, salt);
+      megreUser.password = hashedPassword;
+    }
+    await this.userRepository.save(megreUser);
+    return megreUser;
+  }
+
+  async deleteUser(params: UserIdDto) {
+    const user = await this.userRepository.findOne({ id: params.id });
+    if (!user) {
+      throw makeError("USER_NOT_FOUND");
+    } else {
+      user.deleted_at = new Date();
+    }
+    await this.userRepository.save(user);
+    return user;
+  }
+
+  async moderateUser(params: UserIdDto, body: ModerationBodyDto) {
+    const user = await this.userRepository.findOne({ id: params.id });
+    if (!user) {
+      throw makeError("USER_NOT_FOUND");
+    } else {
+      user.moderation_status = body.moderation_status;
+      await this.userRepository.save(user);
+      return user;
     }
   }
 }

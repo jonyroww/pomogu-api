@@ -114,8 +114,7 @@ export class User {
 
   @ApiProperty({ type: "boolean", nullable: false, default: false })
   @Column("enum", {
-    enum: ModerationStatus,
-    default: ModerationStatus.NOT_MODERATED
+    enum: ModerationStatus
   })
   moderation_status: ModerationStatus;
 
