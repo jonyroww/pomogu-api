@@ -6,6 +6,7 @@ import { User } from "./entities/User.entity";
 import { UserRepository } from "./repositories/User.repository";
 import { HelpTypesRepository } from "../help-types/repositories/Help-types.repository";
 import { CitezenTypesRepository } from "../citezen-types/repositories/Citezen-types.repository";
+import { OrganisationRepository } from "../organisations/repositories/Organisation.repository";
 
 @Module({
   imports: [
@@ -13,7 +14,8 @@ import { CitezenTypesRepository } from "../citezen-types/repositories/Citezen-ty
       User,
       UserRepository,
       HelpTypesRepository,
-      CitezenTypesRepository
+      CitezenTypesRepository,
+      OrganisationRepository
     ])
   ],
   providers: [UsersService],

@@ -19,7 +19,7 @@ import { TransformIntArray } from "../../common/utils/transform-array-int.util";
 import { TransformInt } from "../../common/utils/transform-int.util";
 import { TransformDate } from "../../common/utils/transform-date.util";
 
-export class createUserDto {
+export class UpdateUserDto {
   @ApiPropertyOptional({ type: "varchar" })
   @IsOptional()
   @IsString()
@@ -43,6 +43,7 @@ export class createUserDto {
 
   @ApiProperty({ type: "varchar" })
   @IsString()
+  @IsOptional()
   @IsPhoneNumber("RU")
   phone: string;
 
@@ -58,19 +59,23 @@ export class createUserDto {
   email: string;
 
   @ApiProperty({ type: "boolean" })
+  @IsOptional()
   @IsBoolean()
   is_individual: boolean;
 
   @ApiProperty({ type: "boolean" })
+  @IsOptional()
   @IsBoolean()
   hide_contacts: boolean;
 
   @ApiPropertyOptional({ type: "boolean" })
+  @IsOptional()
   @IsBoolean()
   need_expert_help: boolean;
 
   @ApiProperty({ type: "boolean" })
   @IsBoolean()
+  @IsOptional()
   with_fund: boolean;
 
   @ApiPropertyOptional({ type: "varchar" })
@@ -80,6 +85,7 @@ export class createUserDto {
 
   @ApiProperty({ type: "boolean" })
   @IsBoolean()
+  @IsOptional()
   allow_search_in_messengers: boolean;
 
   @ApiPropertyOptional({ type: "varchar" })
@@ -94,6 +100,7 @@ export class createUserDto {
   gender: string;
 
   @ApiProperty({ type: "varchar" })
+  @IsOptional()
   @IsString()
   password: string;
 

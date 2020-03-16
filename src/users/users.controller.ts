@@ -6,7 +6,8 @@ import {
   Query,
   Param,
   Post,
-  Body
+  Body,
+  Put
 } from "@nestjs/common";
 import { User } from "./entities/User.entity";
 import { UsersService } from "./users.service";
@@ -19,6 +20,7 @@ import {
 import { GetAllQueryDto } from "./dto/get-all-query.dto";
 import { UserIdDto } from "./dto/user-id.dto";
 import { createUserDto } from "./dto/create-user.dto";
+import { UpdateUserDto } from "./dto/update-user-dto";
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 @Controller("users")
@@ -43,5 +45,12 @@ export class UsersController {
   @Post()
   createUser(@Body() body: createUserDto) {
     return this.usersService.createUser(body);
+  }
+
+  @ApiTags("Users")
+  @ApiCreatedResponse()
+  @Put("/:id")
+  updateUser(@Param() params: UserIdDto, @Body() body: UpdateUserDto) {
+    return this.usersService.updateUser(params, body);
   }
 }
