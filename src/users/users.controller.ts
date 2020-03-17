@@ -8,7 +8,8 @@ import {
   Post,
   Body,
   Put,
-  UseGuards
+  UseGuards,
+  Delete
 } from "@nestjs/common";
 import { User } from "./entities/User.entity";
 import { UsersService } from "./users.service";
@@ -33,8 +34,6 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
   @ApiTags("Users")
   @ApiOkResponse({ type: User })
-  @UseGuards(AuthGuard("jwt"), IsAdminGuard)
-  @ApiBearerAuth()
   @Get()
   findAll(
     @Query() query: GetAllQueryDto,
@@ -70,7 +69,7 @@ export class UsersController {
   @ApiCreatedResponse()
   @UseGuards(AuthGuard("jwt"), IsAdminGuard)
   @ApiBearerAuth()
-  @Put("/:id")
+  @Delete("/:id")
   deleteUser(@Param() params: UserIdDto) {
     return this.usersService.deleteUser(params);
   }

@@ -120,9 +120,9 @@ export class UsersService {
       throw makeError("USER_NOT_FOUND");
     } else {
       user.deleted_at = new Date();
+      await this.userRepository.save(user);
+      return user;
     }
-    await this.userRepository.save(user);
-    return user;
   }
 
   async moderateUser(params: UserIdDto, body: ModerationBodyDto) {

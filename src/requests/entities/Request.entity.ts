@@ -69,7 +69,7 @@ export class Request {
   @Column({ type: "text" })
   comment: string;
 
-  @ApiProperty({ type: () => ModerationStatus })
+  @ApiProperty({ enum: ModerationStatus })
   @Column("enum", {
     enum: ModerationStatus,
     nullable: false

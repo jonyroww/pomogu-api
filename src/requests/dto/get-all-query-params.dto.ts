@@ -20,7 +20,7 @@ export class GetAllQueryFilterDto extends PaginationFilterDto {
   @Transform(TransformIntArray)
   citizen_type_ids: Array<number>;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ enum: ModerationStatus })
   @IsOptional()
   @IsEnum(ModerationStatus)
   moderation_status: ModerationStatus;

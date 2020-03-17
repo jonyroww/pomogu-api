@@ -112,7 +112,7 @@ export class User {
   @Column({ type: "varchar" })
   password: string;
 
-  @ApiProperty({ type: () => ModerationStatus })
+  @ApiProperty({ enum: ModerationStatus })
   @Column("enum", {
     enum: ModerationStatus
   })
