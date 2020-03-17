@@ -78,7 +78,7 @@ export class UsersController {
   @ApiCreatedResponse()
   @UseGuards(AuthGuard("jwt"), IsAdminGuard)
   @ApiBearerAuth()
-  @Put("/:id")
+  @Put("/:id/moderate")
   moderateUser(@Param() params: UserIdDto, @Body() body: ModerationBodyDto) {
     return this.usersService.moderateUser(params, body);
   }

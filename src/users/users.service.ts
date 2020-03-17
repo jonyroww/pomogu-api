@@ -39,9 +39,9 @@ export class UsersService {
     return users;
   }
 
-  findOne(params: UserIdDto) {
-    const user = this.userRepository.findOne({ id: params.id });
-    if (!user) {
+  async findOne(params: UserIdDto) {
+    const user = await this.userRepository.findOne({ id: params.id });
+    if (!user || user.deleted_at) {
       throw makeError("USER_NOT_FOUND");
     }
     return user;
@@ -84,7 +84,7 @@ export class UsersService {
     }: UpdateUserDto
   ) {
     const user = await this.userRepository.findOne({ id: params.id });
-    if (!user) {
+    if (!user || user.deleted_at) {
       throw makeError("USER_NOT_FOUND");
     }
     const megreUser = this.userRepository.merge(user, body);
@@ -127,7 +127,7 @@ export class UsersService {
 
   async moderateUser(params: UserIdDto, body: ModerationBodyDto) {
     const user = await this.userRepository.findOne({ id: params.id });
-    if (!user) {
+    if (!user || user.deleted_at) {
       throw makeError("USER_NOT_FOUND");
     } else {
       user.moderation_status = body.moderation_status;
