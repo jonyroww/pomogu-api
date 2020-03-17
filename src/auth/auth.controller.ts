@@ -45,6 +45,7 @@ export class AuthController {
   }
 
   @Put("/phone-verification/:id")
+  @ApiTags("Phone verification")
   @ApiCreatedResponse({ type: PhoneVerification })
   verificationPhone(
     @Body() body: VerificationPhoneDto,
@@ -54,6 +55,7 @@ export class AuthController {
   }
 
   @Put("/phone-verification/:id/resend")
+  @ApiTags("Phone verification")
   @ApiCreatedResponse({ type: PhoneVerification })
   verificationPhoneResend(
     @Body() body: VerificationResendDto,
