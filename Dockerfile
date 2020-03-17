@@ -1,4 +1,4 @@
-FROM node:10 AS installer
+FROM node:10-slim AS installer
 WORKDIR /usr/src/app
 
 COPY package.json package-lock.json ./
