@@ -1,4 +1,9 @@
-import { MigrationInterface, QueryRunner, TableColumn } from "typeorm";
+import {
+  MigrationInterface,
+  QueryRunner,
+  TableColumn,
+  TableForeignKey
+} from "typeorm";
 
 export class phoneVerificationVerificationId1584461189767
   implements MigrationInterface {
@@ -9,7 +14,17 @@ export class phoneVerificationVerificationId1584461189767
 
     await queryRunner.addColumn(
       "volunteer_requests",
-      new TableColumn({ name: "user_id", type: "int" })
+      new TableColumn({ name: "user_id", type: "int", isNullable: true })
+    );
+
+    await queryRunner.createForeignKey(
+      "volunteer_requests",
+      new TableForeignKey({
+        columnNames: ["user_id"],
+        referencedTableName: "users",
+        referencedColumnNames: ["id"],
+        onDelete: "CASCADE"
+      })
     );
   }
 

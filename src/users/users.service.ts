@@ -79,7 +79,6 @@ export class UsersService {
       citizen_type_ids,
       organisation_ids,
       help_type_ids,
-      password,
       ...body
     }: UpdateUserDto
   ) {
@@ -105,11 +104,7 @@ export class UsersService {
       );
       megreUser.organisations = organisations;
     }
-    if (password) {
-      const salt = await bcrypt.genSalt();
-      const hashedPassword = await bcrypt.hash(password, salt);
-      megreUser.password = hashedPassword;
-    }
+
     await this.userRepository.save(megreUser);
     return megreUser;
   }

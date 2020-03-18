@@ -41,12 +41,6 @@ export class UpdateUserDto {
   @Transform(TransformDate)
   birth_date: Date;
 
-  @ApiProperty({ type: "varchar" })
-  @IsString()
-  @IsOptional()
-  @IsPhoneNumber("RU")
-  phone: string;
-
   @ApiPropertyOptional({ type: "varchar" })
   @IsOptional()
   @IsString()
@@ -98,11 +92,6 @@ export class UpdateUserDto {
   @IsOptional()
   @IsString()
   gender: string;
-
-  @ApiProperty({ type: "varchar" })
-  @IsOptional()
-  @IsString()
-  password: string;
 
   @ApiProperty({ type: "number", isArray: true })
   @IsArray()
