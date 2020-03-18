@@ -29,6 +29,7 @@ import { AcceptRequestParamsDto } from "./dto/accept-request-params.dto";
 import { GetUser } from "../common/decorators/get-user.decorator";
 import { User } from "../users/entities/User.entity";
 import { AcceptRequestAccessGuard } from "../common/guards/accept-request.guard";
+import { GetUserRequestDto } from "./dto/get-user-requests.dto";
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 @Controller()
@@ -58,6 +59,15 @@ export class RequestsController {
   @ApiOkResponse()
   getOneRequest(@Param() params: RequestIdParamsDto) {
     return this.requestsService.getOneRequest(params);
+  }
+
+  @Get("/volunteers/me/requests")
+  @UseGuards(AuthGuard("jwt"))
+  @ApiBearerAuth()
+  @ApiTags("Requests")
+  @ApiOkResponse()
+  getUsersRequest(@Query() query: GetUserRequestDto, @GetUser() user: User) {
+    return this.requestsService.getUsersRequest(query, user);
   }
 
   @Put("/requests/:requestId/accept")
