@@ -13,6 +13,7 @@ import { RequestStatus } from "../constants/RequestStatus.enum";
 import { AcceptRequestParamsDto } from "./dto/accept-request-params.dto";
 import { User } from "../users/entities/User.entity";
 import { makeError } from "src/common/errors";
+import { GetUserRequestDto } from "./dto/get-user-requests.dto";
 
 @Injectable()
 export class RequestsService {
@@ -90,6 +91,14 @@ export class RequestsService {
       id: params.requestId
     });
     return request;
+  }
+
+  async getUsersRequest(query: GetUserRequestDto, user: User) {
+    const requests = await this.requestRepository.find({
+      where: { user_id: user.id, status: query.status }
+    });
+
+    return requests;
   }
 
   async acceptRequest(params: AcceptRequestParamsDto, user: User) {
