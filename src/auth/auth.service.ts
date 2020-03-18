@@ -22,6 +22,7 @@ import { HelpTypesRepository } from "../help-types/repositories/Help-types.repos
 import { CitezenTypesRepository } from "../citezen-types/repositories/Citezen-types.repository";
 import axios from "axios";
 import { RoleName } from "../constants/RoleName.enum";
+import { ModerationStatus } from "src/constants/ModerationStatus.enum";
 
 @Injectable()
 export class AuthService {
@@ -193,6 +194,7 @@ export class AuthService {
     user.citezenTypes = citezenTypes;
     user.helpTypes = helpTypes;
     user.organisations = organisations;
+    user.moderation_status = ModerationStatus.NOT_MODERATED;
     await this.userRepository.save(user);
     phoneVerification.user_id = user.id;
     phoneVerification.used = true;

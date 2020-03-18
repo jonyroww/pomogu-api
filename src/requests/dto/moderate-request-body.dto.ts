@@ -17,7 +17,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { ModerationStatus } from "../../constants/ModerationStatus.enum";
 
 export class ModerateRequestBodyDto {
-  @ApiProperty({ type: "varchar" })
+  @ApiProperty({ enum: ModerationStatus })
   @IsEnum(ModerationStatus)
   moderation_status: ModerationStatus;
 }

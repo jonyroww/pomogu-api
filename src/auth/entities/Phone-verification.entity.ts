@@ -64,7 +64,7 @@ export class PhoneVerification {
   @Column({ type: "varchar" })
   sms_code: string;
 
-  @ApiProperty({ type: "varchar" })
+  @ApiProperty({ enum: PurposeType })
   @Column("enum", { enum: PurposeType, nullable: false })
   purpose: PurposeType;
 

@@ -11,7 +11,7 @@ import { HandlebarsAdapter, MailerModule } from "@nest-modules/mailer";
 import path from "path";
 import appRootPath from "app-root-path";
 import { RequestsModule } from "../requests/requests.module";
-
+import { UsersModule } from "../users/users.module";
 import { ConfigService } from "../config/config.service";
 
 @Module({
@@ -37,7 +37,8 @@ import { ConfigService } from "../config/config.service";
     VolunteerRequestsModule,
     PhotosModule,
     AuthModule,
-    RequestsModule
+    RequestsModule,
+    UsersModule
   ],
   controllers: [],
   providers: []
