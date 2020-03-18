@@ -11,6 +11,8 @@ import { PhoneVerificationRepository } from "../auth/repository/Phone-verificati
 import { HelpTypesRepository } from "../help-types/repositories/Help-types.repository";
 import { CitezenTypesRepository } from "../citezen-types/repositories/Citezen-types.repository";
 import { OrganisationRepository } from "../organisations/repositories/Organisation.repository";
+import { User } from "src/users/entities/User.entity";
+import { VolunteerRequestAuthBodyDto } from "./dto/auth-body.dto";
 
 @Injectable()
 export class VolunteerRequestsService {
@@ -34,7 +36,6 @@ export class VolunteerRequestsService {
     const phoneVerification = await this.phoneVerificationRepository.findOne(
       body.verification_id
     );
-
     if (!phoneVerification) {
       throw makeError("RECORD_NOT_FOUND");
     } else if (phoneVerification.purpose != PurposeType.NEW_VOLUNTEER_REQUEST) {
@@ -48,6 +49,7 @@ export class VolunteerRequestsService {
     } else if (phoneVerification.used === true) {
       throw makeError("VERIFICATION_ALREADY_USED");
     }
+
     const helpTypes = await this.helpTypesRepository.findByIds(help_type_ids);
     const citezenTypes = await this.citezenTypesRepository.findByIds(
       citizen_type_ids
@@ -65,7 +67,34 @@ export class VolunteerRequestsService {
     await this.volunteerRequestRepository.save(volunteerRequest);
     phoneVerification.used = true;
     await this.phoneVerificationRepository.save(phoneVerification);
+    await this.sendEmail(volunteerRequest);
+    return volunteerRequest;
+  }
 
+  async createVolunteerRequestAuth(
+    body: VolunteerRequestAuthBodyDto,
+    user: User
+  ) {
+    const helpTypes = await this.helpTypesRepository.findByIds(
+      body.help_type_ids
+    );
+    const citezenTypes = await this.citezenTypesRepository.findByIds(
+      body.citizen_type_ids
+    );
+    const organisations = await this.organisationRepository.findByIds(
+      body.organisation_ids
+    );
+    const volunteerRequest = this.volunteerRequestRepository.create(user);
+    volunteerRequest.helpTypes = helpTypes;
+    volunteerRequest.citezenTypes = citezenTypes;
+    volunteerRequest.organisations = organisations;
+    volunteerRequest.user_id = user.id;
+    await this.volunteerRequestRepository.save(volunteerRequest);
+    await this.sendEmail(volunteerRequest);
+    return volunteerRequest;
+  }
+
+  async sendEmail(volunteerRequest) {
     if (volunteerRequest.email) {
       await this.mailerService.sendMail({
         to: volunteerRequest.email,
@@ -86,6 +115,5 @@ export class VolunteerRequestsService {
         }
       });
     }
-    return volunteerRequest;
   }
 }

@@ -102,9 +102,13 @@ export class VolunteerRequest {
   @Column({ type: "varchar" })
   gender: string;
 
-  @ApiProperty({ type: "int" })
+  @ApiPropertyOptional({ type: "int" })
   @Column({ type: "int", nullable: false })
   verification_id: number;
+
+  @ApiPropertyOptional({ type: "int" })
+  @Column({ type: "int" })
+  user_id: number;
 
   @ApiPropertyOptional({ type: () => Organisation })
   @ManyToMany(
