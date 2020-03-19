@@ -17,6 +17,9 @@ import { PaginationFilterDto } from "../common/dto/pagination-filter.dto";
 import { ModerationBodyDto } from "./dto/moderation-body.dto";
 import { PhoneVerificationRepository } from "../auth/repository/Phone-verification.repository";
 import { PurposeType } from "src/constants/PurposeType.enum";
+import { UpdatePhoneNumberDto } from "./dto/update-phone-number.dto";
+import { RoleName } from "../constants/RoleName.enum";
+import { UpdateUserParamsDto } from "./dto/update-phone-params.dto";
 
 @Injectable()
 export class UsersService {
@@ -110,6 +113,48 @@ export class UsersService {
 
     await this.userRepository.save(megreUser);
     return megreUser;
+  }
+
+  @Transactional()
+  async updatePhoneNumber(
+    body: UpdatePhoneNumberDto,
+    user: User,
+    params: UpdateUserParamsDto
+  ) {
+    const phoneVerification = await this.phoneVerificationRepository.findOne(
+      body.verification_id
+    );
+    if (user.role != RoleName.ADMIN) {
+      if (!phoneVerification) {
+        throw makeError("RECORD_NOT_FOUND");
+      } else if (phoneVerification.purpose != PurposeType.PHONE_NUMBER_UPDATE) {
+        throw makeError("PURPOSE_IS_NOT_CORRECT");
+      } else if (body.verification_id !== phoneVerification.id) {
+        throw makeError("VERIFICATION_ID_IS_NOT_VALID");
+      } else if (phoneVerification.key != body.verification_key) {
+        throw makeError("KEY_IS_NOT_VALID");
+      } else if (phoneVerification.success !== true) {
+        throw makeError("CODE_ALREADY_USED");
+      } else if (phoneVerification.used === true) {
+        throw makeError("VERIFICATION_ALREADY_USED");
+      }
+    }
+
+    const userDb = await this.userRepository.findOne({
+      id: params.volunteerId
+    });
+    if (!userDb || userDb.deleted_at) {
+      throw makeError("USER_NOT_FOUND");
+    }
+
+    userDb.phone = body.phone;
+    await this.userRepository.save(userDb);
+    if (user.role != RoleName.ADMIN) {
+      phoneVerification.user_id = userDb.id;
+      phoneVerification.used = true;
+      await this.phoneVerificationRepository.save(phoneVerification);
+    }
+    return;
   }
 
   async deleteUser(params: UserIdDto) {
