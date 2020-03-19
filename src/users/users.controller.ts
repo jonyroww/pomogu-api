@@ -69,7 +69,7 @@ export class UsersController {
     return this.usersService.updateUser(params, body);
   }
 
-  @ApiTags("Auth")
+  @ApiTags("Users")
   @ApiCreatedResponse()
   @UseGuards(AuthGuard("jwt"), UserWriteAccessGuard)
   @ApiBearerAuth()
