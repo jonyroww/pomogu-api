@@ -115,6 +115,23 @@ export class RequestsService {
     return request;
   }
 
+  async declineRequest(params: RequestIdParamsDto, user: User) {
+    const request = await this.requestRepository.findOne({
+      id: params.requestId
+    });
+    if (request.user_id != user.id) {
+      throw makeError("FORBIDDEN");
+    }
+    if (request.status === RequestStatus.IN_PROGRESS) {
+      request.status = RequestStatus.NO_VOLUNTEER;
+      request.user_id = null;
+    } else {
+      throw makeError("REQUEST_MUST_BE_IN_PROGRESS");
+    }
+    await this.requestRepository.save(request);
+    return request;
+  }
+
   async moderateRequest(
     params: RequestIdParamsDto,
     body: ModerateRequestBodyDto

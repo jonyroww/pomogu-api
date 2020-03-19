@@ -22,7 +22,8 @@ export const errors = {
   PHONE_ALREADY_EXISTS: HttpStatus.BAD_REQUEST,
   EMAIL_ALREADY_EXISTS: HttpStatus.BAD_REQUEST,
   REQUEST_ALREADY_IN_PROGRESS: HttpStatus.BAD_REQUEST,
-  TYPE_WAS_DELETED: HttpStatus.NOT_FOUND
+  TYPE_WAS_DELETED: HttpStatus.NOT_FOUND,
+  REQUEST_MUST_BE_IN_PROGRESS: HttpStatus.BAD_REQUEST
 };
 
 export type ErrorCode = keyof typeof errors;
