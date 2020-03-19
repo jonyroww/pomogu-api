@@ -24,7 +24,6 @@ import axios from "axios";
 import { RoleName } from "../constants/RoleName.enum";
 import { ModerationStatus } from "src/constants/ModerationStatus.enum";
 import { PasswordResetDto } from "../auth/dto/password-reset.dto";
-import { UpdatePhoneNumberDto } from "./dto/update-phone-number.dto";
 
 @Injectable()
 export class AuthService {
@@ -266,37 +265,6 @@ export class AuthService {
     user.password = hashedPassword;
     await this.userRepository.save(user);
     phoneVerification.user_id = user.id;
-    phoneVerification.used = true;
-    await this.phoneVerificationRepository.save(phoneVerification);
-    return;
-  }
-
-  async updatePhoneNumber(body: UpdatePhoneNumberDto, user: User) {
-    const phoneVerification = await this.phoneVerificationRepository.findOne(
-      body.verification_id
-    );
-    if (!phoneVerification) {
-      throw makeError("RECORD_NOT_FOUND");
-    } else if (phoneVerification.purpose != PurposeType.PHONE_NUMBER_UPDATE) {
-      throw makeError("PURPOSE_IS_NOT_CORRECT");
-    } else if (body.verification_id !== phoneVerification.id) {
-      throw makeError("VERIFICATION_ID_IS_NOT_VALID");
-    } else if (phoneVerification.key != body.verification_key) {
-      throw makeError("KEY_IS_NOT_VALID");
-    } else if (phoneVerification.success !== true) {
-      throw makeError("CODE_ALREADY_USED");
-    } else if (phoneVerification.used === true) {
-      throw makeError("VERIFICATION_ALREADY_USED");
-    }
-
-    const userDb = await this.userRepository.findOne({ id: user.id });
-    if (!userDb || userDb.deleted_at) {
-      throw makeError("USER_NOT_FOUND");
-    }
-
-    userDb.phone = body.phone;
-    await this.userRepository.save(userDb);
-    phoneVerification.user_id = userDb.id;
     phoneVerification.used = true;
     await this.phoneVerificationRepository.save(phoneVerification);
     return;

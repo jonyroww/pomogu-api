@@ -19,7 +19,7 @@ import {
 import { RequestsService } from "./requests.service";
 import { BodyValidationDto } from "./dto/create-request-body.dto";
 import { AuthGuard } from "@nestjs/passport";
-import { OneRequestReadAccessGuard } from "../common/guards/get-one-requests.guard";
+import { UserWriteAccessGuard } from "../common/guards/user-write-access-guard";
 import { RequestIdParamsDto } from "./dto/requestId-params.dto";
 import { IsAdminGuard } from "../common/guards/is-admin.guard";
 import { ModerateRequestBodyDto } from "./dto/moderate-request-body.dto";
@@ -53,7 +53,7 @@ export class RequestsController {
   }
 
   @Get("/volunteers/:volunteerId/requests/:requestId")
-  @UseGuards(AuthGuard("jwt"), OneRequestReadAccessGuard)
+  @UseGuards(AuthGuard("jwt"), UserWriteAccessGuard)
   @ApiBearerAuth()
   @ApiTags("Requests")
   @ApiOkResponse()

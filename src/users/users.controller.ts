@@ -28,6 +28,9 @@ import { ModerationBodyDto } from "./dto/moderation-body.dto";
 import { AuthGuard } from "@nestjs/passport";
 import { IsAdminGuard } from "../common/guards/is-admin.guard";
 import { GetUser } from "../common/decorators/get-user.decorator";
+import { UpdatePhoneNumberDto } from "./dto/update-phone-number.dto";
+import { UserWriteAccessGuard } from "../common/guards/user-write-access-guard";
+import { UpdateUserParamsDto } from "./dto/update-phone-params.dto";
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 @Controller("users")
@@ -64,6 +67,19 @@ export class UsersController {
   @Put("/:id")
   updateUser(@Param() params: UserIdDto, @Body() body: UpdateUserDto) {
     return this.usersService.updateUser(params, body);
+  }
+
+  @ApiTags("Auth")
+  @ApiCreatedResponse()
+  @UseGuards(AuthGuard("jwt"), UserWriteAccessGuard)
+  @ApiBearerAuth()
+  @Put("/:volunteerId/change-phone")
+  updatePhoneNumber(
+    @Body() body: UpdatePhoneNumberDto,
+    @GetUser() user: User,
+    @Param() params: UpdateUserParamsDto
+  ) {
+    return this.usersService.updatePhoneNumber(body, user, params);
   }
 
   @ApiTags("Users")

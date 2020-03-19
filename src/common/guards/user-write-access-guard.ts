@@ -5,7 +5,7 @@ import { RoleName } from "../../constants/RoleName.enum";
 import { User } from "../../users/entities/User.entity";
 import { makeError } from "../errors/index";
 
-export class OneRequestReadAccessGuard implements CanActivate {
+export class UserWriteAccessGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const http = context.switchToHttp();
     const request = http.getRequest<Request>();
