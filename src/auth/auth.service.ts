@@ -23,6 +23,7 @@ import { CitezenTypesRepository } from "../citezen-types/repositories/Citezen-ty
 import axios from "axios";
 import { RoleName } from "../constants/RoleName.enum";
 import { ModerationStatus } from "src/constants/ModerationStatus.enum";
+import { PasswordResetDto } from "../auth/dto/password-reset.dto";
 
 @Injectable()
 export class AuthService {
@@ -232,5 +233,40 @@ export class AuthService {
     return {
       token: await this.jwtService.signAsync(payload)
     };
+  }
+
+  @Transactional()
+  async passwordReset(body: PasswordResetDto) {
+    const phoneVerification = await this.phoneVerificationRepository.findOne(
+      body.verification_id
+    );
+    if (!phoneVerification) {
+      throw makeError("RECORD_NOT_FOUND");
+    } else if (phoneVerification.purpose != PurposeType.PASSWORD_RESET) {
+      throw makeError("PURPOSE_IS_NOT_CORRECT");
+    } else if (body.verification_id !== phoneVerification.id) {
+      throw makeError("VERIFICATION_ID_IS_NOT_VALID");
+    } else if (phoneVerification.key != body.verification_key) {
+      throw makeError("KEY_IS_NOT_VALID");
+    } else if (phoneVerification.success !== true) {
+      throw makeError("CODE_ALREADY_USED");
+    } else if (phoneVerification.used === true) {
+      throw makeError("VERIFICATION_ALREADY_USED");
+    }
+    const user = await this.userRepository.findOne({
+      phone: phoneVerification.phone
+    });
+    if (!user) {
+      throw makeError("USER_NOT_FOUND");
+    }
+
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(body.password, salt);
+    user.password = hashedPassword;
+    await this.userRepository.save(user);
+    phoneVerification.user_id = user.id;
+    phoneVerification.used = true;
+    await this.phoneVerificationRepository.save(phoneVerification);
+    return;
   }
 }

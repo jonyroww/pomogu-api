@@ -15,6 +15,8 @@ import { UpdateUserDto } from "./dto/update-user-dto";
 import bcrypt from "bcrypt";
 import { PaginationFilterDto } from "../common/dto/pagination-filter.dto";
 import { ModerationBodyDto } from "./dto/moderation-body.dto";
+import { PhoneVerificationRepository } from "../auth/repository/Phone-verification.repository";
+import { PurposeType } from "src/constants/PurposeType.enum";
 
 @Injectable()
 export class UsersService {
@@ -23,6 +25,7 @@ export class UsersService {
     private userRepository: UserRepository,
     private helpTypesRepository: HelpTypesRepository,
     private citezenTypesRepository: CitezenTypesRepository,
+    private phoneVerificationRepository: PhoneVerificationRepository,
     private organisationRepository: OrganisationRepository
   ) {}
 
