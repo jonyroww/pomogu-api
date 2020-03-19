@@ -27,6 +27,7 @@ import { PaginationFilterDto } from "../common/dto/pagination-filter.dto";
 import { ModerationBodyDto } from "./dto/moderation-body.dto";
 import { AuthGuard } from "@nestjs/passport";
 import { IsAdminGuard } from "../common/guards/is-admin.guard";
+import { GetUser } from "../common/decorators/get-user.decorator";
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 @Controller("users")

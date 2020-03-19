@@ -31,6 +31,7 @@ import { AuthGuard } from "@nestjs/passport";
 import { GetUser } from "../common/decorators/get-user.decorator";
 import { User } from "../users/entities/User.entity";
 import { PasswordResetDto } from "../auth/dto/password-reset.dto";
+import { UpdatePhoneNumberDto } from "./dto/update-phone-number.dto";
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 @UseInterceptors(ClassSerializerInterceptor)
@@ -86,6 +87,15 @@ export class AuthController {
   @Put("/password-reset")
   passwordReset(@Body() body: PasswordResetDto) {
     return this.authService.passwordReset(body);
+  }
+
+  @ApiTags("Auth")
+  @ApiCreatedResponse()
+  @UseGuards(AuthGuard("jwt"))
+  @ApiBearerAuth()
+  @Put("/update-phone-number")
+  updatePhoneNumber(@Body() body, @GetUser() user: User) {
+    return this.authService.updatePhoneNumber(body, user);
   }
 
   @Get("/me")
