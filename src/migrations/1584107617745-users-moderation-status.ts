@@ -9,7 +9,7 @@ export class usersModerationStatus1584107617745 implements MigrationInterface {
       new TableColumn({
         name: "moderation_status",
         type: "varchar",
-        default: ModerationStatus.NOT_MODERATED
+        default: "'NOT_MODERATED'"
       })
     );
   }
