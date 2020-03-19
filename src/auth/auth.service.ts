@@ -235,6 +235,7 @@ export class AuthService {
     };
   }
 
+  @Transactional()
   async passwordReset(body: PasswordResetDto) {
     const phoneVerification = await this.phoneVerificationRepository.findOne(
       body.verification_id
