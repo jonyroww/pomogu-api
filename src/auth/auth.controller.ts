@@ -30,6 +30,7 @@ import { UserLoginDto } from "./dto/login-body.dto";
 import { AuthGuard } from "@nestjs/passport";
 import { GetUser } from "../common/decorators/get-user.decorator";
 import { User } from "../users/entities/User.entity";
+import { PasswordResetDto } from "../auth/dto/password-reset.dto";
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 @UseInterceptors(ClassSerializerInterceptor)
@@ -78,6 +79,13 @@ export class AuthController {
   @UseGuards(AuthGuard("local"))
   async userLogin(@GetUser() user: User) {
     return await this.authService.userLogin(user);
+  }
+
+  @ApiTags("Auth")
+  @ApiCreatedResponse()
+  @Put("/password-reset")
+  passwordReset(@Body() body: PasswordResetDto) {
+    return this.authService.passwordReset(body);
   }
 
   @Get("/me")

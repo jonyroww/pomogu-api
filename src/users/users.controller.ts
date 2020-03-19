@@ -27,7 +27,6 @@ import { PaginationFilterDto } from "../common/dto/pagination-filter.dto";
 import { ModerationBodyDto } from "./dto/moderation-body.dto";
 import { AuthGuard } from "@nestjs/passport";
 import { IsAdminGuard } from "../common/guards/is-admin.guard";
-import { PasswordResetDto } from "./dto/password-reset.dto";
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 @Controller("users")
@@ -82,12 +81,5 @@ export class UsersController {
   @Put("/:id/moderate")
   moderateUser(@Param() params: UserIdDto, @Body() body: ModerationBodyDto) {
     return this.usersService.moderateUser(params, body);
-  }
-
-  @ApiTags("Users")
-  @ApiCreatedResponse()
-  @Put("/password-reset")
-  passwordReset(@Body() body: PasswordResetDto) {
-    return this.usersService.passwordReset(body);
   }
 }
