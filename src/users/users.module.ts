@@ -7,6 +7,7 @@ import { UserRepository } from "./repositories/User.repository";
 import { HelpTypesRepository } from "../help-types/repositories/Help-types.repository";
 import { CitezenTypesRepository } from "../citezen-types/repositories/Citezen-types.repository";
 import { OrganisationRepository } from "../organisations/repositories/Organisation.repository";
+import { PhoneVerificationRepository } from "../auth/repository/Phone-verification.repository";
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import { OrganisationRepository } from "../organisations/repositories/Organisati
       UserRepository,
       HelpTypesRepository,
       CitezenTypesRepository,
-      OrganisationRepository
+      OrganisationRepository,
+      PhoneVerificationRepository
     ])
   ],
   providers: [UsersService],

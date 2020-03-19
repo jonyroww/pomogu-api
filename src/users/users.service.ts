@@ -15,6 +15,9 @@ import { UpdateUserDto } from "./dto/update-user-dto";
 import bcrypt from "bcrypt";
 import { PaginationFilterDto } from "../common/dto/pagination-filter.dto";
 import { ModerationBodyDto } from "./dto/moderation-body.dto";
+import { PasswordResetDto } from "./dto/password-reset.dto";
+import { PhoneVerificationRepository } from "../auth/repository/Phone-verification.repository";
+import { PurposeType } from "src/constants/PurposeType.enum";
 
 @Injectable()
 export class UsersService {
@@ -23,6 +26,7 @@ export class UsersService {
     private userRepository: UserRepository,
     private helpTypesRepository: HelpTypesRepository,
     private citezenTypesRepository: CitezenTypesRepository,
+    private phoneVerificationRepository: PhoneVerificationRepository,
     private organisationRepository: OrganisationRepository
   ) {}
 
@@ -129,5 +133,37 @@ export class UsersService {
       await this.userRepository.save(user);
       return user;
     }
+  }
+
+  async passwordReset(body: PasswordResetDto) {
+    console.log(typeof body.verification_id);
+    const phoneVerification = await this.phoneVerificationRepository.findOne(
+      body.verification_id
+    );
+    if (!phoneVerification) {
+      throw makeError("RECORD_NOT_FOUND");
+    } else if (phoneVerification.purpose != PurposeType.PASSWORD_RESET) {
+      throw makeError("PURPOSE_IS_NOT_CORRECT");
+    } else if (body.verification_id !== phoneVerification.id) {
+      throw makeError("VERIFICATION_ID_IS_NOT_VALID");
+    } else if (phoneVerification.key != body.verification_key) {
+      throw makeError("KEY_IS_NOT_VALID");
+    } else if (phoneVerification.success !== true) {
+      throw makeError("CODE_ALREADY_USED");
+    } else if (phoneVerification.used === true) {
+      throw makeError("VERIFICATION_ALREADY_USED");
+    }
+    const user = await this.userRepository.findOne({
+      phone: phoneVerification.phone
+    });
+    if (!user) {
+      throw makeError("USER_NOT_FOUND");
+    }
+
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(body.password, salt);
+    user.password = hashedPassword;
+    await this.userRepository.save(user);
+    return user;
   }
 }
