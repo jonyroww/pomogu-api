@@ -28,7 +28,7 @@ import { RequestsReadAccessGuard } from "../common/guards/get-all-requests.guard
 import { AcceptRequestParamsDto } from "./dto/accept-request-params.dto";
 import { GetUser } from "../common/decorators/get-user.decorator";
 import { User } from "../users/entities/User.entity";
-import { AcceptRequestAccessGuard } from "../common/guards/accept-request.guard";
+import { RequestAccessGuard } from "../common/guards/request-access.guard";
 import { GetUserRequestDto } from "./dto/get-user-requests.dto";
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
@@ -72,7 +72,7 @@ export class RequestsController {
 
   @Put("/requests/:requestId/accept")
   @ApiTags("Requests")
-  @UseGuards(AuthGuard("jwt"), AcceptRequestAccessGuard)
+  @UseGuards(AuthGuard("jwt"), RequestAccessGuard)
   @ApiBearerAuth()
   @ApiCreatedResponse()
   acceptRequest(
@@ -80,6 +80,15 @@ export class RequestsController {
     @GetUser() user: User
   ) {
     return this.requestsService.acceptRequest(params, user);
+  }
+
+  @Put("/requests/:requestId/decline")
+  @ApiTags("Requests")
+  @UseGuards(AuthGuard("jwt"), RequestAccessGuard)
+  @ApiBearerAuth()
+  @ApiCreatedResponse()
+  declineRequest(@Param() params: RequestIdParamsDto, @GetUser() user: User) {
+    return this.requestsService.declineRequest(params, user);
   }
 
   @Put("/requests/:requestId")
