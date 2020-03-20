@@ -14,7 +14,6 @@ import { ModerationStatus } from "src/constants/ModerationStatus.enum";
 
 export class GetAllQueryDto extends PaginationFilterDto {
   @ApiPropertyOptional({ enum: ModerationStatus })
-  @IsOptional()
   @IsEnum(ModerationStatus)
   moderation_status: ModerationStatus;
 }
