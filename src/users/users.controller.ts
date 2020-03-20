@@ -39,11 +39,8 @@ export class UsersController {
   @ApiTags("Users")
   @ApiOkResponse({ type: User })
   @Get()
-  findAll(
-    @Query() query: GetAllQueryDto,
-    @Param() params: PaginationFilterDto
-  ) {
-    return this.usersService.findAll(query, params);
+  findAll(@Query() query: GetAllQueryDto) {
+    return this.usersService.findAll(query);
   }
 
   @ApiTags("Users")

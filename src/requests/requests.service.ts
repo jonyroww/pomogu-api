@@ -80,10 +80,13 @@ export class RequestsService {
       status: RequestStatus.NO_VOLUNTEER
     }).andWhere("requests.user_id is null");
 
-    return qb
+    const total = await qb.getCount();
+    const requests = await qb
       .take(query.limit)
       .skip(query.offset)
       .getMany();
+
+    return { total: total, data: requests };
   }
 
   async getOneRequest(params: RequestIdParamsDto) {

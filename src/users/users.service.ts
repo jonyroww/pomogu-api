@@ -33,16 +33,18 @@ export class UsersService {
   ) {}
 
   @Transactional()
-  async findAll(query: GetAllQueryDto, params: PaginationFilterDto) {
-    let users;
-    if (query.moderation_status) {
-      users = await this.userRepository.find({
-        where: { moderation_status: query.moderation_status, deleted_at: null }
-      });
-    } else {
-      users = await this.userRepository.find({ where: { deleted_at: null } });
-    }
-    return users;
+  async findAll(query: GetAllQueryDto) {
+    const qb = this.userRepository.createQueryBuilder("users");
+    qb.where("users.moderation_status = :moderation_status", {
+      moderation_status: query.moderation_status
+    });
+    const total = await qb.getCount();
+    const users = await qb
+      .take(query.limit)
+      .skip(query.offset)
+      .getMany();
+
+    return { total: total, data: users };
   }
 
   async findOne(params: UserIdDto) {
