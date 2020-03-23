@@ -15,13 +15,17 @@ import { User } from "../users/entities/User.entity";
 import { makeError } from "src/common/errors";
 import { GetUserRequestDto } from "./dto/get-user-requests.dto";
 import { ReportBodyDto } from "./dto/report-body.dto";
+import { MailerService } from "@nest-modules/mailer";
+import { ConfigService } from "../config/config.service";
 
 @Injectable()
 export class RequestsService {
   constructor(
     private requestRepository: RequestRepository,
     private helpTypesRepository: HelpTypesRepository,
-    private citezenTypesRepository: CitezenTypesRepository
+    private citezenTypesRepository: CitezenTypesRepository,
+    private readonly mailerService: MailerService,
+    private configService: ConfigService
   ) {}
 
   @Transactional()
@@ -152,5 +156,39 @@ export class RequestsService {
     params: RequestIdParamsDto,
     user: User,
     body: ReportBodyDto
-  ) {}
+  ) {
+    const request = await this.requestRepository.findOne({
+      id: params.requestId
+    });
+    await this.sendEmail(user, body.text, request);
+    return;
+  }
+
+  async sendEmail(user, text, request) {
+    if (user.email) {
+      await this.mailerService.sendMail({
+        to: this.configService.get("SUPPORT_EMAIL"),
+        subject: `Жалоба на заявку №${request.id}_${new Date()}`,
+        text: `Обращение: 
+        ${request.comment}
+
+        ${request.middle_name +
+          " " +
+          request.first_name +
+          " " +
+          request.last_name}
+        ${request.phone}
+        ${request.email}
+        ${request.created_at}
+        Заявитель:
+        Текст жалобы: ${text}
+        
+        ${user.middle_name + " " + user.first_name + " " + user.last_name}
+        id: ${user.id}. 
+        ${user.email}. 
+        ${user.phone}. `,
+        template: "report.html"
+      });
+    }
+  }
 }
