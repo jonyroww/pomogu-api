@@ -14,13 +14,18 @@ import { AcceptRequestParamsDto } from "./dto/accept-request-params.dto";
 import { User } from "../users/entities/User.entity";
 import { makeError } from "src/common/errors";
 import { GetUserRequestDto } from "./dto/get-user-requests.dto";
+import { ReportBodyDto } from "./dto/report-body.dto";
+import { MailerService } from "@nest-modules/mailer";
+import { ConfigService } from "../config/config.service";
 
 @Injectable()
 export class RequestsService {
   constructor(
     private requestRepository: RequestRepository,
     private helpTypesRepository: HelpTypesRepository,
-    private citezenTypesRepository: CitezenTypesRepository
+    private citezenTypesRepository: CitezenTypesRepository,
+    private readonly mailerService: MailerService,
+    private configService: ConfigService
   ) {}
 
   @Transactional()
@@ -145,5 +150,42 @@ export class RequestsService {
     request.moderation_status = body.moderation_status;
     await this.requestRepository.save(request);
     return request;
+  }
+
+  async reportRequest(
+    params: RequestIdParamsDto,
+    user: User,
+    body: ReportBodyDto
+  ) {
+    const request = await this.requestRepository.findOne({
+      id: params.requestId
+    });
+    await this.sendEmail(user, body.text, request);
+    return;
+  }
+
+  async sendEmail(user, text, request) {
+    if (user.email) {
+      await this.mailerService.sendMail({
+        to: this.configService.get("SUPPORT_EMAIL"),
+        subject: `Жалоба на заявку №${request.id}_${new Date()}`,
+        template: "report.html",
+        context: {
+          comment: request.comment,
+          middleName: request.middle_name,
+          firstName: request.first_name,
+          lastName: request.last_name,
+          email: request.email,
+          phone: request.phone,
+          created_at: request.created_at,
+          text: text,
+          middleNameUser: user.middle_name,
+          firstNameUser: user.first_name,
+          lastNameUser: user.last_name,
+          emailUser: user.email,
+          phoneUser: user.phone
+        }
+      });
+    }
   }
 }

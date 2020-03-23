@@ -30,6 +30,7 @@ import { GetUser } from "../common/decorators/get-user.decorator";
 import { User } from "../users/entities/User.entity";
 import { RequestAccessGuard } from "../common/guards/request-access.guard";
 import { GetUserRequestDto } from "./dto/get-user-requests.dto";
+import { ReportBodyDto } from "./dto/report-body.dto";
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 @Controller()
@@ -101,5 +102,18 @@ export class RequestsController {
     @Body() body: ModerateRequestBodyDto
   ) {
     return this.requestsService.moderateRequest(params, body);
+  }
+
+  @Post("/requests/:requestId/report")
+  @ApiTags("Requests")
+  @UseGuards(AuthGuard("jwt"), RequestAccessGuard)
+  @ApiBearerAuth()
+  @ApiCreatedResponse()
+  reportRequest(
+    @Param() params: RequestIdParamsDto,
+    @GetUser() user: User,
+    @Body() body: ReportBodyDto
+  ) {
+    return this.requestsService.reportRequest(params, user, body);
   }
 }
