@@ -14,6 +14,7 @@ import { AcceptRequestParamsDto } from "./dto/accept-request-params.dto";
 import { User } from "../users/entities/User.entity";
 import { makeError } from "src/common/errors";
 import { GetUserRequestDto } from "./dto/get-user-requests.dto";
+import { ReportBodyDto } from "./dto/report-body.dto";
 
 @Injectable()
 export class RequestsService {
@@ -146,4 +147,10 @@ export class RequestsService {
     await this.requestRepository.save(request);
     return request;
   }
+
+  async reportRequest(
+    params: RequestIdParamsDto,
+    user: User,
+    body: ReportBodyDto
+  ) {}
 }
