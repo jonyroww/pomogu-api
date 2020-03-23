@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Жалоба на заявку</title>
+  </head>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+    <h3>Обращение</h3>
+    <strong>Текст обращения: </strong>{{comment}}<br />
+    {{#if middleName}}
+    <strong>Фамилия: </strong>{{middleName}}<br />
+    {{/if}} {{#if firstName}}
+    <strong>Имя:</strong>
+    {{firstName}}<br />
+    {{/if}} {{#if lastName}}
+    <strong>Отчество:</strong>
+    {{lastName}}<br />
+    {{/if}} {{#if email}}
+    <strong>Эл. почта:</strong>
+    {{email}}<br />
+    {{/if}}
+    <strong>Телефон: </strong>{{phone}}<br />
+    <strong>Дата: </strong>{{created_at}}<br />
+
+    <h3>Заявитель</h3>
+    <strong>Текст жалобы: </strong> {{text}}<br />
+    {{#if middleNameUser}}
+    <strong>Фамилия: </strong>{{middleNameUser}}<br />
+    {{/if}} {{#if firstNameUser}}
+    <strong>Имя:</strong>
+    {{firstNameUser}}<br />
+    {{/if}} {{#if lastNameUser}}
+    <strong>Отчество:</strong>
+    {{lastNameUser}}<br />
+    {{/if}} {{#if emailUser}}
+    <strong>Эл. почта:</strong>
+    {{emailUser}}<br />
+    {{/if}}
+    <strong>Телефон: </strong>{{phoneUser}}<br />
+  </body>
+</html>

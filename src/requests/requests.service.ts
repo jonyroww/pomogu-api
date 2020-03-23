@@ -169,25 +169,22 @@ export class RequestsService {
       await this.mailerService.sendMail({
         to: this.configService.get("SUPPORT_EMAIL"),
         subject: `Жалоба на заявку №${request.id}_${new Date()}`,
-        text: `Обращение: 
-        ${request.comment}
-
-        ${request.middle_name +
-          " " +
-          request.first_name +
-          " " +
-          request.last_name}
-        ${request.phone}
-        ${request.email}
-        ${request.created_at}
-        Заявитель:
-        Текст жалобы: ${text}
-        
-        ${user.middle_name + " " + user.first_name + " " + user.last_name}
-        id: ${user.id}. 
-        ${user.email}. 
-        ${user.phone}. `,
-        template: "report.html"
+        template: "report.html",
+        context: {
+          comment: request.comment,
+          middleName: request.middle_name,
+          firstName: request.first_name,
+          lastName: request.last_name,
+          email: request.email,
+          phone: request.phone,
+          created_at: request.created_at,
+          text: text,
+          middleNameUser: user.middle_name,
+          firstNameUser: user.first_name,
+          lastNameUser: user.last_name,
+          emailUser: user.email,
+          phoneUser: user.phone
+        }
       });
     }
   }
