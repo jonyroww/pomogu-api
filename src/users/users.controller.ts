@@ -31,6 +31,7 @@ import { GetUser } from "../common/decorators/get-user.decorator";
 import { UpdatePhoneNumberDto } from "./dto/update-phone-number.dto";
 import { UserWriteAccessGuard } from "../common/guards/user-write-access-guard";
 import { UpdateUserParamsDto } from "./dto/update-phone-params.dto";
+import { ModerationAdminGuard } from "../common/guards/moderation-admin.guard";
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 @Controller("users")
@@ -90,7 +91,7 @@ export class UsersController {
 
   @ApiTags("Users")
   @ApiCreatedResponse()
-  @UseGuards(AuthGuard("jwt"), IsAdminGuard)
+  @UseGuards(AuthGuard("jwt"), ModerationAdminGuard)
   @ApiBearerAuth()
   @Put("/:id/moderate")
   moderateUser(@Param() params: UserIdDto, @Body() body: ModerationBodyDto) {

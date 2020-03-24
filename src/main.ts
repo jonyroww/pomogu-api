@@ -6,6 +6,7 @@ import { join } from "path";
 import { path } from "app-root-path";
 import dotenv from "dotenv";
 import { initializeTransactionalContext } from "typeorm-transactional-cls-hooked";
+
 dotenv.config();
 async function bootstrap() {
   initializeTransactionalContext();
@@ -15,9 +16,11 @@ async function bootstrap() {
     .setTitle("Pomogu API")
     .setDescription("The Pomogu API description")
     .setVersion("1.0")
+    .setBasePath(process.env.BASE_URL)
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup("api", app, document);
+
   app.use(
     "/static/photos",
     express.static(join(path, "photos"), {

@@ -4,16 +4,31 @@ import {
   Body,
   UsePipes,
   ValidationPipe,
-  UseGuards
+  UseGuards,
+  Put,
+  Param,
+  Get,
+  Query
 } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { VolunteerRequestsService } from "./volunteer-requests.service";
 import { VolunteerRequest } from "./entities/Volunteer-request.entity";
-import { ApiTags, ApiCreatedResponse, ApiBearerAuth } from "@nestjs/swagger";
+import {
+  ApiTags,
+  ApiCreatedResponse,
+  ApiBearerAuth,
+  ApiOkResponse
+} from "@nestjs/swagger";
 import { VolunteerRequestBodyDto } from "./dto/volunteer-request-body.dto";
 import { GetUser } from "../common/decorators/get-user.decorator";
 import { User } from "src/users/entities/User.entity";
 import { VolunteerRequestAuthBodyDto } from "./dto/auth-body.dto";
+import { IsAdminGuard } from "../common/guards/is-admin.guard";
+import { VolunteerRequestIdDto } from "./dto/volunteer-request-id.dto";
+import { ModerationStatus } from "src/constants/ModerationStatus.enum";
+import { ModerationBodyDto } from "./dto/moderate-body.dto";
+import { GetAllQueryDto } from "./dto/get-all-query.dto";
+import { ModerationAdminGuard } from "../common/guards/moderation-admin.guard";
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 @Controller("volunteer-requests")
@@ -36,5 +51,35 @@ export class VolunteerRequestsController {
     @GetUser() user: User
   ) {
     return this.volunteerRequestService.createVolunteerRequestAuth(body, user);
+  }
+
+  @ApiTags("Volunteer Requests")
+  @ApiOkResponse()
+  @UseGuards(AuthGuard("jwt"), ModerationAdminGuard)
+  @ApiBearerAuth()
+  @Get()
+  getAllVolunteerRequests(@Query() query: GetAllQueryDto) {
+    return this.volunteerRequestService.getAllVolunteerRequests(query);
+  }
+
+  @ApiTags("Volunteer Requests")
+  @ApiOkResponse()
+  @UseGuards(AuthGuard("jwt"), ModerationAdminGuard)
+  @ApiBearerAuth()
+  @Get("/:id")
+  getOneVolunteerRequest(@Param() params: VolunteerRequestIdDto) {
+    return this.volunteerRequestService.getOneRequest(params);
+  }
+
+  @ApiTags("Volunteer Requests")
+  @ApiCreatedResponse()
+  @UseGuards(AuthGuard("jwt"), ModerationAdminGuard)
+  @ApiBearerAuth()
+  @Put("/:id/moderate")
+  moderateVolunteerRequest(
+    @Param() params: VolunteerRequestIdDto,
+    @Body() body: ModerationBodyDto
+  ) {
+    return this.volunteerRequestService.moderateRequest(params, body);
   }
 }

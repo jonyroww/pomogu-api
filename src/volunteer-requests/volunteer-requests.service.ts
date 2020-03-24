@@ -13,6 +13,11 @@ import { CitezenTypesRepository } from "../citezen-types/repositories/Citezen-ty
 import { OrganisationRepository } from "../organisations/repositories/Organisation.repository";
 import { User } from "src/users/entities/User.entity";
 import { VolunteerRequestAuthBodyDto } from "./dto/auth-body.dto";
+import { VolunteerRequestIdDto } from "./dto/volunteer-request-id.dto";
+import { ModerationStatus } from "src/constants/ModerationStatus.enum";
+import { ModerationBodyDto } from "./dto/moderate-body.dto";
+import { GetAllQueryDto } from "./dto/get-all-query.dto";
+import _ from "lodash";
 
 @Injectable()
 export class VolunteerRequestsService {
@@ -92,6 +97,77 @@ export class VolunteerRequestsService {
     await this.volunteerRequestRepository.save(volunteerRequest);
     await this.sendEmail(volunteerRequest);
     return volunteerRequest;
+  }
+
+  async moderateRequest(
+    params: VolunteerRequestIdDto,
+    body: ModerationBodyDto
+  ) {
+    const volunteerRequest = await this.volunteerRequestRepository.findOne({
+      id: params.id
+    });
+    if (volunteerRequest && volunteerRequest.deleted_at === null) {
+      volunteerRequest.moderation_status = body.moderation_status;
+      await this.volunteerRequestRepository.save(volunteerRequest);
+      return volunteerRequest;
+    } else {
+      throw makeError("RECORD_NOT_FOUND");
+    }
+  }
+
+  async getAllVolunteerRequests(query: GetAllQueryDto) {
+    const qb = this.volunteerRequestRepository.createQueryBuilder(
+      "volunteer_requests"
+    );
+    qb.leftJoinAndSelect(
+      "volunteer_requests.helpTypes",
+      "helpTypes"
+    ).leftJoinAndSelect("volunteer_requests.citezenTypes", "citezenTypes");
+
+    if (!_.isEmpty(query.help_type_ids) || !_.isEmpty(query.citizen_type_ids)) {
+      qb.where("FALSE");
+    }
+
+    if (!_.isEmpty(query.help_type_ids)) {
+      qb.leftJoin(
+        "volunteer_requests.helpTypes",
+        "volunteer_requests_help_types"
+      ).orWhere("volunteer_requests_help_types.id IN (:...helpTypesId)", {
+        helpTypesId: query.help_type_ids
+      });
+    }
+
+    if (!_.isEmpty(query.citizen_type_ids)) {
+      qb.leftJoin(
+        "volunteer_requests.citezenTypes",
+        "volunteer_requests_citezen_types"
+      ).orWhere("volunteer_requests_citezen_types.id IN (:...citezenTypes)", {
+        citezenTypes: query.citizen_type_ids
+      });
+    }
+
+    qb.andWhere("volunteer_requests.moderation_status = :moderation_status", {
+      moderation_status: query.moderation_status || ModerationStatus.APPROVED
+    });
+
+    const total = await qb.getCount();
+    const volunteerRequests = await qb
+      .take(query.limit)
+      .skip(query.offset)
+      .getMany();
+    return { total: total, data: volunteerRequests };
+  }
+
+  async getOneRequest(params: VolunteerRequestIdDto) {
+    const volunteerRequest = await this.volunteerRequestRepository.findOne({
+      id: params.id
+    });
+
+    if (volunteerRequest && volunteerRequest.deleted_at === null) {
+      return volunteerRequest;
+    } else {
+      throw makeError("RECORD_NOT_FOUND");
+    }
   }
 
   async sendEmail(volunteerRequest) {
