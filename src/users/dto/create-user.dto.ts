@@ -18,6 +18,7 @@ import { Transform } from "class-transformer";
 import { TransformIntArray } from "../../common/utils/transform-array-int.util";
 import { TransformInt } from "../../common/utils/transform-int.util";
 import { TransformDate } from "../../common/utils/transform-date.util";
+import { RoleName } from "../../constants/RoleName.enum";
 
 export class createUserDto {
   @ApiPropertyOptional({ type: "varchar" })
@@ -50,6 +51,11 @@ export class createUserDto {
   @IsOptional()
   @IsString()
   city: string;
+
+  @ApiProperty({ enum: RoleName })
+  @IsString()
+  @IsEnum(RoleName)
+  role: RoleName;
 
   @ApiPropertyOptional({ type: "varchar" })
   @IsOptional()

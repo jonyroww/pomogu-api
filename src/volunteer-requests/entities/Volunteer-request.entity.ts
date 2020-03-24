@@ -12,6 +12,7 @@ import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Organisation } from "../../organisations/entities/Organisation.entity";
 import { HelpTypes } from "../../help-types/entities/help-types.entity";
 import { CitezenTypes } from "../../citezen-types/entities/citezen-types.entity";
+import { ModerationStatus } from "../../constants/ModerationStatus.enum";
 
 @Entity({ name: "volunteer_requests" })
 export class VolunteerRequest {
@@ -89,6 +90,13 @@ export class VolunteerRequest {
   @ApiPropertyOptional({ type: "text" })
   @Column({ type: "text" })
   comment: string;
+
+  @ApiProperty({ enum: ModerationStatus })
+  @Column("enum", {
+    enum: ModerationStatus,
+    nullable: false
+  })
+  moderation_status: ModerationStatus;
 
   @ApiProperty({ type: "boolean" })
   @Column({ type: "boolean", nullable: false, default: true })

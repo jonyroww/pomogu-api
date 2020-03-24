@@ -31,6 +31,7 @@ import { User } from "../users/entities/User.entity";
 import { RequestAccessGuard } from "../common/guards/request-access.guard";
 import { GetUserRequestDto } from "./dto/get-user-requests.dto";
 import { ReportBodyDto } from "./dto/report-body.dto";
+import { ModerationAdminGuard } from "../common/guards/moderation-admin.guard";
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 @Controller()
@@ -94,7 +95,7 @@ export class RequestsController {
 
   @Put("/requests/:requestId")
   @ApiTags("Requests")
-  @UseGuards(AuthGuard("jwt"), IsAdminGuard)
+  @UseGuards(AuthGuard("jwt"), ModerationAdminGuard)
   @ApiBearerAuth()
   @ApiCreatedResponse()
   moderateRequest(

@@ -36,7 +36,11 @@ export class UsersService {
   async findAll(query: GetAllQueryDto) {
     const qb = this.userRepository.createQueryBuilder("users");
     qb.where("users.moderation_status = :moderation_status", {
-      moderation_status: query.moderation_status
+      moderation_status: query.moderation_status || ModerationStatus.APPROVED
+    });
+
+    qb.andWhere("users.role = :role", {
+      role: query.role || RoleName.VOLUNTEER
     });
     const total = await qb.getCount();
     const users = await qb
