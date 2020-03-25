@@ -8,7 +8,8 @@ import {
   Put,
   Param,
   Get,
-  Query
+  Query,
+  Delete
 } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { VolunteerRequestsService } from "./volunteer-requests.service";
@@ -81,5 +82,14 @@ export class VolunteerRequestsController {
     @Body() body: ModerationBodyDto
   ) {
     return this.volunteerRequestService.moderateRequest(params, body);
+  }
+
+  @ApiTags("Volunteer Requests")
+  @ApiOkResponse()
+  @UseGuards(AuthGuard("jwt"), ModerationAdminGuard)
+  @ApiBearerAuth()
+  @Delete("/:id")
+  deleteVolunteerRequest(@Param() params: VolunteerRequestIdDto) {
+    return this.volunteerRequestService.deleteVolunteerRequest(params);
   }
 }
