@@ -148,7 +148,7 @@ export class VolunteerRequestsService {
 
     qb.andWhere("volunteer_requests.moderation_status = :moderation_status", {
       moderation_status: query.moderation_status || ModerationStatus.APPROVED
-    });
+    }).andWhere("volunteer_requests.deleted_at is null");
 
     const total = await qb.getCount();
     const volunteerRequests = await qb
@@ -163,10 +163,24 @@ export class VolunteerRequestsService {
       id: params.id
     });
 
-    if (volunteerRequest && volunteerRequest.deleted_at === null) {
-      return volunteerRequest;
-    } else {
+    if (!volunteerRequest || volunteerRequest.deleted_at) {
       throw makeError("RECORD_NOT_FOUND");
+    } else {
+      return volunteerRequest;
+    }
+  }
+
+  async deleteVolunteerRequest(params: VolunteerRequestIdDto) {
+    const volunteerRequest = await this.volunteerRequestRepository.findOne({
+      id: params.id
+    });
+
+    if (!volunteerRequest || volunteerRequest.deleted_at) {
+      throw makeError("RECORD_NOT_FOUND");
+    } else {
+      volunteerRequest.deleted_at = new Date();
+      await this.volunteerRequestRepository.save(volunteerRequest);
+      return volunteerRequest;
     }
   }
 
