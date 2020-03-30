@@ -77,9 +77,11 @@ export class RequestsService {
       );
     }
 
+    /*
     qb.andWhere("requests.moderation_status = :moderation_status", {
       moderation_status: query.moderation_status || ModerationStatus.APPROVED
-    });
+    }); 
+*/
 
     qb.andWhere("requests.status = :status", {
       status: RequestStatus.NO_VOLUNTEER
