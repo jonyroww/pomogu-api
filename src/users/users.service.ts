@@ -35,6 +35,11 @@ export class UsersService {
   @Transactional()
   async findAll(query: GetAllQueryDto) {
     const qb = this.userRepository.createQueryBuilder("users");
+
+    qb.leftJoinAndSelect("users.helpTypes", "helpTypes")
+      .leftJoinAndSelect("users.citezenTypes", "citezenTypes")
+      .leftJoinAndSelect("users.organisations", "organisations");
+
     qb.where("users.moderation_status = :moderation_status", {
       moderation_status: query.moderation_status || ModerationStatus.APPROVED
     });
