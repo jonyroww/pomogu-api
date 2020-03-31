@@ -93,6 +93,15 @@ export class RequestsController {
     return this.requestsService.declineRequest(params, user);
   }
 
+  @Put("/requests/:requestId/done")
+  @ApiTags("Requests")
+  @UseGuards(AuthGuard("jwt"), RequestAccessGuard)
+  @ApiBearerAuth()
+  @ApiCreatedResponse()
+  doneRequest(@Param() params: RequestIdParamsDto, @GetUser() user: User) {
+    return this.requestsService.doneRequest(params, user);
+  }
+
   @Put("/requests/:requestId")
   @ApiTags("Requests")
   @UseGuards(AuthGuard("jwt"), ModerationAdminGuard)

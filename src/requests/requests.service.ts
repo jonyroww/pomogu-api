@@ -17,6 +17,8 @@ import { GetUserRequestDto } from "./dto/get-user-requests.dto";
 import { ReportBodyDto } from "./dto/report-body.dto";
 import { MailerService } from "@nest-modules/mailer";
 import { ConfigService } from "../config/config.service";
+import { createQueryBuilder } from "typeorm";
+import { request } from "express";
 
 @Injectable()
 export class RequestsService {
@@ -104,17 +106,29 @@ export class RequestsService {
   }
 
   async getUsersRequest(query: GetUserRequestDto, user: User) {
-    const requests = await this.requestRepository.find({
-      where: { user_id: user.id, status: query.status }
+    const qb = this.requestRepository.createQueryBuilder("requests");
+    qb.where("requests.user_id = :user_id", {
+      user_id: user.id
+    }).andWhere("requests.status = :status", {
+      status: query.status
     });
 
-    return requests;
+    const total = await qb.getCount();
+    const requests = await qb
+      .take(query.limit)
+      .skip(query.offset)
+      .getMany();
+
+    return { total: total, data: requests };
   }
 
   async acceptRequest(params: AcceptRequestParamsDto, user: User) {
     const request = await this.requestRepository.findOne({
       id: params.requestId
     });
+    if (!request) {
+      throw makeError("RECORD_NOT_FOUND");
+    }
     if (request.status === RequestStatus.NO_VOLUNTEER) {
       request.status = RequestStatus.IN_PROGRESS;
       request.user_id = user.id;
@@ -129,12 +143,34 @@ export class RequestsService {
     const request = await this.requestRepository.findOne({
       id: params.requestId
     });
+    if (!request) {
+      throw makeError("RECORD_NOT_FOUND");
+    }
     if (request.user_id != user.id) {
       throw makeError("FORBIDDEN");
     }
     if (request.status === RequestStatus.IN_PROGRESS) {
       request.status = RequestStatus.NO_VOLUNTEER;
       request.user_id = null;
+    } else {
+      throw makeError("REQUEST_MUST_BE_IN_PROGRESS");
+    }
+    await this.requestRepository.save(request);
+    return request;
+  }
+
+  async doneRequest(params: RequestIdParamsDto, user: User) {
+    const request = await this.requestRepository.findOne({
+      id: params.requestId
+    });
+    if (!request) {
+      throw makeError("RECORD_NOT_FOUND");
+    }
+    if (request.user_id != user.id) {
+      throw makeError("FORBIDDEN");
+    }
+    if (request.status === RequestStatus.IN_PROGRESS) {
+      request.status = RequestStatus.DONE;
     } else {
       throw makeError("REQUEST_MUST_BE_IN_PROGRESS");
     }
@@ -149,6 +185,9 @@ export class RequestsService {
     const request = await this.requestRepository.findOne({
       id: params.requestId
     });
+    if (!request) {
+      throw makeError("RECORD_NOT_FOUND");
+    }
     request.moderation_status = body.moderation_status;
     await this.requestRepository.save(request);
     return request;
@@ -162,6 +201,9 @@ export class RequestsService {
     const request = await this.requestRepository.findOne({
       id: params.requestId
     });
+    if (!request) {
+      throw makeError("RECORD_NOT_FOUND");
+    }
     await this.sendEmail(user, body.text, request);
     return;
   }
