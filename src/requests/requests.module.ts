@@ -6,6 +6,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { Request } from "./entities/Request.entity";
 import { HelpTypesRepository } from "../help-types/repositories/Help-types.repository";
 import { CitezenTypesRepository } from "../citezen-types/repositories/Citezen-types.repository";
+import { UserRepository } from "../users/repositories/User.repository";
 
 @Module({
   imports: [
@@ -13,7 +14,8 @@ import { CitezenTypesRepository } from "../citezen-types/repositories/Citezen-ty
       Request,
       RequestRepository,
       HelpTypesRepository,
-      CitezenTypesRepository
+      CitezenTypesRepository,
+      UserRepository
     ])
   ],
   controllers: [RequestsController],

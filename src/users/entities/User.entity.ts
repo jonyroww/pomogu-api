@@ -84,6 +84,10 @@ export class User {
   @Column({ type: "boolean", nullable: false })
   hide_contacts: boolean;
 
+  @ApiProperty()
+  @Column({ type: "int", default: 0 })
+  help_count: number;
+
   @ApiPropertyOptional({ type: "boolean" })
   @Column({ type: "boolean" })
   need_expert_help: boolean;
