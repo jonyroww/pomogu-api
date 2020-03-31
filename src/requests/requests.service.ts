@@ -17,8 +17,7 @@ import { GetUserRequestDto } from "./dto/get-user-requests.dto";
 import { ReportBodyDto } from "./dto/report-body.dto";
 import { MailerService } from "@nest-modules/mailer";
 import { ConfigService } from "../config/config.service";
-import { createQueryBuilder } from "typeorm";
-import { request } from "express";
+import { UserRepository } from "../users/repositories/User.repository";
 
 @Injectable()
 export class RequestsService {
@@ -27,6 +26,7 @@ export class RequestsService {
     private helpTypesRepository: HelpTypesRepository,
     private citezenTypesRepository: CitezenTypesRepository,
     private readonly mailerService: MailerService,
+    private userRepository: UserRepository,
     private configService: ConfigService
   ) {}
 
@@ -171,10 +171,12 @@ export class RequestsService {
     }
     if (request.status === RequestStatus.IN_PROGRESS) {
       request.status = RequestStatus.DONE;
+      user.help_count += 1;
+      await this.userRepository.save(user);
+      await this.requestRepository.save(request);
     } else {
       throw makeError("REQUEST_MUST_BE_IN_PROGRESS");
     }
-    await this.requestRepository.save(request);
     return request;
   }
 
