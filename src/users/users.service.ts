@@ -93,7 +93,7 @@ export class UsersService {
   async updateUser(
     params: UserIdDto,
     {
-      citizen_type_ids,
+      citezen_type_ids,
       organisation_ids,
       help_type_ids,
       ...body
@@ -109,9 +109,9 @@ export class UsersService {
       const helpTypes = await this.helpTypesRepository.findByIds(help_type_ids);
       megreUser.helpTypes = helpTypes;
     }
-    if (citizen_type_ids) {
+    if (citezen_type_ids) {
       const citezenTypes = await this.citezenTypesRepository.findByIds(
-        citizen_type_ids
+        citezen_type_ids
       );
       megreUser.citezenTypes = citezenTypes;
     }
