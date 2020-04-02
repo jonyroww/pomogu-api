@@ -18,6 +18,7 @@ import { ReportBodyDto } from "./dto/report-body.dto";
 import { MailerService } from "@nest-modules/mailer";
 import { ConfigService } from "../config/config.service";
 import { UserRepository } from "../users/repositories/User.repository";
+import { setTypesFilters } from "../common/utils/types-filters.util";
 
 @Injectable()
 export class RequestsService {
@@ -57,27 +58,7 @@ export class RequestsService {
       "citezenTypes"
     );
 
-    if (!_.isEmpty(query.help_type_ids) || !_.isEmpty(query.citizen_type_ids)) {
-      qb.where("FALSE");
-    }
-
-    if (!_.isEmpty(query.help_type_ids)) {
-      qb.leftJoin("requests.helpTypes", "requests_help_types").orWhere(
-        "requests_help_types.id IN (:...helpTypesId)",
-        {
-          helpTypesId: query.help_type_ids
-        }
-      );
-    }
-
-    if (!_.isEmpty(query.citizen_type_ids)) {
-      qb.leftJoin("requests.citezenTypes", "requests_citezen_types").orWhere(
-        "requests_citezen_types.id IN (:...citezenTypes)",
-        {
-          citezenTypes: query.citizen_type_ids
-        }
-      );
-    }
+    setTypesFilters(qb, query.help_type_ids, query.citizen_type_ids);
 
     /*
     qb.andWhere("requests.moderation_status = :moderation_status", {

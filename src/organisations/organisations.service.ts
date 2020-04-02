@@ -15,6 +15,7 @@ import { HelpTypesRepository } from "../help-types/repositories/Help-types.repos
 import { CitezenTypesRepository } from "../citezen-types/repositories/Citezen-types.repository";
 import { OrganisationUpdateBodyDto } from "./dto/organisation-update-body.dto";
 import { FindAllResponseDto } from "./dto/find-all-response.dto";
+import { setTypesFilters } from "../common/utils/types-filters.util";
 
 @Injectable()
 export class OrganisationsService {
@@ -36,32 +37,7 @@ export class OrganisationsService {
       .leftJoinAndSelect("organisations.phone_numbers", "phone_numbers")
       .leftJoinAndSelect("organisations.websites", "websites");
 
-    if (
-      !_.isEmpty(params.help_type_ids) ||
-      !_.isEmpty(params.citizen_type_ids)
-    ) {
-      if (!_.isEmpty(params.help_type_ids)) {
-        qb.leftJoin("organisations.helpTypes", "organisation_help_types");
-      }
-      if (!_.isEmpty(params.citizen_type_ids)) {
-        qb.leftJoin("organisations.citezenTypes", "organisation_citezen_types");
-      }
-      qb.where(
-        new Brackets(qb => {
-          qb.andWhere("FALSE");
-          if (!_.isEmpty(params.help_type_ids)) {
-            qb.orWhere("organisation_help_types.id IN (:...helpTypesId)", {
-              helpTypesId: params.help_type_ids
-            });
-          }
-          if (!_.isEmpty(params.citizen_type_ids)) {
-            qb.orWhere("organisation_citezen_types.id IN (:...citezenTypes)", {
-              citezenTypes: params.citizen_type_ids
-            });
-          }
-        })
-      );
-    }
+    setTypesFilters(qb, params.help_type_ids, params.citizen_type_ids);
 
     qb.andWhere("organisations.deleted_at is null");
 
