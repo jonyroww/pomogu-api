@@ -42,7 +42,10 @@ export class AuthService {
     const phoneVerificationRequest = this.phoneVerificationRepository.create(
       body
     );
-
+    const user = await this.userRepository.findOne({ phone: body.phone });
+    if (user) {
+      throw makeError("PHONE_ALREADY_EXISTS");
+    }
     phoneVerificationRequest.key = cryptoRandomString({ length: 32 });
 
     const smsCode = this.configService.get("SMS_CODE_GEN")
