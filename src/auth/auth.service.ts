@@ -43,8 +43,10 @@ export class AuthService {
       body
     );
     const user = await this.userRepository.findOne({ phone: body.phone });
-    if (user) {
-      throw makeError("PHONE_ALREADY_EXISTS");
+    if (body.purpose === PurposeType.REGISTRATION) {
+      if (user) {
+        throw makeError("PHONE_ALREADY_EXISTS");
+      }
     }
     phoneVerificationRequest.key = cryptoRandomString({ length: 32 });
 
