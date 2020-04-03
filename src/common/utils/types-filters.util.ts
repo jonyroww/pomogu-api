@@ -1,4 +1,4 @@
-import { Repository, Brackets, SelectQueryBuilder } from "typeorm";
+import { Brackets, SelectQueryBuilder } from "typeorm";
 import _ from "lodash";
 
 export function setTypesFilters(
@@ -18,7 +18,7 @@ export function setTypesFilters(
     }
     qb.where(
       new Brackets(qb => {
-        qb.andWhere("FALSE");
+        qb.where("FALSE");
         if (!_.isEmpty(helpTypes)) {
           qb.orWhere(`${leftJoinHelpTypes}.id IN (:...helpTypesId)`, {
             helpTypesId: helpTypes
