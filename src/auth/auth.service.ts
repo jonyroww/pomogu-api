@@ -69,7 +69,7 @@ export class AuthService {
     await this.phoneVerificationRepository.save(phoneVerificationRequest);
     return {
       id: phoneVerificationRequest.id,
-      key: phoneVerificationRequest.key
+      key: phoneVerificationRequest.key,
     };
   }
 
@@ -100,6 +100,7 @@ export class AuthService {
       throw makeError("SMS_CODE_IS_NOT_CORRECT");
     } else {
       phoneVerification.success = true;
+      phoneVerification.used = true;
       await this.phoneVerificationRepository.save(phoneVerification);
     }
 
@@ -185,10 +186,10 @@ export class AuthService {
     body.password = hashedPassword;
     const user = this.userRepository.create(body);
     const isPhoneUnique = await this.userRepository.findOne({
-      phone: phoneVerification.phone
+      phone: phoneVerification.phone,
     });
     const isEmailUnique = await this.userRepository.findOne({
-      email: body.email
+      email: body.email,
     });
     if (isPhoneUnique) {
       throw makeError("PHONE_ALREADY_EXISTS");
@@ -208,7 +209,7 @@ export class AuthService {
 
     const token = await this.jwtService.signAsync({
       sub: user.id,
-      exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7
+      exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7,
     });
     return { token: token };
   }
@@ -233,10 +234,10 @@ export class AuthService {
   async userLogin(user: User) {
     const payload: IJwtPayload = {
       sub: user.id,
-      exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7
+      exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7,
     };
     return {
-      token: await this.jwtService.signAsync(payload)
+      token: await this.jwtService.signAsync(payload),
     };
   }
 
@@ -259,7 +260,7 @@ export class AuthService {
       throw makeError("VERIFICATION_ALREADY_USED");
     }
     const user = await this.userRepository.findOne({
-      phone: phoneVerification.phone
+      phone: phoneVerification.phone,
     });
     if (!user) {
       throw makeError("USER_NOT_FOUND");
