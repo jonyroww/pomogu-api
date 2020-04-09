@@ -65,9 +65,11 @@ export class RequestsService {
       moderation_status: query.moderation_status || ModerationStatus.APPROVED
     }); 
 */
-
+    if (query.city) {
+      qb.andWhere("requests.city = :city", { city: query.city });
+    }
     qb.andWhere("requests.status = :status", {
-      status: RequestStatus.NO_VOLUNTEER
+      status: RequestStatus.NO_VOLUNTEER,
     }).andWhere("requests.user_id is null");
 
     const total = await qb.getCount();
@@ -81,7 +83,7 @@ export class RequestsService {
 
   async getOneRequest(params: RequestIdParamsDto) {
     const request = await this.requestRepository.findOne({
-      id: params.requestId
+      id: params.requestId,
     });
     return request;
   }
@@ -89,9 +91,9 @@ export class RequestsService {
   async getUsersRequest(query: GetUserRequestDto, user: User) {
     const qb = this.requestRepository.createQueryBuilder("requests");
     qb.where("requests.user_id = :user_id", {
-      user_id: user.id
+      user_id: user.id,
     }).andWhere("requests.status = :status", {
-      status: query.status
+      status: query.status,
     });
 
     const total = await qb.getCount();
@@ -105,7 +107,7 @@ export class RequestsService {
 
   async acceptRequest(params: AcceptRequestParamsDto, user: User) {
     const request = await this.requestRepository.findOne({
-      id: params.requestId
+      id: params.requestId,
     });
     if (!request) {
       throw makeError("RECORD_NOT_FOUND");
@@ -122,7 +124,7 @@ export class RequestsService {
 
   async declineRequest(params: RequestIdParamsDto, user: User) {
     const request = await this.requestRepository.findOne({
-      id: params.requestId
+      id: params.requestId,
     });
     if (!request) {
       throw makeError("RECORD_NOT_FOUND");
@@ -142,7 +144,7 @@ export class RequestsService {
 
   async doneRequest(params: RequestIdParamsDto, user: User) {
     const request = await this.requestRepository.findOne({
-      id: params.requestId
+      id: params.requestId,
     });
     if (!request) {
       throw makeError("RECORD_NOT_FOUND");
@@ -166,7 +168,7 @@ export class RequestsService {
     body: ModerateRequestBodyDto
   ) {
     const request = await this.requestRepository.findOne({
-      id: params.requestId
+      id: params.requestId,
     });
     if (!request) {
       throw makeError("RECORD_NOT_FOUND");
@@ -182,7 +184,7 @@ export class RequestsService {
     body: ReportBodyDto
   ) {
     const request = await this.requestRepository.findOne({
-      id: params.requestId
+      id: params.requestId,
     });
     if (!request) {
       throw makeError("RECORD_NOT_FOUND");
@@ -210,8 +212,8 @@ export class RequestsService {
           firstNameUser: user.first_name,
           lastNameUser: user.last_name,
           emailUser: user.email,
-          phoneUser: user.phone
-        }
+          phoneUser: user.phone,
+        },
       });
     }
   }

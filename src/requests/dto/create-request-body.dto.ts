@@ -11,7 +11,7 @@ import {
   IsBoolean,
   IsUrl,
   Length,
-  IsEnum
+  IsEnum,
 } from "class-validator";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
@@ -34,6 +34,10 @@ export class BodyValidationDto {
   @IsOptional()
   @IsString()
   last_name: string;
+
+  @ApiProperty({ type: "varchar" })
+  @IsString()
+  city: string;
 
   @ApiPropertyOptional({ type: "varchar" })
   @IsOptional()

@@ -1,5 +1,11 @@
 import { PaginationFilterDto } from "../../common/dto/pagination-filter.dto";
-import { IsOptional, IsArray, IsNumber, IsEnum } from "class-validator";
+import {
+  IsOptional,
+  IsArray,
+  IsNumber,
+  IsEnum,
+  IsString,
+} from "class-validator";
 import { Transform } from "class-transformer";
 import { TransformIntArray } from "../../common/utils/transform-array-int.util";
 import { ApiPropertyOptional } from "@nestjs/swagger";
@@ -24,4 +30,9 @@ export class GetAllQueryFilterDto extends PaginationFilterDto {
   @IsOptional()
   @IsEnum(ModerationStatus)
   moderation_status: ModerationStatus;
+
+  @ApiPropertyOptional({ type: "varchar" })
+  @IsOptional()
+  @IsString()
+  city: string;
 }
