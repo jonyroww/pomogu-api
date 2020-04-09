@@ -11,7 +11,7 @@ import {
   IsBoolean,
   IsUrl,
   Length,
-  IsEnum
+  IsEnum,
 } from "class-validator";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
