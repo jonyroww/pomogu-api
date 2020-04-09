@@ -12,6 +12,7 @@ import path from "path";
 import appRootPath from "app-root-path";
 import { RequestsModule } from "../requests/requests.module";
 import { UsersModule } from "../users/users.module";
+import { NotificationsModule } from "../notifications/notifications.module";
 import { ConfigService } from "../config/config.service";
 
 @Module({
@@ -38,7 +39,8 @@ import { ConfigService } from "../config/config.service";
     PhotosModule,
     AuthModule,
     RequestsModule,
-    UsersModule
+    UsersModule,
+    NotificationsModule
   ],
   controllers: [],
   providers: []
