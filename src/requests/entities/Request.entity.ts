@@ -8,7 +8,7 @@ import {
   Index,
   OneToOne,
   JoinColumn,
-  ManyToOne
+  ManyToOne,
 } from "typeorm";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { HelpTypes } from "../../help-types/entities/help-types.entity";
@@ -22,18 +22,18 @@ export class Request {
   @PrimaryColumn({
     type: "int",
     generated: true,
-    readonly: true
+    readonly: true,
   })
   id: number;
 
   @ApiProperty({
     type: "string",
     example: "2019-11-22T16:03:05Z",
-    nullable: false
+    nullable: false,
   })
   @Column({
     nullable: false,
-    type: "timestamp with time zone"
+    type: "timestamp with time zone",
   })
   created_at: Date;
 
@@ -57,6 +57,10 @@ export class Request {
   @Column({ type: "varchar" })
   last_name: string;
 
+  @ApiProperty({ type: "string" })
+  @Column({ type: "varchar" })
+  city: string;
+
   @ApiPropertyOptional({ type: "string" })
   @Column({ type: "varchar", unique: true })
   email: string;
@@ -72,7 +76,7 @@ export class Request {
   @ApiProperty({ enum: ModerationStatus })
   @Column("enum", {
     enum: ModerationStatus,
-    nullable: false
+    nullable: false,
   })
   moderation_status: ModerationStatus;
 
@@ -93,7 +97,7 @@ export class Request {
   @JoinTable({
     name: "requests_help_types",
     joinColumn: { name: "request_id", referencedColumnName: "id" },
-    inverseJoinColumn: { name: "help_type_id", referencedColumnName: "id" }
+    inverseJoinColumn: { name: "help_type_id", referencedColumnName: "id" },
   })
   helpTypes: HelpTypes[];
 
@@ -106,7 +110,7 @@ export class Request {
   @JoinTable({
     name: "requests_citezen_types",
     joinColumn: { name: "request_id", referencedColumnName: "id" },
-    inverseJoinColumn: { name: "citezen_type_id", referencedColumnName: "id" }
+    inverseJoinColumn: { name: "citezen_type_id", referencedColumnName: "id" },
   })
   citezenTypes: CitezenTypes[];
 
