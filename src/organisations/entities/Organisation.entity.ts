@@ -59,6 +59,18 @@ export class Organisation {
   })
   address: string;
 
+  @ApiPropertyOptional({ example: "Москва", type: "string" })
+  @Column({
+    type: "varchar"
+  })
+  city: string;
+
+  @ApiPropertyOptional({ type: "string" })
+  @Column({
+    type: "text"
+  })
+  appeal_to_volunteer: string;
+
   @ApiProperty({ type: "string", example: "График работы" })
   @Column({
     nullable: false,
