@@ -44,6 +44,11 @@ export class OrganisationBodyDto {
   @IsEmail()
   email: string;
 
+  @ApiPropertyOptional({ type: "varchar" })
+  @IsOptional()
+  @IsString()
+  city: string;
+
   @ApiProperty({ type: "varchar" })
   @IsArray()
   @IsString({ each: true })
