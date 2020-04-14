@@ -49,6 +49,11 @@ export class OrganisationBodyDto {
   @IsString()
   city: string;
 
+  @ApiPropertyOptional({ type: "text" })
+  @IsOptional()
+  @IsString()
+  appeal_to_volunteer: string;
+
   @ApiProperty({ type: "varchar" })
   @IsArray()
   @IsString({ each: true })
