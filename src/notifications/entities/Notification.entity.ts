@@ -10,7 +10,7 @@ import {
     JoinColumn,
     ManyToOne
   } from "typeorm";
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { User } from "./../../users/entities/User.entity";
 
 @Entity({ name: "notifications" })
@@ -34,20 +34,6 @@ export class Notification {
     })
     created_at: Date;
 
-    @ApiProperty()
-    @Column({ 
-        nullable: false,
-        type: "int" })
-    user_id: number;
-
-    @ApiProperty()
-    @ManyToOne(
-        () => User,
-        (user: User) => user.notifications
-    )
-    @JoinColumn({ name: "user_id" })
-    user: User;
-
     @ApiProperty({ example: "Заголовок" })
     @Column({
         type: "text"
@@ -59,4 +45,16 @@ export class Notification {
         type: "text"
     })
     content: string;
+
+    @ApiPropertyOptional({ type: "int" })
+    @Column({ type: "int" })
+    user_id: number;
+
+    @ApiProperty({ type: () => User })
+    @ManyToOne(
+        () => User,
+        (user: User) => user.notifications
+    )
+    @JoinColumn({ name: "user_id" })
+    user: User;
 }

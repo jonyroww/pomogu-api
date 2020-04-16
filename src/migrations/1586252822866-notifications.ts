@@ -25,7 +25,7 @@ export class notifications1586252822866 implements MigrationInterface {
                         isNullable: true
                     },
                     {
-                        name: "title",
+                        name: "content",
                         type: "text",
                         isNullable: true
                     }
