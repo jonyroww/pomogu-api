@@ -68,10 +68,10 @@ export class OrganisationsService {
     organisation.citezenTypes = citezenTypes;
     await this.organisationsRepository.save(organisation);
 
-    const newWebsitesList = websites.map(website => {
+    const newWebsitesList = websites.map((website) => {
       return {
         url: website,
-        organisation_id: organisation.id
+        organisation_id: organisation.id,
       };
     });
     const newWebsites = this.organisationWebsiteRepository.create(
@@ -79,10 +79,10 @@ export class OrganisationsService {
     );
     await this.organisationWebsiteRepository.save(newWebsites);
 
-    const newPhoneNumbersList = phone_numbers.map(phone_number => {
+    const newPhoneNumbersList = phone_numbers.map((phone_number) => {
       return {
         phone_number: phone_number,
-        organisation_id: organisation.id
+        organisation_id: organisation.id,
       };
     });
 
@@ -103,6 +103,7 @@ export class OrganisationsService {
     }
   }
 
+  @Transactional()
   async updateOrganisation(
     {
       help_type_ids,
@@ -134,12 +135,12 @@ export class OrganisationsService {
 
       if (phone_numbers) {
         await this.organisationPhoneNumberRepository.delete({
-          organisation_id: params.id
+          organisation_id: params.id,
         });
-        const newPhoneNumbersList = phone_numbers.map(phone_number => {
+        const newPhoneNumbersList = phone_numbers.map((phone_number) => {
           return {
             phone_number: phone_number,
-            organisation_id: organisation.id
+            organisation_id: organisation.id,
           };
         });
 
@@ -151,12 +152,12 @@ export class OrganisationsService {
 
       if (websites) {
         await this.organisationWebsiteRepository.delete({
-          organisation_id: params.id
+          organisation_id: params.id,
         });
-        const newWebsitesList = websites.map(website => {
+        const newWebsitesList = websites.map((website) => {
           return {
             url: website,
-            organisation_id: organisation.id
+            organisation_id: organisation.id,
           };
         });
         const newWebsites = this.organisationWebsiteRepository.create(

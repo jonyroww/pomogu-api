@@ -9,7 +9,7 @@ import {
   Body,
   Put,
   Delete,
-  UseGuards
+  UseGuards,
 } from "@nestjs/common";
 import { OrganisationsService } from "./organisations.service";
 import { Organisation } from "./entities/Organisation.entity";
@@ -18,7 +18,7 @@ import {
   ApiOkResponse,
   ApiTags,
   ApiCreatedResponse,
-  ApiBearerAuth
+  ApiBearerAuth,
 } from "@nestjs/swagger";
 import { OrganisationIdDto } from "./dto/organisation-id.dto";
 import { OrganisationBodyDto } from "./dto/organisation-body.dto";
