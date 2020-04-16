@@ -143,11 +143,10 @@ export class OrganisationsService {
             organisation_id: organisation.id,
           };
         });
-
         const newPhoneNumbers = this.organisationPhoneNumberRepository.create(
           newPhoneNumbersList
         );
-        await this.organisationPhoneNumberRepository.save(newPhoneNumbers);
+        mergeOrganisation.phone_numbers = newPhoneNumbers;
       }
 
       if (websites) {
@@ -163,7 +162,7 @@ export class OrganisationsService {
         const newWebsites = this.organisationWebsiteRepository.create(
           newWebsitesList
         );
-        await this.organisationWebsiteRepository.save(newWebsites);
+        mergeOrganisation.websites = newWebsites;
       }
 
       await this.organisationsRepository.save(mergeOrganisation);
