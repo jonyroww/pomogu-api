@@ -7,7 +7,7 @@ import {
   IsEmail,
   IsUrl,
   IsBoolean,
-  IsArray
+  IsArray,
 } from "class-validator";
 import { Transform } from "class-transformer";
 import { TransformInt } from "../../common/utils/transform-int.util";
@@ -62,6 +62,11 @@ export class OrganisationUpdateBodyDto {
   @IsOptional()
   @IsString()
   full_name: string;
+
+  @ApiProperty({ type: "varchar" })
+  @IsOptional()
+  @IsString()
+  city: string;
 
   @ApiProperty({ type: "text" })
   @IsOptional()
