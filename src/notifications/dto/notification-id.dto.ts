@@ -8,5 +8,5 @@ export class NotificationIdDto {
     @IsNumber()
     @IsInt()
     @Transform(TransformInt)
-    id: number;
+    volunteerId: number;
   }

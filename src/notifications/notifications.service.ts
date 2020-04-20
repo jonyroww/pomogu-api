@@ -7,6 +7,8 @@ import { UserRepository } from "../users/repositories/User.repository";
 import { NotificationBodyDto } from "./dto/notification-body.dto";
 import { NotificationIdDto } from "./dto/notification-id.dto";
 import { makeError } from 'src/common/errors';
+import { User } from 'src/users/entities/User.entity';
+import { RoleName } from 'src/constants/RoleName.enum';
 
 @Injectable()
 export class NotificationsService {
@@ -34,11 +36,13 @@ export class NotificationsService {
         return notification;
       }
 
-    async findOne(params: NotificationIdDto) {
-      const notification = await this.notificationRepository.findOne(params.id);
-      if (!notification) {
-        throw makeError("NOTIFICATION_NOT_FOUND");
-      }
-      return notification;
+    async getUserNotifications(
+      user: User,
+      params: NotificationIdDto
+      ) {
+      const notifications = await this.notificationRepository.find({
+        where: { user_id: params.volunteerId}
+      })
+      return notifications;
     }
 }
