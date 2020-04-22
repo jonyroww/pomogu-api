@@ -1,18 +1,12 @@
 import {
-    IsInt,
     IsString,
-    IsBoolean,
     IsOptional,
+    IsBoolean,
   } from "class-validator";
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { TransformInt } from "../../common/utils/transform-int.util";
-import { Transform } from "class-transformer";
+import { ApiPropertyOptional } from "@nestjs/swagger";
 
-export class NotificationBodyDto {
-    @ApiProperty({ type: "number" })
-    @Transform(TransformInt)
-    @IsInt()
-    user_id: number;
+
+export class NotificationUpdateBodyDto {
 
     @ApiPropertyOptional({ type: "text" })
     @IsOptional()

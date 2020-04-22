@@ -28,6 +28,12 @@ export class notifications1586252822866 implements MigrationInterface {
                         name: "content",
                         type: "text",
                         isNullable: true
+                    },
+                    {
+                        name: "is_read",
+                        type: "boolean",
+                        isNullable: false,
+                        default: false
                     }
               ]
             })

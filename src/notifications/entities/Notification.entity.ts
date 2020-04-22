@@ -46,6 +46,13 @@ export class Notification {
     })
     content: string;
 
+    @ApiProperty({ type: "boolean", example: false })
+    @Column({
+    nullable: false,
+    type: "bool"
+    })
+    is_read: boolean;
+
     @ApiPropertyOptional({ type: "int" })
     @Column({ type: "int" })
     user_id: number;
