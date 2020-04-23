@@ -27,7 +27,7 @@ export class notificationsAddUserId1586254099711 implements MigrationInterface {
     public async down(queryRunner: QueryRunner): Promise<any> {
         await queryRunner.dropColumn(
             "notifications",
-            "organisation_id"
+            "user_id"
           );
       
           await queryRunner.dropForeignKey(

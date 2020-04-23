@@ -45,7 +45,8 @@ export class NotificationsService {
       params: VolunteerIdDto
     ) {
       const notifications = await this.notificationRepository.find({
-        where: { user_id: params.volunteerId}
+        where: { user_id: params.volunteerId},
+        order : { created_at: "DESC"}
       })
       return notifications;
     }
