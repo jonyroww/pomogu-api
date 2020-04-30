@@ -1,12 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import _ from "lodash";
 import { Transactional } from "typeorm-transactional-cls-hooked";
 import { Notification } from "./entities/Notification.entity";
 import { NotificationRepository } from "./repositories/Notification.repository";
 import { UserRepository } from "../users/repositories/User.repository";
 import { NotificationBodyDto } from "./dto/notification-body.dto";
 import { NotificationUpdateBodyDto } from "./dto/notification-update-body.dto";
-import { NotificationSetReadParamsDto } from "./dto/notification-set-read-params-dto";
+import { NotificationSetReadParamsDto } from "./dto/notification-set-read-params.dto";
+import { GetNotificationsFiltersDto } from "./dto/get-notifications-filter.dto";
 import { NotificationIdDto } from "./dto/notification-id.dto";
 import { VolunteerIdDto } from "./dto/volunteer-id.dto";
 import { makeError } from "src/common/errors";
@@ -36,11 +38,29 @@ export class NotificationsService {
     return notification;
   }
 
-  async getUserNotifications(params: VolunteerIdDto) {
-    const notifications = await this.notificationRepository.find({
-      where: { user_id: params.volunteerId },
-      order: { created_at: "DESC" }
+  async getUserNotifications(
+    params: VolunteerIdDto,
+    filters: GetNotificationsFiltersDto
+  ) {
+    const qb = this.notificationRepository.createQueryBuilder("notifications");
+
+    qb.where("user_id = :user_id", {
+      user_id: params.volunteerId
     });
+
+    if (!isUndefined(filters.is_read)) {
+      qb.andWhere("is_read = :is_read", {
+        is_read: filters.is_read
+      });
+    }
+
+    qb.orderBy("created_at", "DESC");
+
+    const notifications = await qb
+      .take(filters.limit)
+      .skip(filters.offset)
+      .getMany();
+
     return notifications;
   }
 

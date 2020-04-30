@@ -7,7 +7,8 @@ import {
   ValidationPipe,
   Get,
   Param,
-  Put
+  Put,
+  Query
 } from "@nestjs/common";
 import {
   ApiTags,
@@ -22,7 +23,8 @@ import { IsAdminGuard } from "src/common/guards/is-admin.guard";
 import { NotificationsService } from "./notifications.service";
 import { NotificationBodyDto } from "./dto/notification-body.dto";
 import { NotificationUpdateBodyDto } from "./dto/notification-update-body.dto";
-import { NotificationSetReadParamsDto } from "./dto/notification-set-read-params-dto";
+import { NotificationSetReadParamsDto } from "./dto/notification-set-read-params.dto";
+import { GetNotificationsFiltersDto } from "./dto/get-notifications-filter.dto";
 import { NotificationIdDto } from "./dto/notification-id.dto";
 import { VolunteerIdDto } from "./dto/volunteer-id.dto";
 import { User } from "src/users/entities/User.entity";
@@ -48,9 +50,10 @@ export class NotificationsController {
   @ApiTags("Notifications")
   @ApiOkResponse({ type: Notification })
   getUserNotifications(
-    @Param() params: VolunteerIdDto
+    @Param() params: VolunteerIdDto,
+    @Query() filters: GetNotificationsFiltersDto
   ): Promise<Notification[]> {
-    return this.notificationsService.getUserNotifications(params);
+    return this.notificationsService.getUserNotifications(params, filters);
   }
 
   @Put("/notifications/:notificationId")
