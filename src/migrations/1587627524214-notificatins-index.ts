@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner, TableIndex } from "typeorm";
 
-export class notificatinsIndex1587627524214 implements MigrationInterface {
+export class notificationsIndex1587627524214 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {
     await queryRunner.createIndex(
       "notifications",
