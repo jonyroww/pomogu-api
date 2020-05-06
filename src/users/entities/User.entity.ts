@@ -10,6 +10,7 @@ import {
 } from "typeorm";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { PhoneVerification } from "./../../auth/entities/Phone-verification.entity";
+import { Notification } from "./../../notifications/entities/Notification.entity";
 import { HelpTypes } from "../../help-types/entities/help-types.entity";
 import { CitezenTypes } from "../../citezen-types/entities/citezen-types.entity";
 import { Organisation } from "../../organisations/entities/Organisation.entity";
@@ -138,6 +139,14 @@ export class User {
     (registration: PhoneVerification) => registration.user
   )
   registration: PhoneVerification;
+
+  @ApiProperty()
+  @OneToMany(
+    () => Notification,
+    (notification: Notification) => notification.user,
+    { eager: true }
+  )
+  notifications: Notification[];
 
   @ApiPropertyOptional({ type: () => CitezenTypes })
   @ManyToMany(
