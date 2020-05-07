@@ -29,6 +29,9 @@ export class NotificationsService {
     const notification = this.notificationRepository.create(body);
 
     const user = await this.userRepository.findOne(user_id);
+    if (user && !user.deleted_at){
+      throw makeError("USER_NOT_FOUND");
+    }
 
     notification.user_id = user.id;
     notification.title = body.title;
@@ -71,6 +74,9 @@ export class NotificationsService {
     const notification = await this.notificationRepository.findOne({
       id: params.notificationId
     });
+    if (!notification) {
+      throw makeError("NOTIFICATION_NOT_FOUND");
+    }
     if (body.title) {
       notification.title = body.title;
     }
