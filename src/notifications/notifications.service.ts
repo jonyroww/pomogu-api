@@ -29,7 +29,7 @@ export class NotificationsService {
     const notification = this.notificationRepository.create(body);
 
     const user = await this.userRepository.findOne(user_id);
-    if (user && !user.deleted_at){
+    if (!user || user.deleted_at){
       throw makeError("USER_NOT_FOUND");
     }
 
