@@ -7,7 +7,7 @@ import { VerificationPhoneDto } from "./dto/verification-phone.dto";
 import { VerificationResendDto } from "./dto/verification-resend.dto";
 import { ParamsValidationDto } from "./dto/params-validation.dto";
 import { makeError } from "../common/errors/index";
-import { registrationBodyDto } from "./dto/registration-body.dto";
+import { RegistrationBodyDto } from "./dto/registration-body.dto";
 import { PurposeType } from "src/constants/PurposeType.enum";
 import bcrypt from "bcrypt";
 import { JwtService } from "@nestjs/jwt";
@@ -158,7 +158,7 @@ export class AuthService {
     citizen_type_ids,
     organisation_ids,
     ...body
-  }: registrationBodyDto) {
+  }: RegistrationBodyDto) {
     const phoneVerification = await this.phoneVerificationRepository.findOne(
       body.verification_id
     );

@@ -24,7 +24,7 @@ import { PhoneVerificationRequestDto } from "./dto/phone-verification-request.dt
 import { VerificationPhoneDto } from "./dto/verification-phone.dto";
 import { ParamsValidationDto } from "./dto/params-validation.dto";
 import { VerificationResendDto } from "./dto/verification-resend.dto";
-import { registrationBodyDto } from "./dto/registration-body.dto";
+import { RegistrationBodyDto } from "./dto/registration-body.dto";
 import { UserLoginDto } from "./dto/login-body.dto";
 import { AuthGuard } from "@nestjs/passport";
 import { GetUser } from "../common/decorators/get-user.decorator";
@@ -67,7 +67,7 @@ export class AuthController {
   @Post("/registration")
   @ApiTags("Auth")
   @ApiCreatedResponse({ type: PhoneVerification })
-  registrationUser(@Body() body: registrationBodyDto) {
+  registrationUser(@Body() body: RegistrationBodyDto) {
     return this.authService.registrationUser(body);
   }
 

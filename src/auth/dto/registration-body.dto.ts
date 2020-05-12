@@ -15,7 +15,7 @@ import { TransformIntArray } from "../../common/utils/transform-array-int.util";
 import { TransformInt } from "../../common/utils/transform-int.util";
 import { TransformDate } from "../../common/utils/transform-date.util";
 
-export class registrationBodyDto {
+export class RegistrationBodyDto {
   @ApiProperty({ type: "number" })
   @Transform(TransformInt)
   @IsNumber()

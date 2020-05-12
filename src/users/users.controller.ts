@@ -21,7 +21,7 @@ import {
 } from "@nestjs/swagger";
 import { GetAllQueryDto } from "./dto/get-all-query.dto";
 import { UserIdDto } from "./dto/user-id.dto";
-import { createUserDto } from "./dto/create-user.dto";
+import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user-dto";
 import { ModerationBodyDto } from "./dto/moderation-body.dto";
 import { AuthGuard } from "@nestjs/passport";
@@ -55,7 +55,7 @@ export class UsersController {
   @UseGuards(AuthGuard("jwt"), IsAdminGuard)
   @ApiBearerAuth()
   @Post()
-  createUser(@Body() body: createUserDto) {
+  createUser(@Body() body: CreateUserDto) {
     return this.usersService.createUser(body);
   }
 

@@ -16,7 +16,7 @@ import { TransformIntArray } from "../../common/utils/transform-array-int.util";
 import { TransformDate } from "../../common/utils/transform-date.util";
 import { RoleName } from "../../constants/RoleName.enum";
 
-export class createUserDto {
+export class CreateUserDto {
   @ApiPropertyOptional({ type: "varchar" })
   @IsOptional()
   @IsString()
