@@ -5,6 +5,7 @@ import {
   ManyToMany,
   JoinColumn,
   ManyToOne,
+  JoinTable,
 } from "typeorm";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { HelpTypes } from "../../help-types/entities/help-types.entity";
