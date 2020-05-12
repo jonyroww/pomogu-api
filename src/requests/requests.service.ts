@@ -8,7 +8,6 @@ import { RequestIdParamsDto } from "./dto/requestId-params.dto";
 import { ModerationStatus } from "../constants/ModerationStatus.enum";
 import { ModerateRequestBodyDto } from "./dto/moderate-request-body.dto";
 import { GetAllQueryFilterDto } from "./dto/get-all-query-params.dto";
-import _ from "lodash";
 import { RequestStatus } from "../constants/RequestStatus.enum";
 import { AcceptRequestParamsDto } from "./dto/accept-request-params.dto";
 import { User } from "../users/entities/User.entity";

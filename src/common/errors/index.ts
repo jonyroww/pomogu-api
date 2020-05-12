@@ -1,5 +1,4 @@
 import { HttpException, HttpStatus } from "@nestjs/common";
-import { VerificationPhoneDto } from "src/auth/dto/verification-phone.dto";
 
 export const errors = {
   USER_NOT_FOUND: HttpStatus.NOT_FOUND,

@@ -1,6 +1,6 @@
 import _ from "lodash";
 
-export function TransformDate(dateStr: String): Date {
+export function TransformDate(dateStr: string): Date {
   if (dateStr === "" || dateStr === null || dateStr === undefined) {
     return undefined;
   }

@@ -21,7 +21,6 @@ import { BodyValidationDto } from "./dto/create-request-body.dto";
 import { AuthGuard } from "@nestjs/passport";
 import { UserWriteAccessGuard } from "../common/guards/user-write-access-guard";
 import { RequestIdParamsDto } from "./dto/requestId-params.dto";
-import { IsAdminGuard } from "../common/guards/is-admin.guard";
 import { ModerateRequestBodyDto } from "./dto/moderate-request-body.dto";
 import { GetAllQueryFilterDto } from "./dto/get-all-query-params.dto";
 import { RequestsReadAccessGuard } from "../common/guards/get-all-requests.guard";

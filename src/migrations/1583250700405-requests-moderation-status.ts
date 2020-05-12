@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, TableColumn } from "typeorm";
+import { MigrationInterface, QueryRunner } from "typeorm";
 
 export class requestsModerationStatus1583250700405
   implements MigrationInterface {

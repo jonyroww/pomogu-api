@@ -3,11 +3,10 @@ import {
   Post,
   UseInterceptors,
   UploadedFile,
-  Get
 } from "@nestjs/common";
-import { FileInterceptor, MulterModule } from "@nestjs/platform-express";
+import { FileInterceptor } from "@nestjs/platform-express";
 import { PhotosService } from "./photos.service";
-import { ApiOkResponse, ApiTags, ApiCreatedResponse } from "@nestjs/swagger";
+import { ApiTags, ApiCreatedResponse } from "@nestjs/swagger";
 import { ConfigService } from "../config/config.service";
 import multer from "multer";
 import uuid from "uuid/v4";

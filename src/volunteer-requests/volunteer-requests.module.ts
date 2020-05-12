@@ -1,4 +1,4 @@
-import { Module, ValidationPipe } from "@nestjs/common";
+import { Module } from "@nestjs/common";
 import { VolunteerRequestsController } from "./volunteer-requests.controller";
 import { VolunteerRequestsService } from "./volunteer-requests.service";
 import { TypeOrmModule } from "@nestjs/typeorm";

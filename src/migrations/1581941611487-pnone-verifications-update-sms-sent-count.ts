@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, TableColumn } from "typeorm";
+import { MigrationInterface, QueryRunner } from "typeorm";
 
 export class pnoneVerificationsUpdateSmsSentCount1581941611487
   implements MigrationInterface {

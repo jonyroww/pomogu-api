@@ -2,11 +2,8 @@ import {
   Entity,
   PrimaryColumn,
   Column,
-  OneToMany,
-  ManyToMany,
-  Double
 } from "typeorm";
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiProperty } from "@nestjs/swagger";
 
 @Entity({ name: "help_types" })
 export class HelpTypes {

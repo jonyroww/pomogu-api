@@ -23,7 +23,6 @@ import { GetAllQueryDto } from "./dto/get-all-query.dto";
 import { UserIdDto } from "./dto/user-id.dto";
 import { createUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user-dto";
-import { PaginationFilterDto } from "../common/dto/pagination-filter.dto";
 import { ModerationBodyDto } from "./dto/moderation-body.dto";
 import { AuthGuard } from "@nestjs/passport";
 import { IsAdminGuard } from "../common/guards/is-admin.guard";

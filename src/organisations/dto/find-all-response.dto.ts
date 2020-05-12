@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiProperty } from "@nestjs/swagger";
 import { Organisation } from "../entities/Organisation.entity";
 
 export class FindAllResponseDto {

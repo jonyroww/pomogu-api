@@ -2,11 +2,8 @@ import {
   Entity,
   PrimaryColumn,
   Column,
-  OneToMany,
   ManyToMany,
   JoinTable,
-  Index,
-  OneToOne
 } from "typeorm";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Organisation } from "../../organisations/entities/Organisation.entity";

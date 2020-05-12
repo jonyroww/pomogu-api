@@ -1,6 +1,6 @@
 import _ from "lodash";
 
-export function TransformBoolean(booleanStr: String): boolean {
+export function TransformBoolean(booleanStr: string): boolean {
   if (booleanStr === "" || booleanStr === null || booleanStr === undefined) {
     return undefined;
   }

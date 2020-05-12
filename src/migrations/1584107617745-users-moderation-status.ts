@@ -1,5 +1,4 @@
 import { MigrationInterface, QueryRunner, TableColumn } from "typeorm";
-import { ModerationStatus } from "src/constants/ModerationStatus.enum";
 
 export class usersModerationStatus1584107617745 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {

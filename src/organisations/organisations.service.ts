@@ -1,10 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Organisation } from "./entities/Organisation.entity";
-import { Repository, Brackets } from "typeorm";
 import { QueryFilterDto } from "./dto/query-filter.dto";
 import { OrganisationIdDto } from "./dto/organisation-id.dto";
-import _ from "lodash";
 import { makeError } from "../common/errors/index";
 import { Transactional } from "typeorm-transactional-cls-hooked";
 import { OrganisationRepository } from "./repositories/Organisation.repository";

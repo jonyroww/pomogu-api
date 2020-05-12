@@ -2,11 +2,9 @@ import {
   IsNumber,
   IsInt,
   IsString,
-  Length,
   IsOptional,
   IsEmail,
   IsUrl,
-  IsBoolean,
   IsArray,
 } from "class-validator";
 import { Transform } from "class-transformer";

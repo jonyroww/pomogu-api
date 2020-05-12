@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, TableColumn, Table } from "typeorm";
+import { MigrationInterface, QueryRunner, TableColumn } from "typeorm";
 
 export class organisationRemoveWebsitesPhonrNumbers1584025623279
   implements MigrationInterface {

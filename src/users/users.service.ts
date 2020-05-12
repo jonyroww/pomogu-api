@@ -13,7 +13,6 @@ import { createUserDto } from "./dto/create-user.dto";
 import { ModerationStatus } from "../constants/ModerationStatus.enum";
 import { UpdateUserDto } from "./dto/update-user-dto";
 import bcrypt from "bcrypt";
-import { PaginationFilterDto } from "../common/dto/pagination-filter.dto";
 import { ModerationBodyDto } from "./dto/moderation-body.dto";
 import { PhoneVerificationRepository } from "../auth/repository/Phone-verification.repository";
 import { PurposeType } from "src/constants/PurposeType.enum";

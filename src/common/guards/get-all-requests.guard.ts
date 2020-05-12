@@ -1,9 +1,7 @@
-import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
+import { CanActivate, ExecutionContext } from "@nestjs/common";
 import { Request } from "express";
-import _ from "lodash";
 import { RoleName } from "../../constants/RoleName.enum";
 import { User } from "../../users/entities/User.entity";
-import { ModerationStatus } from "../../constants/ModerationStatus.enum";
 import { makeError } from "../errors/index";
 
 export class RequestsReadAccessGuard implements CanActivate {

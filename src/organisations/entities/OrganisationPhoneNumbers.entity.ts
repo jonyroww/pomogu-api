@@ -2,13 +2,10 @@ import {
   Entity,
   PrimaryColumn,
   Column,
-  OneToMany,
-  ManyToMany,
-  JoinTable,
   ManyToOne,
   JoinColumn
 } from "typeorm";
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiProperty } from "@nestjs/swagger";
 import { Organisation } from "./Organisation.entity";
 
 @Entity({ name: "organisation_phone_numbers" })

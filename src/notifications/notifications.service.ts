@@ -1,7 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import _ from "lodash";
-import { Transactional } from "typeorm-transactional-cls-hooked";
 import { Notification } from "./entities/Notification.entity";
 import { NotificationRepository } from "./repositories/Notification.repository";
 import { UserRepository } from "../users/repositories/User.repository";
@@ -13,8 +11,6 @@ import { NotificationIdDto } from "./dto/notification-id.dto";
 import { VolunteerIdDto } from "./dto/volunteer-id.dto";
 import { makeError } from "src/common/errors";
 import { User } from "src/users/entities/User.entity";
-import { RoleName } from "src/constants/RoleName.enum";
-import { IsNotEmpty, IsNotEmptyObject } from "class-validator";
 import { isUndefined } from "util";
 
 @Injectable()

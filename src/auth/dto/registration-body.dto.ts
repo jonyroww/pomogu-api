@@ -2,16 +2,12 @@ import {
   IsOptional,
   IsArray,
   IsNumber,
-  IsInt,
   IsString,
   IsAlphanumeric,
   IsDate,
   IsEmail,
-  IsPhoneNumber,
   IsBoolean,
   IsUrl,
-  Length,
-  IsEnum,
 } from "class-validator";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Transform } from "class-transformer";

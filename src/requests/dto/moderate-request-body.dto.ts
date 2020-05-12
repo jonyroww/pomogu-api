@@ -1,18 +1,4 @@
-import {
-  IsOptional,
-  IsArray,
-  IsNumber,
-  IsInt,
-  IsString,
-  IsAlphanumeric,
-  IsDate,
-  IsEmail,
-  IsPhoneNumber,
-  IsBoolean,
-  IsUrl,
-  Length,
-  IsEnum
-} from "class-validator";
+import { IsEnum } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 import { ModerationStatus } from "../../constants/ModerationStatus.enum";
 

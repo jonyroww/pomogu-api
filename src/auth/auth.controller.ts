@@ -8,7 +8,6 @@ import {
   Param,
   UseInterceptors,
   ClassSerializerInterceptor,
-  Header,
   Get,
   UseGuards
 } from "@nestjs/common";

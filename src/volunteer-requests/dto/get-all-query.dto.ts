@@ -3,8 +3,6 @@ import {
   IsOptional,
   IsArray,
   IsNumber,
-  IsInt,
-  IsBoolean,
   IsEnum
 } from "class-validator";
 import { Transform } from "class-transformer";
