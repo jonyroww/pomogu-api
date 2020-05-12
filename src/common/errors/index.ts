@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus } from "@nestjs/common";
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 export const errors = {
   USER_NOT_FOUND: HttpStatus.NOT_FOUND,
@@ -23,7 +23,7 @@ export const errors = {
   REQUEST_ALREADY_IN_PROGRESS: HttpStatus.BAD_REQUEST,
   TYPE_WAS_DELETED: HttpStatus.NOT_FOUND,
   REQUEST_MUST_BE_IN_PROGRESS: HttpStatus.BAD_REQUEST,
-  NOTIFICATION_NOT_FOUND: HttpStatus.NOT_FOUND
+  NOTIFICATION_NOT_FOUND: HttpStatus.NOT_FOUND,
 };
 
 export type ErrorCode = keyof typeof errors;
@@ -35,9 +35,9 @@ export const makeError = (code: ErrorCode, additional: object = {}) => {
     {
       statusCode: status,
       code,
-      ...additional
+      ...additional,
     },
-    status
+    status,
   );
 
   return err;

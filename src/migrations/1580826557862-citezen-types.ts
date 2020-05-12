@@ -1,40 +1,40 @@
-import { MigrationInterface, QueryRunner, Table } from "typeorm";
+import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export class citezenTypes1580826557862 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {
     await queryRunner.createTable(
       new Table({
-        name: "citezen_types",
+        name: 'citezen_types',
         columns: [
           {
-            name: "id",
-            type: "int",
+            name: 'id',
+            type: 'int',
             isGenerated: true,
-            isPrimary: true
+            isPrimary: true,
           },
           {
-            name: "created_at",
-            type: "timestamp without time zone",
+            name: 'created_at',
+            type: 'timestamp without time zone',
             isNullable: false,
-            default: "NOW()"
+            default: 'NOW()',
           },
           {
-            name: "updated_at",
-            type: "timestamp without time zone",
+            name: 'updated_at',
+            type: 'timestamp without time zone',
             isNullable: false,
-            default: "NOW()"
+            default: 'NOW()',
           },
           {
-            name: "title",
-            type: "text",
-            isNullable: true
-          }
-        ]
-      })
+            name: 'title',
+            type: 'text',
+            isNullable: true,
+          },
+        ],
+      }),
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {
-    await queryRunner.dropTable("citezen_types");
+    await queryRunner.dropTable('citezen_types');
   }
 }

@@ -1,62 +1,56 @@
-import {
-  Entity,
-  PrimaryColumn,
-  Column,
-  JoinColumn,
-  ManyToOne
-} from "typeorm";
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { User } from "./../../users/entities/User.entity";
+import { Entity, PrimaryColumn, Column, JoinColumn, ManyToOne } from 'typeorm';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { User } from './../../users/entities/User.entity';
 
-@Entity({ name: "notifications" })
+@Entity({ name: 'notifications' })
 export class Notification {
   @ApiProperty()
   @PrimaryColumn({
-    type: "int",
+    type: 'int',
     generated: true,
-    readonly: true
+    readonly: true,
   })
   id: number;
 
   @ApiProperty({
-    type: "string",
-    example: "2019-11-22T16:03:05Z",
-    nullable: false
+    type: 'string',
+    example: '2019-11-22T16:03:05Z',
+    nullable: false,
   })
   @Column({
     nullable: false,
-    type: "timestamp with time zone"
+    type: 'timestamp with time zone',
   })
   created_at: Date;
 
-  @ApiProperty({ example: "Заголовок" })
+  @ApiProperty({ example: 'Заголовок' })
   @Column({
-    type: "text"
+    type: 'text',
   })
   title: string;
 
-  @ApiProperty({ example: "Содержание" })
+  @ApiProperty({ example: 'Содержание' })
   @Column({
-    type: "text"
+    type: 'text',
   })
   content: string;
 
-  @ApiProperty({ type: "boolean", example: false })
+  @ApiProperty({ type: 'boolean', example: false })
   @Column({
     nullable: false,
-    type: "bool"
+    type: 'bool',
   })
   is_read: boolean;
 
-  @ApiPropertyOptional({ type: "int" })
-  @Column({ type: "int" })
+  @ApiPropertyOptional({ type: 'int' })
+  @Column({ type: 'int' })
   user_id: number;
 
   @ApiProperty({ type: () => User })
   @ManyToOne(
     () => User,
-    (user: User) => user.notifications
+    (user: User) => user.notifications,
   )
-  @JoinColumn({ name: "user_id" })
+  @JoinColumn({ name: 'user_id' })
   user: User;
 }

@@ -1,13 +1,13 @@
-import { Module } from "@nestjs/common";
-import { OrganisationsController } from "./organisations.controller";
-import { OrganisationsService } from "./organisations.service";
-import { Organisation } from "./entities/Organisation.entity";
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { OrganisationRepository } from "./repositories/Organisation.repository";
-import { OrganisationPhoneNumberRepository } from "./repositories/OrganisationPhoneNumbers.repository";
-import { OrganisationWebsiteRepository } from "./repositories/OrganisationWebsite.repository";
-import { HelpTypesRepository } from "../help-types/repositories/Help-types.repository";
-import { CitezenTypesRepository } from "../citezen-types/repositories/Citezen-types.repository";
+import { Module } from '@nestjs/common';
+import { OrganisationsController } from './organisations.controller';
+import { OrganisationsService } from './organisations.service';
+import { Organisation } from './entities/Organisation.entity';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { OrganisationRepository } from './repositories/Organisation.repository';
+import { OrganisationPhoneNumberRepository } from './repositories/OrganisationPhoneNumbers.repository';
+import { OrganisationWebsiteRepository } from './repositories/OrganisationWebsite.repository';
+import { HelpTypesRepository } from '../help-types/repositories/Help-types.repository';
+import { CitezenTypesRepository } from '../citezen-types/repositories/Citezen-types.repository';
 
 @Module({
   imports: [
@@ -17,10 +17,10 @@ import { CitezenTypesRepository } from "../citezen-types/repositories/Citezen-ty
       OrganisationPhoneNumberRepository,
       OrganisationWebsiteRepository,
       HelpTypesRepository,
-      CitezenTypesRepository
-    ])
+      CitezenTypesRepository,
+    ]),
   ],
   controllers: [OrganisationsController],
-  providers: [OrganisationsService]
+  providers: [OrganisationsService],
 })
 export class OrganisationsModule {}

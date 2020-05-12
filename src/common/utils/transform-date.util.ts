@@ -1,15 +1,15 @@
-import _ from "lodash";
+import _ from 'lodash';
 
 export function TransformDate(dateStr: string): Date {
-  if (dateStr === "" || dateStr === null || dateStr === undefined) {
+  if (dateStr === '' || dateStr === null || dateStr === undefined) {
     return undefined;
   }
 
   if (_.isString(dateStr)) {
     const reverseDate = dateStr
-      .split(".")
+      .split('.')
       .reverse()
-      .join("-");
+      .join('-');
 
     return new Date(reverseDate);
   }

@@ -1,18 +1,18 @@
-import { PaginationFilterDto } from "../../common/dto/pagination-filter.dto";
-import { IsOptional, IsArray, IsNumber } from "class-validator";
-import { Transform } from "class-transformer";
-import { TransformIntArray } from "../../common/utils/transform-array-int.util";
-import { ApiPropertyOptional } from "@nestjs/swagger";
+import { PaginationFilterDto } from '../../common/dto/pagination-filter.dto';
+import { IsOptional, IsArray, IsNumber } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { TransformIntArray } from '../../common/utils/transform-array-int.util';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class QueryFilterDto extends PaginationFilterDto {
-  @ApiPropertyOptional({ type: "number", isArray: true })
+  @ApiPropertyOptional({ type: 'number', isArray: true })
   @IsArray()
   @IsOptional()
   @IsNumber({}, { each: true })
   @Transform(TransformIntArray)
   help_type_ids: Array<number>;
 
-  @ApiPropertyOptional({ type: "number", isArray: true })
+  @ApiPropertyOptional({ type: 'number', isArray: true })
   @IsArray()
   @IsOptional()
   @IsNumber({}, { each: true })

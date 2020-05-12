@@ -1,8 +1,8 @@
-import { IsString } from "class-validator";
-import { ApiProperty } from "@nestjs/swagger";
+import { IsString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class ReportBodyDto {
-  @ApiProperty({ type: "varchar" })
+  @ApiProperty({ type: 'varchar' })
   @IsString()
   text: string;
 }

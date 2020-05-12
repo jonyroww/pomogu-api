@@ -1,15 +1,11 @@
-import {
-  IsString,
-  IsPhoneNumber,
-  IsEnum
-} from "class-validator";
-import { ApiProperty } from "@nestjs/swagger";
-import { PurposeType } from "../../constants/PurposeType.enum";
+import { IsString, IsPhoneNumber, IsEnum } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { PurposeType } from '../../constants/PurposeType.enum';
 
 export class PhoneVerificationRequestDto {
-  @ApiProperty({ type: "varchar" })
+  @ApiProperty({ type: 'varchar' })
   @IsString()
-  @IsPhoneNumber("RU")
+  @IsPhoneNumber('RU')
   phone: string;
 
   @ApiProperty({ enum: PurposeType })

@@ -5,143 +5,143 @@ import {
   OneToMany,
   ManyToMany,
   JoinTable,
-} from "typeorm";
-import { HelpTypes } from "../../help-types/entities/help-types.entity";
-import { CitezenTypes } from "../../citezen-types/entities/citezen-types.entity";
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { OrganisationPhoneNumber } from "./OrganisationPhoneNumbers.entity";
-import { OrganisationWebsite } from "./OrganisationWebsite.entity";
+} from 'typeorm';
+import { HelpTypes } from '../../help-types/entities/help-types.entity';
+import { CitezenTypes } from '../../citezen-types/entities/citezen-types.entity';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { OrganisationPhoneNumber } from './OrganisationPhoneNumbers.entity';
+import { OrganisationWebsite } from './OrganisationWebsite.entity';
 
-@Entity({ name: "organisations" })
+@Entity({ name: 'organisations' })
 export class Organisation {
   @ApiProperty()
   @PrimaryColumn({
-    type: "int",
+    type: 'int',
     generated: true,
     readonly: true,
   })
   id: number;
 
-  @ApiProperty({ type: "string", example: "2019-11-22T16:03:05Z" })
+  @ApiProperty({ type: 'string', example: '2019-11-22T16:03:05Z' })
   @Column({
     nullable: false,
-    type: "timestamp with time zone",
+    type: 'timestamp with time zone',
   })
   created_at: Date;
 
-  @ApiProperty({ type: "string", example: "2019-11-22T16:03:05Z" })
-  @Column({ type: "timestamp with time zone" })
+  @ApiProperty({ type: 'string', example: '2019-11-22T16:03:05Z' })
+  @Column({ type: 'timestamp with time zone' })
   updated_at: Date;
 
   @ApiPropertyOptional({ example: 123456789 })
   @Column({
-    type: "varchar",
+    type: 'varchar',
     length: 255,
   })
   inn: string;
 
-  @ApiPropertyOptional({ example: "Название" })
+  @ApiPropertyOptional({ example: 'Название' })
   @Column({
-    type: "text",
+    type: 'text',
   })
   title: string;
 
-  @ApiProperty({ type: "string", example: "Описание организации" })
+  @ApiProperty({ type: 'string', example: 'Описание организации' })
   @Column({
     nullable: false,
-    type: "text",
+    type: 'text',
   })
   description: string;
 
-  @ApiPropertyOptional({ example: "Адрес" })
+  @ApiPropertyOptional({ example: 'Адрес' })
   @Column({
-    type: "text",
+    type: 'text',
   })
   address: string;
 
-  @ApiPropertyOptional({ example: "Москва", type: "string" })
+  @ApiPropertyOptional({ example: 'Москва', type: 'string' })
   @Column({
-    type: "varchar",
+    type: 'varchar',
   })
   city: string;
 
-  @ApiPropertyOptional({ type: "string" })
+  @ApiPropertyOptional({ type: 'string' })
   @Column({
-    type: "text",
+    type: 'text',
   })
   appeal_to_volunteer: string;
 
-  @ApiProperty({ type: "string", example: "График работы" })
+  @ApiProperty({ type: 'string', example: 'График работы' })
   @Column({
     nullable: false,
-    type: "varchar",
+    type: 'varchar',
   })
   work_schedule: string;
 
-  @ApiProperty({ type: "string", example: "mail@mail.com" })
+  @ApiProperty({ type: 'string', example: 'mail@mail.com' })
   @Column({
     nullable: false,
-    type: "varchar",
+    type: 'varchar',
     length: 255,
   })
   email: string;
 
-  @ApiProperty({ type: "boolean", example: true })
+  @ApiProperty({ type: 'boolean', example: true })
   @Column({
     nullable: false,
-    type: "bool",
+    type: 'bool',
   })
   publish_agreement: boolean;
 
-  @ApiProperty({ type: "string", example: "Имя Фамилия" })
+  @ApiProperty({ type: 'string', example: 'Имя Фамилия' })
   @Column({
     nullable: false,
-    type: "varchar",
+    type: 'varchar',
     length: 255,
   })
   full_name: string;
 
-  @ApiPropertyOptional({ example: "Комментарий" })
+  @ApiPropertyOptional({ example: 'Комментарий' })
   @Column({
     nullable: false,
-    type: "text",
+    type: 'text',
   })
   comment_for_dev: string;
 
-  @ApiPropertyOptional({ type: "number", example: "51.661535" })
+  @ApiPropertyOptional({ type: 'number', example: '51.661535' })
   @Column({
-    type: "numeric",
+    type: 'numeric',
   })
   location_lat: number;
 
-  @ApiPropertyOptional({ type: "number", example: "51.661535" })
+  @ApiPropertyOptional({ type: 'number', example: '51.661535' })
   @Column({
-    type: "numeric",
+    type: 'numeric',
   })
   location_long: number;
 
-  @ApiPropertyOptional({ example: "Logo url" })
+  @ApiPropertyOptional({ example: 'Logo url' })
   @Column({
-    type: "varchar",
+    type: 'varchar',
   })
   logo: string;
 
   @ApiPropertyOptional()
   @Column({
-    type: "text",
+    type: 'text',
   })
   need_help: string;
 
   @ApiPropertyOptional()
   @Column({
-    type: "text",
+    type: 'text',
   })
   organisation_type: string;
 
-  @ApiProperty({ type: "string", example: "2019-11-22T16:03:05Z" })
+  @ApiProperty({ type: 'string', example: '2019-11-22T16:03:05Z' })
   @Column({
     nullable: false,
-    type: "timestamp with time zone",
+    type: 'timestamp with time zone',
   })
   deleted_at: Date;
 
@@ -150,7 +150,7 @@ export class Organisation {
     () => OrganisationPhoneNumber,
     (organisationPhoneNumbers: OrganisationPhoneNumber) =>
       organisationPhoneNumbers.organisation,
-    { eager: true, cascade: true }
+    { eager: true, cascade: true },
   )
   phone_numbers: OrganisationPhoneNumber[];
 
@@ -159,7 +159,7 @@ export class Organisation {
     () => OrganisationWebsite,
     (organisationWebsite: OrganisationWebsite) =>
       organisationWebsite.organisation,
-    { eager: true, cascade: true }
+    { eager: true, cascade: true },
   )
   websites: OrganisationWebsite[];
 
@@ -167,12 +167,12 @@ export class Organisation {
   @ManyToMany(
     () => HelpTypes,
     (helpTypes: HelpTypes) => helpTypes.id,
-    { eager: true }
+    { eager: true },
   )
   @JoinTable({
-    name: "organisation_help_types",
-    joinColumn: { name: "organisation_id", referencedColumnName: "id" },
-    inverseJoinColumn: { name: "help_types_id", referencedColumnName: "id" },
+    name: 'organisation_help_types',
+    joinColumn: { name: 'organisation_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'help_types_id', referencedColumnName: 'id' },
   })
   helpTypes: HelpTypes[];
 
@@ -180,12 +180,12 @@ export class Organisation {
   @ManyToMany(
     () => CitezenTypes,
     (citezenTypes: CitezenTypes) => citezenTypes.id,
-    { eager: true }
+    { eager: true },
   )
   @JoinTable({
-    name: "organisation_citezen_types",
-    joinColumn: { name: "organisation_id", referencedColumnName: "id" },
-    inverseJoinColumn: { name: "citezen_types_id", referencedColumnName: "id" },
+    name: 'organisation_citezen_types',
+    joinColumn: { name: 'organisation_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'citezen_types_id', referencedColumnName: 'id' },
   })
   citezenTypes: CitezenTypes[];
 }
