@@ -6,7 +6,6 @@ import {
   IsDate,
   IsEmail,
   IsPhoneNumber,
-  IsBoolean,
   IsUrl,
   IsEnum,
 } from 'class-validator';
@@ -59,30 +58,10 @@ export class CreateUserDto {
   @IsEmail()
   email: string;
 
-  @ApiProperty({ type: 'boolean' })
-  @IsBoolean()
-  is_individual: boolean;
-
-  @ApiProperty({ type: 'boolean' })
-  @IsBoolean()
-  hide_contacts: boolean;
-
-  @ApiPropertyOptional({ type: 'boolean' })
-  @IsBoolean()
-  need_expert_help: boolean;
-
-  @ApiProperty({ type: 'boolean' })
-  @IsBoolean()
-  with_fund: boolean;
-
   @ApiPropertyOptional({ type: 'varchar' })
   @IsOptional()
   @IsString()
   comment: string;
-
-  @ApiProperty({ type: 'boolean' })
-  @IsBoolean()
-  allow_search_in_messengers: boolean;
 
   @ApiPropertyOptional({ type: 'varchar' })
   @IsOptional()
@@ -94,10 +73,6 @@ export class CreateUserDto {
   @IsOptional()
   @IsString()
   gender: string;
-
-  @ApiProperty({ type: 'varchar' })
-  @IsString()
-  password: string;
 
   @ApiProperty({ type: 'number', isArray: true })
   @IsArray()
