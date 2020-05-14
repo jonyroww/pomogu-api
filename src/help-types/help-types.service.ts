@@ -1,21 +1,21 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { HelpTypes } from "./entities/help-types.entity";
-import { HelpTypesRepository } from "./repositories/Help-types.repository";
-import { HelpTypeBodyDto } from "./dto/help-type-body.dto";
-import { HelpTypeIdDto } from "./dto/help-type-id.dto";
-import { makeError } from "../common/errors/index";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { HelpTypes } from './entities/help-types.entity';
+import { HelpTypesRepository } from './repositories/Help-types.repository';
+import { HelpTypeBodyDto } from './dto/help-type-body.dto';
+import { HelpTypeIdDto } from './dto/help-type-id.dto';
+import { makeError } from '../common/errors/index';
 
 @Injectable()
 export class HelpTypesService {
   constructor(
     @InjectRepository(HelpTypes)
-    private readonly helpTypesRepository: HelpTypesRepository
+    private readonly helpTypesRepository: HelpTypesRepository,
   ) {}
 
   async findAll(): Promise<HelpTypes[]> {
     const helpTypes = await this.helpTypesRepository.find({
-      where: { deleted_at: null }
+      where: { deleted_at: null },
     });
 
     return helpTypes;
@@ -32,7 +32,7 @@ export class HelpTypesService {
     if (helpType.deleted_at === null) {
       return helpType;
     } else {
-      throw makeError("TYPE_WAS_DELETED");
+      throw makeError('TYPE_WAS_DELETED');
     }
   }
 
@@ -43,7 +43,7 @@ export class HelpTypesService {
       await this.helpTypesRepository.save(helpType);
       return helpType;
     } else {
-      throw makeError("TYPE_WAS_DELETED");
+      throw makeError('TYPE_WAS_DELETED');
     }
   }
 
@@ -54,7 +54,7 @@ export class HelpTypesService {
       await this.helpTypesRepository.save(helpType);
       return helpType;
     } else {
-      throw makeError("TYPE_WAS_DELETED");
+      throw makeError('TYPE_WAS_DELETED');
     }
   }
 }

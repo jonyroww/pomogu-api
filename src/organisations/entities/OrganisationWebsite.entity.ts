@@ -1,46 +1,37 @@
-import {
-  Entity,
-  PrimaryColumn,
-  Column,
-  OneToMany,
-  ManyToMany,
-  JoinTable,
-  ManyToOne,
-  JoinColumn
-} from "typeorm";
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { Organisation } from "./Organisation.entity";
+import { Entity, PrimaryColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { ApiProperty } from '@nestjs/swagger';
+import { Organisation } from './Organisation.entity';
 
-@Entity("organisation_websites")
+@Entity('organisation_websites')
 export class OrganisationWebsite {
   @ApiProperty()
   @PrimaryColumn({
-    type: "int",
+    type: 'int',
     generated: true,
-    readonly: true
+    readonly: true,
   })
   id: number;
 
-  @ApiProperty({ type: "string", example: "website.com" })
+  @ApiProperty({ type: 'string', example: 'website.com' })
   @Column({
     nullable: false,
-    type: "varchar",
-    length: 255
+    type: 'varchar',
+    length: 255,
   })
   url: string;
 
   @ApiProperty()
   @Column({
-    type: "int",
-    nullable: false
+    type: 'int',
+    nullable: false,
   })
   organisation_id: number;
 
   @ApiProperty()
   @ManyToOne(
     () => Organisation,
-    (organisation: Organisation) => organisation.websites
+    (organisation: Organisation) => organisation.websites,
   )
-  @JoinColumn({ name: "organisation_id" })
+  @JoinColumn({ name: 'organisation_id' })
   organisation: Organisation;
 }

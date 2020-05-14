@@ -1,21 +1,21 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { CitezenTypes } from "./entities/citezen-types.entity";
-import { CitezenTypesRepository } from "./repositories/Citezen-types.repository";
-import { CitezenTypeBodyDto } from "./dto/citezen-type-body.dto";
-import { CitezenTypeIdDto } from "./dto/citezen-type-id.dto";
-import { makeError } from "../common/errors/index";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { CitezenTypes } from './entities/citezen-types.entity';
+import { CitezenTypesRepository } from './repositories/Citezen-types.repository';
+import { CitezenTypeBodyDto } from './dto/citezen-type-body.dto';
+import { CitezenTypeIdDto } from './dto/citezen-type-id.dto';
+import { makeError } from '../common/errors/index';
 
 @Injectable()
 export class CitezenTypesService {
   constructor(
     @InjectRepository(CitezenTypes)
-    private citezenTypesRepository: CitezenTypesRepository
+    private citezenTypesRepository: CitezenTypesRepository,
   ) {}
 
   async findAll(): Promise<CitezenTypes[]> {
     const citezenTypes = await this.citezenTypesRepository.find({
-      where: { deleted_at: null }
+      where: { deleted_at: null },
     });
     return citezenTypes;
   }
@@ -28,38 +28,38 @@ export class CitezenTypesService {
 
   async getOneCitezenType(params: CitezenTypeIdDto) {
     const citezenType = await this.citezenTypesRepository.findOne({
-      id: params.id
+      id: params.id,
     });
     if (citezenType.deleted_at === null) {
       return citezenType;
     } else {
-      throw makeError("TYPE_WAS_DELETED");
+      throw makeError('TYPE_WAS_DELETED');
     }
   }
 
   async updateCitezenType(params: CitezenTypeIdDto, body: CitezenTypeBodyDto) {
     const citezenType = await this.citezenTypesRepository.findOne({
-      id: params.id
+      id: params.id,
     });
     if (citezenType.deleted_at === null) {
       citezenType.title = body.title;
       await this.citezenTypesRepository.save(citezenType);
       return citezenType;
     } else {
-      throw makeError("TYPE_WAS_DELETED");
+      throw makeError('TYPE_WAS_DELETED');
     }
   }
 
   async deleteCitezenType(params: CitezenTypeIdDto) {
     const citezenType = await this.citezenTypesRepository.findOne({
-      id: params.id
+      id: params.id,
     });
     if (citezenType.deleted_at === null) {
       citezenType.deleted_at = new Date();
       await this.citezenTypesRepository.save(citezenType);
       return citezenType;
     } else {
-      throw makeError("TYPE_WAS_DELETED");
+      throw makeError('TYPE_WAS_DELETED');
     }
   }
 }

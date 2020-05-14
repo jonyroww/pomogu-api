@@ -2,15 +2,14 @@ import {
   IsOptional,
   IsArray,
   IsNumber,
-  IsInt,
   IsString,
-  IsAlphanumeric,
   IsDate,
   IsEmail,
   IsPhoneNumber,
   IsBoolean,
   IsUrl,
   IsEnum,
+
 } from "class-validator";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
@@ -24,28 +23,28 @@ export class CreateUserDto {
   @IsString()
   first_name: string;
 
-  @ApiPropertyOptional({ type: "varchar" })
+  @ApiPropertyOptional({ type: 'varchar' })
   @IsOptional()
   @IsString()
   middle_name: string;
 
-  @ApiPropertyOptional({ type: "varchar" })
+  @ApiPropertyOptional({ type: 'varchar' })
   @IsOptional()
   @IsString()
   last_name: string;
 
-  @ApiPropertyOptional({ type: "Date" })
+  @ApiPropertyOptional({ type: 'Date' })
   @IsOptional()
   @IsDate()
   @Transform(TransformDate)
   birth_date: Date;
 
-  @ApiProperty({ type: "varchar" })
+  @ApiProperty({ type: 'varchar' })
   @IsString()
-  @IsPhoneNumber("RU")
+  @IsPhoneNumber('RU')
   phone: string;
 
-  @ApiPropertyOptional({ type: "varchar" })
+  @ApiPropertyOptional({ type: 'varchar' })
   @IsOptional()
   @IsString()
   city: string;
@@ -55,43 +54,43 @@ export class CreateUserDto {
   @IsEnum(RoleName)
   role: RoleName;
 
-  @ApiPropertyOptional({ type: "varchar" })
+  @ApiPropertyOptional({ type: 'varchar' })
   @IsOptional()
   @IsString()
   @IsEmail()
   email: string;
 
-  @ApiPropertyOptional({ type: "varchar" })
+  @ApiPropertyOptional({ type: 'varchar' })
   @IsOptional()
   @IsString()
   comment: string;
-
-  @ApiPropertyOptional({ type: "varchar" })
+  
+  @ApiPropertyOptional({ type: 'varchar' })
   @IsOptional()
   @IsString()
   @IsUrl()
   avatar: string;
 
-  @ApiPropertyOptional({ type: "varchar" })
+  @ApiPropertyOptional({ type: 'varchar' })
   @IsOptional()
   @IsString()
   gender: string;
-
-  @ApiProperty({ type: "number", isArray: true })
+  
+  @ApiProperty({ type: 'number', isArray: true })
   @IsArray()
   @IsOptional()
   @IsNumber({}, { each: true })
   @Transform(TransformIntArray)
   help_type_ids: Array<number>;
 
-  @ApiProperty({ type: "number", isArray: true })
+  @ApiProperty({ type: 'number', isArray: true })
   @IsArray()
   @IsOptional()
   @IsNumber({}, { each: true })
   @Transform(TransformIntArray)
   citizen_type_ids: Array<number>;
 
-  @ApiProperty({ type: "number", isArray: true })
+  @ApiProperty({ type: 'number', isArray: true })
   @IsArray()
   @IsOptional()
   @IsNumber({}, { each: true })
