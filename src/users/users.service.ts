@@ -9,7 +9,7 @@ import { makeError } from "../common/errors/index";
 import { Transactional } from "typeorm-transactional-cls-hooked";
 import { GetAllQueryDto } from "./dto/get-all-query.dto";
 import { UserIdDto } from "./dto/user-id.dto";
-import { createUserDto } from "./dto/create-user.dto";
+import { CreateUserDto } from "./dto/create-user.dto";
 import { ModerationStatus } from "../constants/ModerationStatus.enum";
 import { UpdateUserDto } from "./dto/update-user-dto";
 import bcrypt from "bcrypt";
@@ -71,7 +71,7 @@ export class UsersService {
     citizen_type_ids,
     help_type_ids,
     ...body
-  }: createUserDto) {
+  }: CreateUserDto) {
     const user = this.userRepository.create(body);
     const helpTypes = await this.helpTypesRepository.findByIds(help_type_ids);
     const citezenTypes = await this.citezenTypesRepository.findByIds(

@@ -9,7 +9,7 @@ import {
   Body,
   Put,
   UseGuards,
-  Delete
+  Delete,
 } from "@nestjs/common";
 import { User } from "./entities/User.entity";
 import { UsersService } from "./users.service";
@@ -17,11 +17,11 @@ import {
   ApiOkResponse,
   ApiTags,
   ApiCreatedResponse,
-  ApiBearerAuth
+  ApiBearerAuth,
 } from "@nestjs/swagger";
 import { GetAllQueryDto } from "./dto/get-all-query.dto";
 import { UserIdDto } from "./dto/user-id.dto";
-import { createUserDto } from "./dto/create-user.dto";
+import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user-dto";
 import { PaginationFilterDto } from "../common/dto/pagination-filter.dto";
 import { ModerationBodyDto } from "./dto/moderation-body.dto";
@@ -56,7 +56,7 @@ export class UsersController {
   @UseGuards(AuthGuard("jwt"), IsAdminGuard)
   @ApiBearerAuth()
   @Post()
-  createUser(@Body() body: createUserDto) {
+  createUser(@Body() body: CreateUserDto) {
     return this.usersService.createUser(body);
   }
 
