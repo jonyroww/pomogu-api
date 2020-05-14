@@ -20,6 +20,8 @@ import { PurposeType } from "src/constants/PurposeType.enum";
 import { UpdatePhoneNumberDto } from "./dto/update-phone-number.dto";
 import { RoleName } from "../constants/RoleName.enum";
 import { UpdateUserParamsDto } from "./dto/update-phone-params.dto";
+import { MailerService } from "@nest-modules/mailer";
+import cryptoRandomString from "crypto-random-string";
 
 @Injectable()
 export class UsersService {
@@ -29,7 +31,8 @@ export class UsersService {
     private helpTypesRepository: HelpTypesRepository,
     private citezenTypesRepository: CitezenTypesRepository,
     private phoneVerificationRepository: PhoneVerificationRepository,
-    private organisationRepository: OrganisationRepository
+    private organisationRepository: OrganisationRepository,
+    private mailerService: MailerService
   ) {}
 
   @Transactional()
@@ -41,11 +44,11 @@ export class UsersService {
       .leftJoinAndSelect("users.organisations", "organisations");
 
     qb.where("users.moderation_status = :moderation_status", {
-      moderation_status: query.moderation_status || ModerationStatus.APPROVED
+      moderation_status: query.moderation_status || ModerationStatus.APPROVED,
     });
 
     qb.andWhere("users.role = :role", {
-      role: query.role || RoleName.VOLUNTEER
+      role: query.role || RoleName.VOLUNTEER,
     });
     const total = await qb.getCount();
     const users = await qb
@@ -78,14 +81,15 @@ export class UsersService {
     const organisations = await this.organisationRepository.findByIds(
       organisation_ids
     );
+    const password = cryptoRandomString({ length: 10, type: "base64" });
     const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(body.password, salt);
+    const hashedPassword = await bcrypt.hash(password, salt);
     user.password = hashedPassword;
     user.helpTypes = helpTypes;
     user.citezenTypes = citezenTypes;
     user.organisations = organisations;
     user.moderation_status = ModerationStatus.APPROVED;
-
+    this.sendPassword(user.email, password);
     await this.userRepository.save(user);
     return user;
   }
@@ -152,7 +156,7 @@ export class UsersService {
     }
 
     const userDb = await this.userRepository.findOne({
-      id: params.volunteerId
+      id: params.volunteerId,
     });
     if (!userDb || userDb.deleted_at) {
       throw makeError("USER_NOT_FOUND");
@@ -188,5 +192,16 @@ export class UsersService {
       await this.userRepository.save(user);
       return user;
     }
+  }
+
+  async sendPassword(email, password) {
+    await this.mailerService.sendMail({
+      to: email,
+      subject: "ЯПомогу - пароль от личного кабинета",
+      template: "password.html",
+      context: {
+        password: password,
+      },
+    });
   }
 }
