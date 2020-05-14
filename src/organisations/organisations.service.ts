@@ -1,21 +1,19 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Organisation } from "./entities/Organisation.entity";
-import { Repository, Brackets } from "typeorm";
-import { QueryFilterDto } from "./dto/query-filter.dto";
-import { OrganisationIdDto } from "./dto/organisation-id.dto";
-import _ from "lodash";
-import { makeError } from "../common/errors/index";
-import { Transactional } from "typeorm-transactional-cls-hooked";
-import { OrganisationRepository } from "./repositories/Organisation.repository";
-import { OrganisationBodyDto } from "./dto/organisation-body.dto";
-import { OrganisationPhoneNumberRepository } from "./repositories/OrganisationPhoneNumbers.repository";
-import { OrganisationWebsiteRepository } from "./repositories/OrganisationWebsite.repository";
-import { HelpTypesRepository } from "../help-types/repositories/Help-types.repository";
-import { CitezenTypesRepository } from "../citezen-types/repositories/Citezen-types.repository";
-import { OrganisationUpdateBodyDto } from "./dto/organisation-update-body.dto";
-import { FindAllResponseDto } from "./dto/find-all-response.dto";
-import { setTypesFilters } from "../common/utils/types-filters.util";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Organisation } from './entities/Organisation.entity';
+import { QueryFilterDto } from './dto/query-filter.dto';
+import { OrganisationIdDto } from './dto/organisation-id.dto';
+import { makeError } from '../common/errors/index';
+import { Transactional } from 'typeorm-transactional-cls-hooked';
+import { OrganisationRepository } from './repositories/Organisation.repository';
+import { OrganisationBodyDto } from './dto/organisation-body.dto';
+import { OrganisationPhoneNumberRepository } from './repositories/OrganisationPhoneNumbers.repository';
+import { OrganisationWebsiteRepository } from './repositories/OrganisationWebsite.repository';
+import { HelpTypesRepository } from '../help-types/repositories/Help-types.repository';
+import { CitezenTypesRepository } from '../citezen-types/repositories/Citezen-types.repository';
+import { OrganisationUpdateBodyDto } from './dto/organisation-update-body.dto';
+import { FindAllResponseDto } from './dto/find-all-response.dto';
+import { setTypesFilters } from '../common/utils/types-filters.util';
 
 @Injectable()
 export class OrganisationsService {
@@ -25,21 +23,21 @@ export class OrganisationsService {
     private organisationPhoneNumberRepository: OrganisationPhoneNumberRepository,
     private organisationWebsiteRepository: OrganisationWebsiteRepository,
     private helpTypesRepository: HelpTypesRepository,
-    private citezenTypesRepository: CitezenTypesRepository
+    private citezenTypesRepository: CitezenTypesRepository,
   ) {}
 
   @Transactional()
   async findAll(params: QueryFilterDto): Promise<FindAllResponseDto> {
-    const qb = this.organisationsRepository.createQueryBuilder("organisations");
+    const qb = this.organisationsRepository.createQueryBuilder('organisations');
 
-    qb.leftJoinAndSelect("organisations.helpTypes", "helpTypes")
-      .leftJoinAndSelect("organisations.citezenTypes", "citezenTypes")
-      .leftJoinAndSelect("organisations.phone_numbers", "phone_numbers")
-      .leftJoinAndSelect("organisations.websites", "websites");
+    qb.leftJoinAndSelect('organisations.helpTypes', 'helpTypes')
+      .leftJoinAndSelect('organisations.citezenTypes', 'citezenTypes')
+      .leftJoinAndSelect('organisations.phone_numbers', 'phone_numbers')
+      .leftJoinAndSelect('organisations.websites', 'websites');
 
     setTypesFilters(qb, params.help_type_ids, params.citizen_type_ids);
 
-    qb.andWhere("organisations.deleted_at is null");
+    qb.andWhere('organisations.deleted_at is null');
 
     const total = await qb.getCount();
 
@@ -62,24 +60,24 @@ export class OrganisationsService {
     const organisation = this.organisationsRepository.create(body);
     const helpTypes = await this.helpTypesRepository.findByIds(help_type_ids);
     const citezenTypes = await this.citezenTypesRepository.findByIds(
-      citizen_type_ids
+      citizen_type_ids,
     );
     organisation.helpTypes = helpTypes;
     organisation.citezenTypes = citezenTypes;
     await this.organisationsRepository.save(organisation);
 
-    const newWebsitesList = websites.map((website) => {
+    const newWebsitesList = websites.map(website => {
       return {
         url: website,
         organisation_id: organisation.id,
       };
     });
     const newWebsites = this.organisationWebsiteRepository.create(
-      newWebsitesList
+      newWebsitesList,
     );
     await this.organisationWebsiteRepository.save(newWebsites);
 
-    const newPhoneNumbersList = phone_numbers.map((phone_number) => {
+    const newPhoneNumbersList = phone_numbers.map(phone_number => {
       return {
         phone_number: phone_number,
         organisation_id: organisation.id,
@@ -87,7 +85,7 @@ export class OrganisationsService {
     });
 
     const newPhoneNumbers = this.organisationPhoneNumberRepository.create(
-      newPhoneNumbersList
+      newPhoneNumbersList,
     );
     await this.organisationPhoneNumberRepository.save(newPhoneNumbers);
 
@@ -99,7 +97,7 @@ export class OrganisationsService {
     if (organisation && organisation.deleted_at === null) {
       return organisation;
     } else {
-      throw makeError("NO_SUCH_ORGANISATION");
+      throw makeError('NO_SUCH_ORGANISATION');
     }
   }
 
@@ -112,23 +110,23 @@ export class OrganisationsService {
       phone_numbers,
       ...body
     }: OrganisationUpdateBodyDto,
-    params: OrganisationIdDto
+    params: OrganisationIdDto,
   ) {
     const organisation = await this.organisationsRepository.findOne(params.id);
     if (organisation && organisation.deleted_at === null) {
       const mergeOrganisation = this.organisationsRepository.merge(
         organisation,
-        body
+        body,
       );
       if (help_type_ids) {
         const helpTypes = await this.helpTypesRepository.findByIds(
-          help_type_ids
+          help_type_ids,
         );
         mergeOrganisation.helpTypes = helpTypes;
       }
       if (citizen_type_ids) {
         const citezenTypes = await this.citezenTypesRepository.findByIds(
-          citizen_type_ids
+          citizen_type_ids,
         );
         mergeOrganisation.citezenTypes = citezenTypes;
       }
@@ -137,14 +135,14 @@ export class OrganisationsService {
         await this.organisationPhoneNumberRepository.delete({
           organisation_id: params.id,
         });
-        const newPhoneNumbersList = phone_numbers.map((phone_number) => {
+        const newPhoneNumbersList = phone_numbers.map(phone_number => {
           return {
             phone_number: phone_number,
             organisation_id: organisation.id,
           };
         });
         const newPhoneNumbers = this.organisationPhoneNumberRepository.create(
-          newPhoneNumbersList
+          newPhoneNumbersList,
         );
         mergeOrganisation.phone_numbers = newPhoneNumbers;
       }
@@ -153,21 +151,21 @@ export class OrganisationsService {
         await this.organisationWebsiteRepository.delete({
           organisation_id: params.id,
         });
-        const newWebsitesList = websites.map((website) => {
+        const newWebsitesList = websites.map(website => {
           return {
             url: website,
             organisation_id: organisation.id,
           };
         });
         const newWebsites = this.organisationWebsiteRepository.create(
-          newWebsitesList
+          newWebsitesList,
         );
         mergeOrganisation.websites = newWebsites;
       }
 
       await this.organisationsRepository.save(mergeOrganisation);
     } else {
-      throw makeError("NO_SUCH_ORGANISATION");
+      throw makeError('NO_SUCH_ORGANISATION');
     }
   }
 
@@ -178,7 +176,7 @@ export class OrganisationsService {
       await this.organisationsRepository.save(organisation);
       return organisation;
     } else {
-      throw makeError("NO_SUCH_ORGANISATION");
+      throw makeError('NO_SUCH_ORGANISATION');
     }
   }
 }

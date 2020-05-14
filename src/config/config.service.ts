@@ -1,6 +1,6 @@
-import { Injectable } from "@nestjs/common";
-import * as dotenv from "dotenv";
-import Joi from "@hapi/joi";
+import { Injectable } from '@nestjs/common';
+import * as dotenv from 'dotenv';
+import Joi from '@hapi/joi';
 
 @Injectable()
 export class ConfigService {
@@ -16,8 +16,8 @@ export class ConfigService {
 
   private validateInput(envVars: NodeJS.ProcessEnv) {
     const envVarsSchema = Joi.object({
-      NODE_ENV: Joi.string().default("development"),
-      HOST: Joi.string().default("localhost"),
+      NODE_ENV: Joi.string().default('development'),
+      HOST: Joi.string().default('localhost'),
       PORT: Joi.number().default(4000),
 
       DB_HOST: Joi.string().required(),
@@ -33,9 +33,9 @@ export class ConfigService {
       EMAIL_FROM: Joi.string().required(),
       SMS_API_ID: Joi.string().required(),
       SMS_CODE_GEN: Joi.boolean().required(),
-      SUPPORT_EMAIL: Joi.string().required()
+      SUPPORT_EMAIL: Joi.string().required(),
     }).options({
-      stripUnknown: true
+      stripUnknown: true,
     });
     const { error, value } = envVarsSchema.validate(envVars);
     if (error) {

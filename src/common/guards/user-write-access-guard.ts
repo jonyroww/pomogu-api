@@ -1,9 +1,8 @@
-import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
-import { Request } from "express";
-import _ from "lodash";
-import { RoleName } from "../../constants/RoleName.enum";
-import { User } from "../../users/entities/User.entity";
-import { makeError } from "../errors/index";
+import { CanActivate, ExecutionContext } from '@nestjs/common';
+import { Request } from 'express';
+import { RoleName } from '../../constants/RoleName.enum';
+import { User } from '../../users/entities/User.entity';
+import { makeError } from '../errors/index';
 
 export class UserWriteAccessGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -18,7 +17,7 @@ export class UserWriteAccessGuard implements CanActivate {
     } else if (volunteerId === user.id) {
       return true;
     } else {
-      throw makeError("FORBIDDEN");
+      throw makeError('FORBIDDEN');
     }
   }
 }

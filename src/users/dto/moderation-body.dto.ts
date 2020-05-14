@@ -1,6 +1,6 @@
-import { IsEnum, IsString } from "class-validator";
-import { ApiProperty } from "@nestjs/swagger";
-import { ModerationStatus } from "src/constants/ModerationStatus.enum";
+import { IsEnum, IsString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { ModerationStatus } from 'src/constants/ModerationStatus.enum';
 
 export class ModerationBodyDto {
   @ApiProperty({ enum: ModerationStatus })

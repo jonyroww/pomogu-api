@@ -1,10 +1,10 @@
-import { Brackets, SelectQueryBuilder } from "typeorm";
-import _ from "lodash";
+import { Brackets, SelectQueryBuilder } from 'typeorm';
+import _ from 'lodash';
 
 export function setTypesFilters(
   qb: SelectQueryBuilder<any>,
   helpTypes?: Array<number>,
-  citezenTypes?: Array<number>
+  citezenTypes?: Array<number>,
 ) {
   const leftJoinHelpTypes = `${qb.alias}_help_types`;
   const leftJoinCitezenTypes = `${qb.alias}_citezen_types`;
@@ -18,18 +18,18 @@ export function setTypesFilters(
     }
     qb.where(
       new Brackets(qb => {
-        qb.where("FALSE");
+        qb.where('FALSE');
         if (!_.isEmpty(helpTypes)) {
           qb.orWhere(`${leftJoinHelpTypes}.id IN (:...helpTypesId)`, {
-            helpTypesId: helpTypes
+            helpTypesId: helpTypes,
           });
         }
         if (!_.isEmpty(citezenTypes)) {
           qb.orWhere(`${leftJoinCitezenTypes}.id IN (:...citezenTypes)`, {
-            citezenTypes: citezenTypes
+            citezenTypes: citezenTypes,
           });
         }
-      })
+      }),
     );
   }
 }
