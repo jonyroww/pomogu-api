@@ -10,13 +10,11 @@ import {
   IsPhoneNumber,
   IsBoolean,
   IsUrl,
-  Length,
   IsEnum,
 } from "class-validator";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
 import { TransformIntArray } from "../../common/utils/transform-array-int.util";
-import { TransformInt } from "../../common/utils/transform-int.util";
 import { TransformDate } from "../../common/utils/transform-date.util";
 import { RoleName } from "../../constants/RoleName.enum";
 
