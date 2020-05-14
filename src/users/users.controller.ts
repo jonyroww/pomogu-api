@@ -10,31 +10,27 @@ import {
   Put,
   UseGuards,
   Delete,
-
-} from "@nestjs/common";
-import { User } from "./entities/User.entity";
-import { UsersService } from "./users.service";
+} from '@nestjs/common';
+import { User } from './entities/User.entity';
+import { UsersService } from './users.service';
 import {
   ApiOkResponse,
   ApiTags,
   ApiCreatedResponse,
   ApiBearerAuth,
-
-} from "@nestjs/swagger";
-import { GetAllQueryDto } from "./dto/get-all-query.dto";
-import { UserIdDto } from "./dto/user-id.dto";
-import { CreateUserDto } from "./dto/create-user.dto";
-import { UpdateUserDto } from "./dto/update-user-dto";
-import { PaginationFilterDto } from "../common/dto/pagination-filter.dto";
-import { ModerationBodyDto } from "./dto/moderation-body.dto";
-import { AuthGuard } from "@nestjs/passport";
-import { IsAdminGuard } from "../common/guards/is-admin.guard";
-import { GetUser } from "../common/decorators/get-user.decorator";
-import { UpdatePhoneNumberDto } from "./dto/update-phone-number.dto";
-import { UserWriteAccessGuard } from "../common/guards/user-write-access-guard";
-import { UpdateUserParamsDto } from "./dto/update-phone-params.dto";
-import { ModerationAdminGuard } from "../common/guards/moderation-admin.guard";
-
+} from '@nestjs/swagger';
+import { GetAllQueryDto } from './dto/get-all-query.dto';
+import { UserIdDto } from './dto/user-id.dto';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user-dto';
+import { ModerationBodyDto } from './dto/moderation-body.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { IsAdminGuard } from '../common/guards/is-admin.guard';
+import { GetUser } from '../common/decorators/get-user.decorator';
+import { UpdatePhoneNumberDto } from './dto/update-phone-number.dto';
+import { UserWriteAccessGuard } from '../common/guards/user-write-access-guard';
+import { UpdateUserParamsDto } from './dto/update-phone-params.dto';
+import { ModerationAdminGuard } from '../common/guards/moderation-admin.guard';
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 @Controller('users')

@@ -6,19 +6,17 @@ import {
   IsDate,
   IsEmail,
   IsPhoneNumber,
-  IsBoolean,
   IsUrl,
   IsEnum,
-
-} from "class-validator";
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { Transform } from "class-transformer";
-import { TransformIntArray } from "../../common/utils/transform-array-int.util";
-import { TransformDate } from "../../common/utils/transform-date.util";
-import { RoleName } from "../../constants/RoleName.enum";
+} from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
+import { TransformIntArray } from '../../common/utils/transform-array-int.util';
+import { TransformDate } from '../../common/utils/transform-date.util';
+import { RoleName } from '../../constants/RoleName.enum';
 
 export class CreateUserDto {
-  @ApiPropertyOptional({ type: "varchar" })
+  @ApiPropertyOptional({ type: 'varchar' })
   @IsOptional()
   @IsString()
   first_name: string;
@@ -64,7 +62,7 @@ export class CreateUserDto {
   @IsOptional()
   @IsString()
   comment: string;
-  
+
   @ApiPropertyOptional({ type: 'varchar' })
   @IsOptional()
   @IsString()
@@ -75,7 +73,7 @@ export class CreateUserDto {
   @IsOptional()
   @IsString()
   gender: string;
-  
+
   @ApiProperty({ type: 'number', isArray: true })
   @IsArray()
   @IsOptional()
