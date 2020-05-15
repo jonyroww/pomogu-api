@@ -1,28 +1,26 @@
-
-import { Injectable } from "@nestjs/common";
-import { User } from "./entities/User.entity";
-import { InjectRepository } from "@nestjs/typeorm";
-import { UserRepository } from "./repositories/User.repository";
-import { HelpTypesRepository } from "../help-types/repositories/Help-types.repository";
-import { CitezenTypesRepository } from "../citezen-types/repositories/Citezen-types.repository";
-import { OrganisationRepository } from "../organisations/repositories/Organisation.repository";
-import { makeError } from "../common/errors/index";
-import { Transactional } from "typeorm-transactional-cls-hooked";
-import { GetAllQueryDto } from "./dto/get-all-query.dto";
-import { UserIdDto } from "./dto/user-id.dto";
-import { CreateUserDto } from "./dto/create-user.dto";
-import { ModerationStatus } from "../constants/ModerationStatus.enum";
-import { UpdateUserDto } from "./dto/update-user-dto";
-import bcrypt from "bcrypt";
-import { ModerationBodyDto } from "./dto/moderation-body.dto";
-import { PhoneVerificationRepository } from "../auth/repository/Phone-verification.repository";
-import { PurposeType } from "src/constants/PurposeType.enum";
-import { UpdatePhoneNumberDto } from "./dto/update-phone-number.dto";
-import { RoleName } from "../constants/RoleName.enum";
-import { UpdateUserParamsDto } from "./dto/update-phone-params.dto";
-import { MailerService } from "@nest-modules/mailer";
-import cryptoRandomString from "crypto-random-string";
-
+import { Injectable } from '@nestjs/common';
+import { User } from './entities/User.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UserRepository } from './repositories/User.repository';
+import { HelpTypesRepository } from '../help-types/repositories/Help-types.repository';
+import { CitezenTypesRepository } from '../citezen-types/repositories/Citezen-types.repository';
+import { OrganisationRepository } from '../organisations/repositories/Organisation.repository';
+import { makeError } from '../common/errors/index';
+import { Transactional } from 'typeorm-transactional-cls-hooked';
+import { GetAllQueryDto } from './dto/get-all-query.dto';
+import { UserIdDto } from './dto/user-id.dto';
+import { CreateUserDto } from './dto/create-user.dto';
+import { ModerationStatus } from '../constants/ModerationStatus.enum';
+import { UpdateUserDto } from './dto/update-user-dto';
+import bcrypt from 'bcrypt';
+import { ModerationBodyDto } from './dto/moderation-body.dto';
+import { PhoneVerificationRepository } from '../auth/repository/Phone-verification.repository';
+import { PurposeType } from 'src/constants/PurposeType.enum';
+import { UpdatePhoneNumberDto } from './dto/update-phone-number.dto';
+import { RoleName } from '../constants/RoleName.enum';
+import { UpdateUserParamsDto } from './dto/update-phone-params.dto';
+import { MailerService } from '@nest-modules/mailer';
+import cryptoRandomString from 'crypto-random-string';
 
 @Injectable()
 export class UsersService {
@@ -33,7 +31,7 @@ export class UsersService {
     private citezenTypesRepository: CitezenTypesRepository,
     private phoneVerificationRepository: PhoneVerificationRepository,
     private organisationRepository: OrganisationRepository,
-    private mailerService: MailerService
+    private mailerService: MailerService,
   ) {}
 
   @Transactional()
@@ -73,6 +71,18 @@ export class UsersService {
     help_type_ids,
     ...body
   }: CreateUserDto) {
+    const phoneExists = await this.userRepository.findOne({
+      phone: body.phone,
+    });
+    const emailExists = await this.userRepository.findOne({
+      email: body.email,
+    });
+    if (emailExists) {
+      throw makeError('EMAIL_ALREADY_EXISTS');
+    }
+    if (phoneExists) {
+      throw makeError('PHONE_ALREADY_EXISTS');
+    }
     const user = this.userRepository.create(body);
     const helpTypes = await this.helpTypesRepository.findByIds(help_type_ids);
     const citezenTypes = await this.citezenTypesRepository.findByIds(
@@ -81,7 +91,7 @@ export class UsersService {
     const organisations = await this.organisationRepository.findByIds(
       organisation_ids,
     );
-    const password = cryptoRandomString({ length: 10, type: "base64" });
+    const password = cryptoRandomString({ length: 10, type: 'base64' });
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
     user.password = hashedPassword;
@@ -197,8 +207,8 @@ export class UsersService {
   async sendPassword(email, password) {
     await this.mailerService.sendMail({
       to: email,
-      subject: "ЯПомогу - пароль от личного кабинета",
-      template: "password.html",
+      subject: 'ЯПомогу - пароль от личного кабинета',
+      template: 'password.html',
       context: {
         password: password,
       },
