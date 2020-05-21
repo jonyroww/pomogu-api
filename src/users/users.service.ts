@@ -48,6 +48,8 @@ export class UsersService {
     qb.andWhere('users.role = :role', {
       role: query.role || RoleName.VOLUNTEER,
     });
+    qb.andWhere('users.deleted_at is null')
+    
     const total = await qb.getCount();
     const users = await qb
       .take(query.limit)
