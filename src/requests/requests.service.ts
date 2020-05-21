@@ -59,11 +59,11 @@ export class RequestsService {
 
     setTypesFilters(qb, query.help_type_ids, query.citizen_type_ids);
 
-    /*
+    
     qb.andWhere("requests.moderation_status = :moderation_status", {
       moderation_status: query.moderation_status || ModerationStatus.APPROVED
     }); 
-*/
+
     if (query.city) {
       qb.andWhere('requests.city = :city', { city: query.city });
     }
