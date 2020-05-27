@@ -8,7 +8,7 @@ import { VerificationResendDto } from './dto/verification-resend.dto';
 import { ParamsValidationDto } from './dto/params-validation.dto';
 import { makeError } from '../common/errors/index';
 import { RegistrationBodyDto } from './dto/registration-body.dto';
-import { PurposeType } from 'src/constants/PurposeType.enum';
+import { PurposeType } from '../constants/PurposeType.enum';
 import bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { Transactional } from 'typeorm-transactional-cls-hooked';
@@ -215,11 +215,8 @@ export class AuthService {
   }
 
   async validateUser(phone: string, password: string) {
-    const user = await this.userRepository.findOne({ phone: phone });
+    const user = await this.userRepository.findOne({ phone: phone, deleted_at: null });
     if (user) {
-      if (user.deleted_at) {
-        throw makeError('USER_NOT_FOUND');
-      }
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (isPasswordValid) {
         return user;
@@ -236,6 +233,7 @@ export class AuthService {
       sub: user.id,
       exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7,
     };
+
     return {
       token: await this.jwtService.signAsync(payload),
     };
