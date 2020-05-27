@@ -86,7 +86,6 @@ export class RegistrationBodyDto {
   @ApiPropertyOptional({ type: 'varchar' })
   @IsOptional()
   @IsString()
-  @IsUrl()
   avatar: string;
 
   @ApiPropertyOptional({ type: 'varchar' })
