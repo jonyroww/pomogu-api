@@ -43,7 +43,7 @@ export class AuthService {
       body,
     );
     const user = await this.userRepository.findOne({ phone: body.phone });
-    if (body.purpose === PurposeType.REGISTRATION && user) {
+    if (body.purpose === PurposeType.REGISTRATION && !user.deleted_at) {
       throw makeError('PHONE_ALREADY_EXISTS');
     }
     if (body.purpose === PurposeType.PASSWORD_RESET && !user) {
