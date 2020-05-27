@@ -191,9 +191,9 @@ export class AuthService {
     const isEmailUnique = await this.userRepository.findOne({
       email: body.email,
     });
-    if (isPhoneUnique) {
+    if (isPhoneUnique && !isPhoneUnique.deleted_at) {
       throw makeError('PHONE_ALREADY_EXISTS');
-    } else if (isEmailUnique) {
+    } else if (isEmailUnique && !isEmailUnique.deleted_at) {
       throw makeError('EMAIL_ALREADY_EXISTS');
     }
     user.role = RoleName.VOLUNTEER;
