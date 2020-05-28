@@ -60,8 +60,8 @@ export class UsersService {
   }
 
   async findOne(params: UserIdDto) {
-    const user = await this.userRepository.findOne({ id: params.id });
-    if (!user || user.deleted_at) {
+    const user = await this.userRepository.findOne({ id: params.id, deleted_at: null });
+    if (!user) {
       throw makeError('USER_NOT_FOUND');
     }
     return user;
@@ -115,8 +115,8 @@ export class UsersService {
       ...body
     }: UpdateUserDto,
   ) {
-    const user = await this.userRepository.findOne({ id: params.id });
-    if (!user || user.deleted_at) {
+    const user = await this.userRepository.findOne({ id: params.id, deleted_at: null });
+    if (!user) {
       throw makeError('USER_NOT_FOUND');
     }
     const megreUser = this.userRepository.merge(user, body);
@@ -185,7 +185,7 @@ export class UsersService {
   }
 
   async deleteUser(params: UserIdDto) {
-    const user = await this.userRepository.findOne({ id: params.id });
+    const user = await this.userRepository.findOne({ id: params.id, deleted_at: null });
     if (!user) {
       throw makeError('USER_NOT_FOUND');
     } else {
@@ -196,8 +196,8 @@ export class UsersService {
   }
 
   async moderateUser(params: UserIdDto, body: ModerationBodyDto) {
-    const user = await this.userRepository.findOne({ id: params.id });
-    if (!user || user.deleted_at) {
+    const user = await this.userRepository.findOne({ id: params.id, deleted_at: null });
+    if (!user) {
       throw makeError('USER_NOT_FOUND');
     } else {
       user.moderation_status = body.moderation_status;
