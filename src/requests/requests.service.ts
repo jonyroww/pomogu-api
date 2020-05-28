@@ -105,6 +105,9 @@ export class RequestsService {
   }
 
   async acceptRequest(params: AcceptRequestParamsDto, user: User) {
+    if (user.moderation_status === ModerationStatus.REJECTED){
+      throw makeError('USER_IS_REJECTED')
+    }
     const request = await this.requestRepository.findOne({
       id: params.requestId,
     });

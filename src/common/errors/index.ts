@@ -24,6 +24,7 @@ export const errors = {
   TYPE_WAS_DELETED: HttpStatus.NOT_FOUND,
   REQUEST_MUST_BE_IN_PROGRESS: HttpStatus.BAD_REQUEST,
   NOTIFICATION_NOT_FOUND: HttpStatus.NOT_FOUND,
+  USER_IS_REJECTED: HttpStatus.FORBIDDEN
 };
 
 export type ErrorCode = keyof typeof errors;
