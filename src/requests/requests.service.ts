@@ -108,6 +108,9 @@ export class RequestsService {
     if (user.moderation_status === ModerationStatus.REJECTED){
       throw makeError('USER_IS_REJECTED')
     }
+    if (user.moderation_status === ModerationStatus.NOT_MODERATED){
+      throw makeError('USER_MUST_BE_APPROVED')
+    }
     const request = await this.requestRepository.findOne({
       id: params.requestId,
     });
