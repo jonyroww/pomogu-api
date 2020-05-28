@@ -79,7 +79,6 @@ export class UpdateUserDto {
   @ApiPropertyOptional({ type: 'varchar' })
   @IsOptional()
   @IsString()
-  @IsUrl()
   avatar: string;
 
   @ApiPropertyOptional({ type: 'varchar' })

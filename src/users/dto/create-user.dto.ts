@@ -66,7 +66,6 @@ export class CreateUserDto {
   @ApiPropertyOptional({ type: 'varchar' })
   @IsOptional()
   @IsString()
-  @IsUrl()
   avatar: string;
 
   @ApiPropertyOptional({ type: 'varchar' })

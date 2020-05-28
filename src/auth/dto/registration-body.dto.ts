@@ -7,7 +7,6 @@ import {
   IsDate,
   IsEmail,
   IsBoolean,
-  IsUrl,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
