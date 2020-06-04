@@ -128,6 +128,10 @@ export class User {
   role: string;
 
   @ApiProperty()
+  @Column({ type: 'int' })
+  own_organisation_id: number;
+
+  @ApiProperty()
   @OneToMany(
     () => Request,
     (request: Request) => request.user_id,
@@ -139,6 +143,12 @@ export class User {
     (registration: PhoneVerification) => registration.user,
   )
   registration: PhoneVerification;
+
+  @OneToOne(
+    () => Organisation,
+    (organisation: Organisation) => organisation.owner,
+  )
+  own_organisation: Organisation;
 
   @ApiProperty()
   @OneToMany(
