@@ -141,6 +141,10 @@ export class Organisation {
   })
   organisation_type: string;
 
+  @ApiProperty()
+  @Column({ type: 'int' })
+  owner_id: number;
+
   @ApiProperty({ type: 'string', example: '2019-11-22T16:03:05Z' })
   @Column({
     nullable: false,
