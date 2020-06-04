@@ -28,10 +28,10 @@ export class userOwnOrganisationId1591273231276 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {
-    await queryRunner.dropColumn('users', 'own_organisation_id');
     await queryRunner.dropForeignKey(
       'users',
       'FK_users_own_organisation_id_organisations_id',
     );
+    await queryRunner.dropColumn('users', 'own_organisation_id');
   }
 }

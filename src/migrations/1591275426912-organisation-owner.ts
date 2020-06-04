@@ -12,7 +12,7 @@ export class organisationOwner1591275426912 implements MigrationInterface {
       new TableColumn({
         name: 'owner_id',
         type: 'int',
-        isNullable: false,
+        isNullable: true,
       }),
     );
     await queryRunner.createForeignKey(
@@ -28,10 +28,10 @@ export class organisationOwner1591275426912 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {
-    await queryRunner.dropColumn('organisations', 'owner_id');
     await queryRunner.dropForeignKey(
       'organisations',
       'FK_organisations_owner_id_users_id',
     );
+    await queryRunner.dropColumn('organisations', 'owner_id');
   }
 }
