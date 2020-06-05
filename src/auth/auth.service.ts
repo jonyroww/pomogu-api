@@ -24,6 +24,7 @@ import axios from 'axios';
 import { RoleName } from '../constants/RoleName.enum';
 import { ModerationStatus } from 'src/constants/ModerationStatus.enum';
 import { PasswordResetDto } from '../auth/dto/password-reset.dto';
+import { OrganisationAdminRegistrationDto } from './dto/organisation-admin-registration.dto';
 
 @Injectable()
 export class AuthService {
@@ -214,8 +215,14 @@ export class AuthService {
     return { token: token };
   }
 
+  @Transactional()
+  async registrationOrganisationAdmin(body: OrganisationAdminRegistrationDto) {}
+
   async validateUser(phone: string, password: string) {
-    const user = await this.userRepository.findOne({ phone: phone, deleted_at: null });
+    const user = await this.userRepository.findOne({
+      phone: phone,
+      deleted_at: null,
+    });
     if (user) {
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (isPasswordValid) {

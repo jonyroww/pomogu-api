@@ -30,6 +30,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../common/decorators/get-user.decorator';
 import { User } from '../users/entities/User.entity';
 import { PasswordResetDto } from '../auth/dto/password-reset.dto';
+import { OrganisationAdminRegistrationDto } from './dto/organisation-admin-registration.dto';
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 @UseInterceptors(ClassSerializerInterceptor)
@@ -69,6 +70,13 @@ export class AuthController {
   @ApiCreatedResponse({ type: PhoneVerification })
   registrationUser(@Body() body: RegistrationBodyDto) {
     return this.authService.registrationUser(body);
+  }
+
+  @Post('/organisations/registration')
+  @ApiTags('Auth')
+  @ApiCreatedResponse({ type: PhoneVerification })
+  registrationOrganisation(@Body() body: OrganisationAdminRegistrationDto) {
+    return this.authService.registrationOrganisationAdmin(body);
   }
 
   @Post('/login')
