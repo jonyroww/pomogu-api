@@ -220,6 +220,8 @@ export class AuthService {
     verification_id,
     verification_key,
     password,
+    websites,
+    phone_numbers,
     citizen_type_ids,
     help_type_ids,
     ...body
@@ -239,11 +241,44 @@ export class AuthService {
     } else if (phoneVerification.used === true) {
       throw makeError('VERIFICATION_ALREADY_USED');
     }
+    const organisation = this.organisationRepository.create(body);
 
     const helpTypes = await this.helpTypesRepository.findByIds(help_type_ids);
     const citezenTypes = await this.citezenTypesRepository.findByIds(
       citizen_type_ids,
     );
+
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(password, salt);
+    password = hashedPassword;
+    const user = this.userRepository.create(body);
+    const isPhoneUnique = await this.userRepository.findOne({
+      phone: phoneVerification.phone,
+    });
+    const isEmailUnique = await this.userRepository.findOne({
+      email: body.email,
+    });
+    if (isPhoneUnique && !isPhoneUnique.deleted_at) {
+      throw makeError('PHONE_ALREADY_EXISTS');
+    } else if (isEmailUnique && !isEmailUnique.deleted_at) {
+      throw makeError('EMAIL_ALREADY_EXISTS');
+    }
+    user.role = RoleName.ORGANISTATION_ADMIN;
+    user.password = password;
+    user.phone = phoneVerification.phone;
+    user.citezenTypes = citezenTypes;
+    user.helpTypes = helpTypes;
+    user.moderation_status = ModerationStatus.NOT_MODERATED;
+    await this.userRepository.save(user);
+    phoneVerification.user_id = user.id;
+    phoneVerification.used = true;
+    await this.phoneVerificationRepository.save(phoneVerification);
+
+    const token = await this.jwtService.signAsync({
+      sub: user.id,
+      exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7,
+    });
+    return { token: token };
   }
 
   async validateUser(phone: string, password: string) {
