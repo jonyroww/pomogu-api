@@ -216,7 +216,35 @@ export class AuthService {
   }
 
   @Transactional()
-  async registrationOrganisationAdmin(body: OrganisationAdminRegistrationDto) {}
+  async registrationOrganisationAdmin({
+    verification_id,
+    verification_key,
+    password,
+    citizen_type_ids,
+    help_type_ids,
+    ...body
+  }: OrganisationAdminRegistrationDto) {
+    const phoneVerification = await this.phoneVerificationRepository.findOne(
+      verification_id,
+    );
+
+    if (!phoneVerification) {
+      throw makeError('RECORD_NOT_FOUND');
+    } else if (phoneVerification.purpose !== PurposeType.REGISTRATION) {
+      throw makeError('PURPOSE_IS_NOT_CORRECT');
+    } else if (phoneVerification.key !== verification_key) {
+      throw makeError('KEY_IS_NOT_VALID');
+    } else if (phoneVerification.success !== true) {
+      throw makeError('CODE_ALREADY_USED');
+    } else if (phoneVerification.used === true) {
+      throw makeError('VERIFICATION_ALREADY_USED');
+    }
+
+    const helpTypes = await this.helpTypesRepository.findByIds(help_type_ids);
+    const citezenTypes = await this.citezenTypesRepository.findByIds(
+      citizen_type_ids,
+    );
+  }
 
   async validateUser(phone: string, password: string) {
     const user = await this.userRepository.findOne({

@@ -7,6 +7,7 @@ import {
   IsUrl,
   IsBoolean,
   IsArray,
+  IsAlphanumeric,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { TransformInt } from '../../common/utils/transform-int.util';
@@ -14,6 +15,16 @@ import { TransformIntArray } from '../../common/utils/transform-array-int.util';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class OrganisationAdminRegistrationDto {
+  @ApiProperty({ type: 'number' })
+  @Transform(TransformInt)
+  @IsNumber()
+  verification_id: number;
+
+  @ApiProperty({ type: 'varchar' })
+  @IsString()
+  @IsAlphanumeric()
+  verification_key: string;
+
   @ApiPropertyOptional({ type: 'varchar' })
   @IsOptional()
   @IsString()
