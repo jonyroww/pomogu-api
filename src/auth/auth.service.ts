@@ -22,9 +22,11 @@ import { HelpTypesRepository } from '../help-types/repositories/Help-types.repos
 import { CitezenTypesRepository } from '../citezen-types/repositories/Citezen-types.repository';
 import axios from 'axios';
 import { RoleName } from '../constants/RoleName.enum';
-import { ModerationStatus } from 'src/constants/ModerationStatus.enum';
+import { ModerationStatus } from '../constants/ModerationStatus.enum';
 import { PasswordResetDto } from '../auth/dto/password-reset.dto';
 import { OrganisationAdminRegistrationDto } from './dto/organisation-admin-registration.dto';
+import { OrganisationPhoneNumberRepository } from '../organisations/repositories/OrganisationPhoneNumbers.repository';
+import { OrganisationWebsiteRepository } from '../organisations/repositories/OrganisationWebsite.repository';
 
 @Injectable()
 export class AuthService {
@@ -37,6 +39,8 @@ export class AuthService {
     private citezenTypesRepository: CitezenTypesRepository,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private organisationPhoneNumberRepository: OrganisationPhoneNumberRepository,
+    private organisationWebsiteRepository: OrganisationWebsiteRepository,
   ) {}
   @Transactional()
   async createPhoneVerification(body: PhoneVerificationRequestDto) {
@@ -243,6 +247,29 @@ export class AuthService {
     }
     const organisation = this.organisationRepository.create(body);
 
+    const newWebsitesList = websites.map(website => {
+      return {
+        url: website,
+        organisation_id: organisation.id,
+      };
+    });
+    const newWebsites = this.organisationWebsiteRepository.create(
+      newWebsitesList,
+    );
+    await this.organisationWebsiteRepository.save(newWebsites);
+
+    const newPhoneNumbersList = phone_numbers.map(phone_number => {
+      return {
+        phone_number: phone_number,
+        organisation_id: organisation.id,
+      };
+    });
+
+    const newPhoneNumbers = this.organisationPhoneNumberRepository.create(
+      newPhoneNumbersList,
+    );
+    await this.organisationPhoneNumberRepository.save(newPhoneNumbers);
+
     const helpTypes = await this.helpTypesRepository.findByIds(help_type_ids);
     const citezenTypes = await this.citezenTypesRepository.findByIds(
       citizen_type_ids,
@@ -269,7 +296,10 @@ export class AuthService {
     user.citezenTypes = citezenTypes;
     user.helpTypes = helpTypes;
     user.moderation_status = ModerationStatus.NOT_MODERATED;
+    user.own_organisation_id = organisation.id;
+    organisation.owner_id = user.id;
     await this.userRepository.save(user);
+    await this.organisationRepository.save(organisation);
     phoneVerification.user_id = user.id;
     phoneVerification.used = true;
     await this.phoneVerificationRepository.save(phoneVerification);
