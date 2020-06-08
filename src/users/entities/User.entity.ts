@@ -128,10 +128,6 @@ export class User {
   role: string;
 
   @ApiProperty()
-  @Column({ type: 'int' })
-  own_organisation_id: number;
-
-  @ApiProperty()
   @OneToMany(
     () => Request,
     (request: Request) => request.user_id,

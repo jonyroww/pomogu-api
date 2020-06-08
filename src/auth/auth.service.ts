@@ -296,9 +296,9 @@ export class AuthService {
     user.citezenTypes = citezenTypes;
     user.helpTypes = helpTypes;
     user.moderation_status = ModerationStatus.NOT_MODERATED;
-    user.own_organisation_id = organisation.id;
-    organisation.owner_id = user.id;
     await this.userRepository.save(user);
+
+    organisation.owner_id = user.id;
     await this.organisationRepository.save(organisation);
     phoneVerification.user_id = user.id;
     phoneVerification.used = true;
