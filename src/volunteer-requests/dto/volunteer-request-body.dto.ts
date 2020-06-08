@@ -76,7 +76,6 @@ export class VolunteerRequestBodyDto {
   @ApiPropertyOptional({ type: 'varchar' })
   @IsOptional()
   @IsString()
-  @IsUrl()
   avatar: string;
 
   @ApiPropertyOptional({ type: 'varchar' })
