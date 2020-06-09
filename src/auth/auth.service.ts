@@ -191,13 +191,15 @@ export class AuthService {
     const user = this.userRepository.create(body);
     const isPhoneUnique = await this.userRepository.findOne({
       phone: phoneVerification.phone,
+      deleted_at: null,
     });
     const isEmailUnique = await this.userRepository.findOne({
       email: body.email,
+      deleted_at: null,
     });
-    if (isPhoneUnique && !isPhoneUnique.deleted_at) {
+    if (isPhoneUnique) {
       throw makeError('PHONE_ALREADY_EXISTS');
-    } else if (isEmailUnique && !isEmailUnique.deleted_at) {
+    } else if (isEmailUnique) {
       throw makeError('EMAIL_ALREADY_EXISTS');
     }
     user.role = RoleName.VOLUNTEER;
@@ -251,13 +253,15 @@ export class AuthService {
     const user = this.userRepository.create(body);
     const isPhoneUnique = await this.userRepository.findOne({
       phone: phoneVerification.phone,
+      deleted_at: null,
     });
     const isEmailUnique = await this.userRepository.findOne({
       email: body.email,
+      deleted_at: null,
     });
-    if (isPhoneUnique && !isPhoneUnique.deleted_at) {
+    if (isPhoneUnique) {
       throw makeError('PHONE_ALREADY_EXISTS');
-    } else if (isEmailUnique && !isEmailUnique.deleted_at) {
+    } else if (isEmailUnique) {
       throw makeError('EMAIL_ALREADY_EXISTS');
     }
     user.role = RoleName.ORGANISTATION_ADMIN;
