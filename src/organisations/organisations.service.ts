@@ -14,6 +14,8 @@ import { CitezenTypesRepository } from '../citezen-types/repositories/Citezen-ty
 import { OrganisationUpdateBodyDto } from './dto/organisation-update-body.dto';
 import { FindAllResponseDto } from './dto/find-all-response.dto';
 import { setTypesFilters } from '../common/utils/types-filters.util';
+import { createWebsites } from '../common/utils/create-organisation-websites.util';
+import { createPhoneNumbers } from '../common/utils/create-organisation-phone-numbers.util';
 
 @Injectable()
 export class OrganisationsService {
@@ -66,28 +68,12 @@ export class OrganisationsService {
     organisation.citezenTypes = citezenTypes;
     await this.organisationsRepository.save(organisation);
 
-    const newWebsitesList = websites.map(website => {
-      return {
-        url: website,
-        organisation_id: organisation.id,
-      };
-    });
-    const newWebsites = this.organisationWebsiteRepository.create(
-      newWebsitesList,
+    createWebsites(websites, organisation, this.organisationWebsiteRepository);
+    createPhoneNumbers(
+      phone_numbers,
+      organisation,
+      this.organisationPhoneNumberRepository,
     );
-    await this.organisationWebsiteRepository.save(newWebsites);
-
-    const newPhoneNumbersList = phone_numbers.map(phone_number => {
-      return {
-        phone_number: phone_number,
-        organisation_id: organisation.id,
-      };
-    });
-
-    const newPhoneNumbers = this.organisationPhoneNumberRepository.create(
-      newPhoneNumbersList,
-    );
-    await this.organisationPhoneNumberRepository.save(newPhoneNumbers);
 
     return organisation;
   }

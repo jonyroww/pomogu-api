@@ -27,6 +27,9 @@ import { PasswordResetDto } from '../auth/dto/password-reset.dto';
 import { OrganisationAdminRegistrationDto } from './dto/organisation-admin-registration.dto';
 import { OrganisationPhoneNumberRepository } from '../organisations/repositories/OrganisationPhoneNumbers.repository';
 import { OrganisationWebsiteRepository } from '../organisations/repositories/OrganisationWebsite.repository';
+import { createWebsites } from '../common/utils/create-organisation-websites.util';
+import { createPhoneNumbers } from '../common/utils/create-organisation-phone-numbers.util';
+import { checkPhoneVerification } from '../common/utils/check-phone-verification.utils';
 
 @Injectable()
 export class AuthService {
@@ -162,23 +165,19 @@ export class AuthService {
     help_type_ids,
     citizen_type_ids,
     organisation_ids,
+    verification_id,
+    verification_key,
     ...body
   }: RegistrationBodyDto) {
     const phoneVerification = await this.phoneVerificationRepository.findOne(
-      body.verification_id,
+      verification_id,
     );
-
-    if (!phoneVerification) {
-      throw makeError('RECORD_NOT_FOUND');
-    } else if (phoneVerification.purpose !== PurposeType.REGISTRATION) {
-      throw makeError('PURPOSE_IS_NOT_CORRECT');
-    } else if (phoneVerification.key !== body.verification_key) {
-      throw makeError('KEY_IS_NOT_VALID');
-    } else if (phoneVerification.success !== true) {
-      throw makeError('CODE_ALREADY_USED');
-    } else if (phoneVerification.used === true) {
-      throw makeError('VERIFICATION_ALREADY_USED');
-    }
+    checkPhoneVerification(
+      phoneVerification,
+      verification_id,
+      verification_key,
+      PurposeType.REGISTRATION,
+    );
     const helpTypes = await this.helpTypesRepository.findByIds(help_type_ids);
     const citezenTypes = await this.citezenTypesRepository.findByIds(
       citizen_type_ids,
@@ -233,42 +232,13 @@ export class AuthService {
     const phoneVerification = await this.phoneVerificationRepository.findOne(
       verification_id,
     );
-
-    if (!phoneVerification) {
-      throw makeError('RECORD_NOT_FOUND');
-    } else if (phoneVerification.purpose !== PurposeType.REGISTRATION) {
-      throw makeError('PURPOSE_IS_NOT_CORRECT');
-    } else if (phoneVerification.key !== verification_key) {
-      throw makeError('KEY_IS_NOT_VALID');
-    } else if (phoneVerification.success !== true) {
-      throw makeError('CODE_ALREADY_USED');
-    } else if (phoneVerification.used === true) {
-      throw makeError('VERIFICATION_ALREADY_USED');
-    }
+    checkPhoneVerification(
+      phoneVerification,
+      verification_id,
+      verification_key,
+      PurposeType.REGISTRATION,
+    );
     const organisation = this.organisationRepository.create(body);
-
-    const newWebsitesList = websites.map(website => {
-      return {
-        url: website,
-        organisation_id: organisation.id,
-      };
-    });
-    const newWebsites = this.organisationWebsiteRepository.create(
-      newWebsitesList,
-    );
-    await this.organisationWebsiteRepository.save(newWebsites);
-
-    const newPhoneNumbersList = phone_numbers.map(phone_number => {
-      return {
-        phone_number: phone_number,
-        organisation_id: organisation.id,
-      };
-    });
-
-    const newPhoneNumbers = this.organisationPhoneNumberRepository.create(
-      newPhoneNumbersList,
-    );
-    await this.organisationPhoneNumberRepository.save(newPhoneNumbers);
 
     const helpTypes = await this.helpTypesRepository.findByIds(help_type_ids);
     const citezenTypes = await this.citezenTypesRepository.findByIds(
@@ -300,6 +270,12 @@ export class AuthService {
 
     organisation.owner_id = user.id;
     await this.organisationRepository.save(organisation);
+    createWebsites(websites, organisation, this.organisationWebsiteRepository);
+    createPhoneNumbers(
+      phone_numbers,
+      organisation,
+      this.organisationPhoneNumberRepository,
+    );
     phoneVerification.user_id = user.id;
     phoneVerification.used = true;
     await this.phoneVerificationRepository.save(phoneVerification);
@@ -344,19 +320,12 @@ export class AuthService {
     const phoneVerification = await this.phoneVerificationRepository.findOne(
       body.verification_id,
     );
-    if (!phoneVerification) {
-      throw makeError('RECORD_NOT_FOUND');
-    } else if (phoneVerification.purpose != PurposeType.PASSWORD_RESET) {
-      throw makeError('PURPOSE_IS_NOT_CORRECT');
-    } else if (body.verification_id !== phoneVerification.id) {
-      throw makeError('VERIFICATION_ID_IS_NOT_VALID');
-    } else if (phoneVerification.key != body.verification_key) {
-      throw makeError('KEY_IS_NOT_VALID');
-    } else if (phoneVerification.success !== true) {
-      throw makeError('CODE_ALREADY_USED');
-    } else if (phoneVerification.used === true) {
-      throw makeError('VERIFICATION_ALREADY_USED');
-    }
+    checkPhoneVerification(
+      phoneVerification,
+      body.verification_id,
+      body.verification_key,
+      PurposeType.PASSWORD_RESET,
+    );
     const user = await this.userRepository.findOne({
       phone: phoneVerification.phone,
     });
