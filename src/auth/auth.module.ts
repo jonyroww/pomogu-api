@@ -13,6 +13,8 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { HelpTypesRepository } from '../help-types/repositories/Help-types.repository';
 import { CitezenTypesRepository } from '../citezen-types/repositories/Citezen-types.repository';
 import { OrganisationRepository } from '../organisations/repositories/Organisation.repository';
+import { OrganisationPhoneNumberRepository } from '../organisations/repositories/OrganisationPhoneNumbers.repository';
+import { OrganisationWebsiteRepository } from '../organisations/repositories/OrganisationWebsite.repository';
 
 @Module({
   imports: [
@@ -29,6 +31,8 @@ import { OrganisationRepository } from '../organisations/repositories/Organisati
       HelpTypesRepository,
       CitezenTypesRepository,
       OrganisationRepository,
+      OrganisationPhoneNumberRepository,
+      OrganisationWebsiteRepository,
     ]),
     PassportModule,
   ],
