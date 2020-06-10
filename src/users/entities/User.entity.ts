@@ -143,6 +143,7 @@ export class User {
   @OneToOne(
     () => Organisation,
     (organisation: Organisation) => organisation.owner,
+    { eager: true },
   )
   own_organisation: Organisation;
 

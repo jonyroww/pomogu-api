@@ -26,6 +26,7 @@ import { OrganisationUpdateBodyDto } from './dto/organisation-update-body.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { IsAdminGuard } from '../common/guards/is-admin.guard';
 import { FindAllResponseDto } from './dto/find-all-response.dto';
+import { OrganisationWriteAccessGuard } from '../common/guards/organisation-write-access.guard';
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 @Controller('organisations')
@@ -56,7 +57,7 @@ export class OrganisationsController {
 
   @ApiTags('Organisations')
   @ApiOkResponse()
-  @UseGuards(AuthGuard('jwt'), IsAdminGuard)
+  @UseGuards(AuthGuard('jwt'), OrganisationWriteAccessGuard)
   @ApiBearerAuth()
   @Put('/:id')
   updateOrganisation(
@@ -69,7 +70,7 @@ export class OrganisationsController {
   @ApiTags('Organisations')
   @ApiOkResponse()
   @Delete('/:id')
-  @UseGuards(AuthGuard('jwt'), IsAdminGuard)
+  @UseGuards(AuthGuard('jwt'), OrganisationWriteAccessGuard)
   @ApiBearerAuth()
   deleteOrganisation(@Param() params: OrganisationIdDto) {
     return this.organisationsService.deleteOrganisation(params);
