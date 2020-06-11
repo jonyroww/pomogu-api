@@ -199,7 +199,7 @@ export class AuthService {
     phoneVerification.used = true;
     await this.phoneVerificationRepository.save(phoneVerification);
 
-    return { token: await this.getToken(user) };
+    return { token: await this.getToken(user.id) };
   }
 
   @Transactional()
@@ -251,7 +251,7 @@ export class AuthService {
     phoneVerification.used = true;
     await this.phoneVerificationRepository.save(phoneVerification);
 
-    return { token: await this.getToken(user) };
+    return { token: await this.getToken(user.id) };
   }
 
   async validateUser(phone: string, password: string) {
@@ -333,9 +333,9 @@ export class AuthService {
     return await bcrypt.hash(password, salt);
   }
 
-  async getToken(user: User) {
+  async getToken(userId: number) {
     return await this.jwtService.signAsync({
-      sub: user.id,
+      sub: userId,
       exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7,
     });
   }
