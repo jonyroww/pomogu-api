@@ -140,6 +140,13 @@ export class User {
   )
   registration: PhoneVerification;
 
+  @OneToOne(
+    () => Organisation,
+    (organisation: Organisation) => organisation.owner,
+    { eager: true },
+  )
+  own_organisation: Organisation;
+
   @ApiProperty()
   @OneToMany(
     () => Notification,

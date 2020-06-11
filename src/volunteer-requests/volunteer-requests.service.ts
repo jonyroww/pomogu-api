@@ -17,6 +17,7 @@ import { VolunteerRequestIdDto } from './dto/volunteer-request-id.dto';
 import { ModerationStatus } from 'src/constants/ModerationStatus.enum';
 import { ModerationBodyDto } from './dto/moderate-body.dto';
 import { GetAllQueryDto } from './dto/get-all-query.dto';
+import { AuthService } from '../auth/auth.service';
 import _ from 'lodash';
 
 @Injectable()
@@ -29,6 +30,7 @@ export class VolunteerRequestsService {
     private citezenTypesRepository: CitezenTypesRepository,
     private organisationRepository: OrganisationRepository,
     private readonly mailerService: MailerService,
+    private authService: AuthService,
   ) {}
 
   @Transactional()
@@ -41,19 +43,12 @@ export class VolunteerRequestsService {
     const phoneVerification = await this.phoneVerificationRepository.findOne(
       body.verification_id,
     );
-    if (!phoneVerification) {
-      throw makeError('RECORD_NOT_FOUND');
-    } else if (phoneVerification.purpose != PurposeType.NEW_VOLUNTEER_REQUEST) {
-      throw makeError('PURPOSE_IS_NOT_CORRECT');
-    } else if (body.verification_id !== phoneVerification.id) {
-      throw makeError('VERIFICATION_ID_IS_NOT_VALID');
-    } else if (phoneVerification.key != body.verification_key) {
-      throw makeError('KEY_IS_NOT_VALID');
-    } else if (phoneVerification.success !== true) {
-      throw makeError('CODE_ALREADY_USED');
-    } else if (phoneVerification.used === true) {
-      throw makeError('VERIFICATION_ALREADY_USED');
-    }
+    this.authService.checkPhoneVerification(
+      phoneVerification,
+      body.verification_id,
+      body.verification_key,
+      PurposeType.NEW_VOLUNTEER_REQUEST,
+    );
 
     const helpTypes = await this.helpTypesRepository.findByIds(help_type_ids);
     const citezenTypes = await this.citezenTypesRepository.findByIds(

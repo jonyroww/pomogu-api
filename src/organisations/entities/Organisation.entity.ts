@@ -5,12 +5,15 @@ import {
   OneToMany,
   ManyToMany,
   JoinTable,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
 import { HelpTypes } from '../../help-types/entities/help-types.entity';
 import { CitezenTypes } from '../../citezen-types/entities/citezen-types.entity';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { OrganisationPhoneNumber } from './OrganisationPhoneNumbers.entity';
 import { OrganisationWebsite } from './OrganisationWebsite.entity';
+import { User } from '../../users/entities/User.entity';
 
 @Entity({ name: 'organisations' })
 export class Organisation {
@@ -138,12 +141,23 @@ export class Organisation {
   })
   organisation_type: string;
 
+  @ApiProperty()
+  @Column({ type: 'int' })
+  owner_id: number;
+
   @ApiProperty({ type: 'string', example: '2019-11-22T16:03:05Z' })
   @Column({
     nullable: false,
     type: 'timestamp with time zone',
   })
   deleted_at: Date;
+
+  @OneToOne(
+    () => User,
+    (user: User) => user.own_organisation,
+  )
+  @JoinColumn({ name: 'owner_id' })
+  owner: User;
 
   @ApiProperty()
   @OneToMany(
