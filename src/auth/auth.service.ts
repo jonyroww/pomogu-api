@@ -333,14 +333,14 @@ export class AuthService {
     return await bcrypt.hash(password, salt);
   }
 
-  async getToken(user) {
+  async getToken(user: User) {
     return await this.jwtService.signAsync({
       sub: user.id,
       exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7,
     });
   }
 
-  async isUserNotUnique(phone, email) {
+  async isUserNotUnique(phone: string, email: string) {
     const isPhoneNotUnique = await this.userRepository.findOne({
       phone: phone,
       deleted_at: null,
