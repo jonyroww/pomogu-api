@@ -49,12 +49,11 @@ export class HelpTypesService {
 
   async deleteHelpType(params: HelpTypeIdDto) {
     const helpType = await this.helpTypesRepository.findOne({ id: params.id });
-    if (helpType.deleted_at === null) {
-      helpType.deleted_at = new Date();
-      await this.helpTypesRepository.save(helpType);
-      return helpType;
-    } else {
+    if (!helpType) {
       throw makeError('TYPE_WAS_DELETED');
+    } else {
+      await this.helpTypesRepository.delete({ id: params.id });
+      return;
     }
   }
 }

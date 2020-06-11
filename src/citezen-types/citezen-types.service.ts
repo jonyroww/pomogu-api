@@ -54,12 +54,13 @@ export class CitezenTypesService {
     const citezenType = await this.citezenTypesRepository.findOne({
       id: params.id,
     });
-    if (citezenType.deleted_at === null) {
-      citezenType.deleted_at = new Date();
-      await this.citezenTypesRepository.save(citezenType);
-      return citezenType;
-    } else {
+    if (!citezenType) {
       throw makeError('TYPE_WAS_DELETED');
+    } else {
+      await this.citezenTypesRepository.delete({
+        id: params.id,
+      });
+      return;
     }
   }
 }
