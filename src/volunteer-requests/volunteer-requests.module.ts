@@ -8,9 +8,11 @@ import { PhoneVerificationRepository } from '../auth/repository/Phone-verificati
 import { HelpTypesRepository } from '../help-types/repositories/Help-types.repository';
 import { CitezenTypesRepository } from '../citezen-types/repositories/Citezen-types.repository';
 import { OrganisationRepository } from '../organisations/repositories/Organisation.repository';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [
+    AuthModule,
     TypeOrmModule.forFeature([
       VolunteerRequest,
       VolunteerRequestRepository,

@@ -17,7 +17,7 @@ import { VolunteerRequestIdDto } from './dto/volunteer-request-id.dto';
 import { ModerationStatus } from 'src/constants/ModerationStatus.enum';
 import { ModerationBodyDto } from './dto/moderate-body.dto';
 import { GetAllQueryDto } from './dto/get-all-query.dto';
-import { checkPhoneVerification } from '../common/utils/check-phone-verification.utils';
+import { AuthService } from '../auth/auth.service';
 import _ from 'lodash';
 
 @Injectable()
@@ -30,6 +30,7 @@ export class VolunteerRequestsService {
     private citezenTypesRepository: CitezenTypesRepository,
     private organisationRepository: OrganisationRepository,
     private readonly mailerService: MailerService,
+    private authService: AuthService,
   ) {}
 
   @Transactional()
@@ -42,7 +43,7 @@ export class VolunteerRequestsService {
     const phoneVerification = await this.phoneVerificationRepository.findOne(
       body.verification_id,
     );
-    checkPhoneVerification(
+    this.authService.checkPhoneVerification(
       phoneVerification,
       body.verification_id,
       body.verification_key,

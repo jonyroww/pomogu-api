@@ -29,7 +29,6 @@ import { OrganisationPhoneNumberRepository } from '../organisations/repositories
 import { OrganisationWebsiteRepository } from '../organisations/repositories/OrganisationWebsite.repository';
 import { createWebsites } from '../common/utils/create-organisation-websites.util';
 import { createPhoneNumbers } from '../common/utils/create-organisation-phone-numbers.util';
-import { checkPhoneVerification } from '../common/utils/check-phone-verification.utils';
 
 @Injectable()
 export class AuthService {
@@ -172,7 +171,7 @@ export class AuthService {
     const phoneVerification = await this.phoneVerificationRepository.findOne(
       verification_id,
     );
-    checkPhoneVerification(
+    this.checkPhoneVerification(
       phoneVerification,
       verification_id,
       verification_key,
@@ -185,23 +184,10 @@ export class AuthService {
     const organisations = await this.organisationRepository.findByIds(
       organisation_ids,
     );
-    const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(body.password, salt);
-    body.password = hashedPassword;
+
+    body.password = await this.hashPassword(body.password);
     const user = this.userRepository.create(body);
-    const isPhoneUnique = await this.userRepository.findOne({
-      phone: phoneVerification.phone,
-      deleted_at: null,
-    });
-    const isEmailUnique = await this.userRepository.findOne({
-      email: body.email,
-      deleted_at: null,
-    });
-    if (isPhoneUnique) {
-      throw makeError('PHONE_ALREADY_EXISTS');
-    } else if (isEmailUnique) {
-      throw makeError('EMAIL_ALREADY_EXISTS');
-    }
+    this.isUserNotUnique(phoneVerification.phone, body.email);
     user.role = RoleName.VOLUNTEER;
     user.phone = phoneVerification.phone;
     user.citezenTypes = citezenTypes;
@@ -213,11 +199,7 @@ export class AuthService {
     phoneVerification.used = true;
     await this.phoneVerificationRepository.save(phoneVerification);
 
-    const token = await this.jwtService.signAsync({
-      sub: user.id,
-      exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7,
-    });
-    return { token: token };
+    return { token: await this.getToken(user) };
   }
 
   @Transactional()
@@ -234,7 +216,7 @@ export class AuthService {
     const phoneVerification = await this.phoneVerificationRepository.findOne(
       verification_id,
     );
-    checkPhoneVerification(
+    this.checkPhoneVerification(
       phoneVerification,
       verification_id,
       verification_key,
@@ -246,24 +228,9 @@ export class AuthService {
     const citezenTypes = await this.citezenTypesRepository.findByIds(
       citizen_type_ids,
     );
-
-    const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(password, salt);
-    password = hashedPassword;
+    password = await this.hashPassword(password);
     const user = this.userRepository.create(body);
-    const isPhoneUnique = await this.userRepository.findOne({
-      phone: phoneVerification.phone,
-      deleted_at: null,
-    });
-    const isEmailUnique = await this.userRepository.findOne({
-      email: body.email,
-      deleted_at: null,
-    });
-    if (isPhoneUnique) {
-      throw makeError('PHONE_ALREADY_EXISTS');
-    } else if (isEmailUnique) {
-      throw makeError('EMAIL_ALREADY_EXISTS');
-    }
+    this.isUserNotUnique(phoneVerification.phone, body.email);
     user.role = RoleName.ORGANISTATION_ADMIN;
     user.password = password;
     user.phone = phoneVerification.phone;
@@ -284,11 +251,7 @@ export class AuthService {
     phoneVerification.used = true;
     await this.phoneVerificationRepository.save(phoneVerification);
 
-    const token = await this.jwtService.signAsync({
-      sub: user.id,
-      exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7,
-    });
-    return { token: token };
+    return { token: await this.getToken(user) };
   }
 
   async validateUser(phone: string, password: string) {
@@ -324,7 +287,7 @@ export class AuthService {
     const phoneVerification = await this.phoneVerificationRepository.findOne(
       body.verification_id,
     );
-    checkPhoneVerification(
+    this.checkPhoneVerification(
       phoneVerification,
       body.verification_id,
       body.verification_key,
@@ -336,14 +299,60 @@ export class AuthService {
     if (!user) {
       throw makeError('USER_NOT_FOUND');
     }
-
-    const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(body.password, salt);
-    user.password = hashedPassword;
+    user.password = await this.hashPassword(body.password);
     await this.userRepository.save(user);
     phoneVerification.user_id = user.id;
     phoneVerification.used = true;
     await this.phoneVerificationRepository.save(phoneVerification);
     return;
+  }
+
+  checkPhoneVerification(
+    phoneVerification,
+    verification_id,
+    verification_key,
+    purposeType,
+  ) {
+    if (!phoneVerification) {
+      throw makeError('RECORD_NOT_FOUND');
+    } else if (phoneVerification.purpose != purposeType) {
+      throw makeError('PURPOSE_IS_NOT_CORRECT');
+    } else if (verification_id !== phoneVerification.id) {
+      throw makeError('VERIFICATION_ID_IS_NOT_VALID');
+    } else if (phoneVerification.key != verification_key) {
+      throw makeError('KEY_IS_NOT_VALID');
+    } else if (phoneVerification.success !== true) {
+      throw makeError('CODE_ALREADY_USED');
+    } else if (phoneVerification.used === true) {
+      throw makeError('VERIFICATION_ALREADY_USED');
+    }
+  }
+
+  async hashPassword(password) {
+    const salt = await bcrypt.genSalt();
+    return await bcrypt.hash(password, salt);
+  }
+
+  async getToken(user) {
+    return await this.jwtService.signAsync({
+      sub: user.id,
+      exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7,
+    });
+  }
+
+  async isUserNotUnique(phone, email) {
+    const isPhoneNotUnique = await this.userRepository.findOne({
+      phone: phone,
+      deleted_at: null,
+    });
+    const isEmailNotUnique = await this.userRepository.findOne({
+      email: email,
+      deleted_at: null,
+    });
+    if (isPhoneNotUnique) {
+      throw makeError('PHONE_ALREADY_EXISTS');
+    } else if (isEmailNotUnique) {
+      throw makeError('EMAIL_ALREADY_EXISTS');
+    }
   }
 }
