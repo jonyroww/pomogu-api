@@ -118,10 +118,9 @@ export class VolunteerRequestsService {
     const qb = this.volunteerRequestRepository.createQueryBuilder(
       'volunteer_requests',
     );
-    qb.leftJoinAndSelect(
-      'volunteer_requests.helpTypes',
-      'helpTypes',
-    ).leftJoinAndSelect('volunteer_requests.citezenTypes', 'citezenTypes');
+    qb.leftJoinAndSelect('volunteer_requests.helpTypes', 'helpTypes')
+      .leftJoinAndSelect('volunteer_requests.citezenTypes', 'citezenTypes')
+      .leftJoinAndSelect('volunteer_requests.organisations', 'organisations');
 
     if (!_.isEmpty(query.help_type_ids) || !_.isEmpty(query.citizen_type_ids)) {
       qb.where('FALSE');
