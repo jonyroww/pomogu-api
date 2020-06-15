@@ -5,7 +5,10 @@ import { VolunteerRequestBodyDto } from './dto/volunteer-request-body.dto';
 import { makeError } from '../common/errors/index';
 import { PurposeType } from 'src/constants/PurposeType.enum';
 import { MailerService } from '@nest-modules/mailer';
-import { Transactional } from 'typeorm-transactional-cls-hooked';
+import {
+  Transactional,
+  patchTypeORMRepositoryWithBaseRepository,
+} from 'typeorm-transactional-cls-hooked';
 import { VolunteerRequestRepository } from './repositories/Volunteer-request.repositories';
 import { PhoneVerificationRepository } from '../auth/repository/Phone-verification.repository';
 import { HelpTypesRepository } from '../help-types/repositories/Help-types.repository';
@@ -19,6 +22,7 @@ import { ModerationBodyDto } from './dto/moderate-body.dto';
 import { GetAllQueryDto } from './dto/get-all-query.dto';
 import { AuthService } from '../auth/auth.service';
 import _ from 'lodash';
+import { UpdateVolunteerRequestBodyDto } from './dto/update-volunteer-request-body.dto';
 
 @Injectable()
 export class VolunteerRequestsService {
@@ -163,6 +167,49 @@ export class VolunteerRequestsService {
     } else {
       return volunteerRequest;
     }
+  }
+
+  async updateRequest(
+    params: VolunteerRequestIdDto,
+    {
+      help_type_ids,
+      citizen_type_ids,
+      organisation_ids,
+      ...body
+    }: UpdateVolunteerRequestBodyDto,
+  ) {
+    const volunteerRequest = await this.volunteerRequestRepository.findOne({
+      id: params.id,
+      deleted_at: null,
+    });
+    if (!volunteerRequest) {
+      throw makeError('RECORD_NOT_FOUND');
+    }
+    const mergeRequest = this.volunteerRequestRepository.merge(
+      volunteerRequest,
+      body,
+    );
+
+    if (help_type_ids) {
+      const helpTypes = await this.helpTypesRepository.findByIds(help_type_ids);
+      mergeRequest.helpTypes = helpTypes;
+    }
+
+    if (citizen_type_ids) {
+      const citizenTypes = await this.citezenTypesRepository.findByIds(
+        citizen_type_ids,
+      );
+      mergeRequest.citezenTypes = citizenTypes;
+    }
+
+    if (organisation_ids) {
+      const organisations = await this.organisationRepository.findByIds(
+        organisation_ids,
+      );
+      mergeRequest.organisations = organisations;
+    }
+    await this.volunteerRequestRepository.save(mergeRequest);
+    return mergeRequest;
   }
 
   async deleteVolunteerRequest(params: VolunteerRequestIdDto) {

@@ -3,7 +3,6 @@ import {
   IsArray,
   IsNumber,
   IsString,
-  IsAlphanumeric,
   IsDate,
   IsEmail,
   IsBoolean,
@@ -11,10 +10,9 @@ import {
 import { Transform } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { TransformIntArray } from '../../common/utils/transform-array-int.util';
-import { TransformInt } from '../../common/utils/transform-int.util';
 import { TransformDate } from '../../common/utils/transform-date.util';
 
-export class VolunteerRequestBodyDto {
+export class UpdateVolunteerRequestBodyDto {
   @ApiPropertyOptional({ type: 'varchar' })
   @IsOptional()
   @IsString()
@@ -48,18 +46,22 @@ export class VolunteerRequestBodyDto {
   email: string;
 
   @ApiProperty({ type: 'boolean' })
+  @IsOptional()
   @IsBoolean()
   is_individual: boolean;
 
   @ApiProperty({ type: 'boolean' })
+  @IsOptional()
   @IsBoolean()
   hide_contacts: boolean;
 
   @ApiPropertyOptional({ type: 'boolean' })
+  @IsOptional()
   @IsBoolean()
   need_expert_help: boolean;
 
   @ApiProperty({ type: 'boolean' })
+  @IsOptional()
   @IsBoolean()
   with_fund: boolean;
 
@@ -69,6 +71,7 @@ export class VolunteerRequestBodyDto {
   comment: string;
 
   @ApiProperty({ type: 'boolean' })
+  @IsOptional()
   @IsBoolean()
   allow_search_in_messengers: boolean;
 
@@ -102,14 +105,4 @@ export class VolunteerRequestBodyDto {
   @IsNumber({}, { each: true })
   @Transform(TransformIntArray)
   organisation_ids: Array<number>;
-
-  @ApiProperty({ type: 'number' })
-  @Transform(TransformInt)
-  @IsNumber()
-  verification_id: number;
-
-  @ApiProperty({ type: 'varchar' })
-  @IsString()
-  @IsAlphanumeric()
-  verification_key: string;
 }

@@ -48,8 +48,8 @@ export class UsersService {
     qb.andWhere('users.role = :role', {
       role: query.role || RoleName.VOLUNTEER,
     });
-    qb.andWhere('users.deleted_at is null')
-    
+    qb.andWhere('users.deleted_at is null');
+
     const total = await qb.getCount();
     const users = await qb
       .take(query.limit)
@@ -60,7 +60,10 @@ export class UsersService {
   }
 
   async findOne(params: UserIdDto) {
-    const user = await this.userRepository.findOne({ id: params.id, deleted_at: null });
+    const user = await this.userRepository.findOne({
+      id: params.id,
+      deleted_at: null,
+    });
     if (!user) {
       throw makeError('USER_NOT_FOUND');
     }
@@ -115,7 +118,10 @@ export class UsersService {
       ...body
     }: UpdateUserDto,
   ) {
-    const user = await this.userRepository.findOne({ id: params.id, deleted_at: null });
+    const user = await this.userRepository.findOne({
+      id: params.id,
+      deleted_at: null,
+    });
     if (!user) {
       throw makeError('USER_NOT_FOUND');
     }
@@ -185,7 +191,10 @@ export class UsersService {
   }
 
   async deleteUser(params: UserIdDto) {
-    const user = await this.userRepository.findOne({ id: params.id, deleted_at: null });
+    const user = await this.userRepository.findOne({
+      id: params.id,
+      deleted_at: null,
+    });
     if (!user) {
       throw makeError('USER_NOT_FOUND');
     } else {
@@ -196,7 +205,10 @@ export class UsersService {
   }
 
   async moderateUser(params: UserIdDto, body: ModerationBodyDto) {
-    const user = await this.userRepository.findOne({ id: params.id, deleted_at: null });
+    const user = await this.userRepository.findOne({
+      id: params.id,
+      deleted_at: null,
+    });
     if (!user) {
       throw makeError('USER_NOT_FOUND');
     } else {
