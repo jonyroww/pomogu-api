@@ -97,7 +97,7 @@ export class UpdateVolunteerRequestBodyDto {
   @IsOptional()
   @IsNumber({}, { each: true })
   @Transform(TransformIntArray)
-  citizen_type_ids: Array<number>;
+  citezen_type_ids: Array<number>;
 
   @ApiProperty({ type: 'number', isArray: true })
   @IsArray()

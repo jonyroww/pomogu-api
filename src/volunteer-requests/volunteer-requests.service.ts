@@ -173,7 +173,7 @@ export class VolunteerRequestsService {
     params: VolunteerRequestIdDto,
     {
       help_type_ids,
-      citizen_type_ids,
+      citezen_type_ids,
       organisation_ids,
       ...body
     }: UpdateVolunteerRequestBodyDto,
@@ -195,9 +195,9 @@ export class VolunteerRequestsService {
       mergeRequest.helpTypes = helpTypes;
     }
 
-    if (citizen_type_ids) {
+    if (citezen_type_ids) {
       const citizenTypes = await this.citezenTypesRepository.findByIds(
-        citizen_type_ids,
+        citezen_type_ids,
       );
       mergeRequest.citezenTypes = citizenTypes;
     }
