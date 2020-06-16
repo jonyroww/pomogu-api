@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { PurposeType } from '../../constants/PurposeType.enum';
 
 export class PhoneVerificationRequestDto {
-  @ApiProperty({ type: 'varchar' })
+  @ApiProperty({ type: 'string' })
   @IsString()
   @IsPhoneNumber('RU')
   phone: string;

@@ -54,7 +54,7 @@ export class VolunteerRequestsController {
   }
 
   @ApiTags('Volunteer Requests')
-  @ApiOkResponse()
+  @ApiOkResponse({ type: () => VolunteerRequest })
   @UseGuards(AuthGuard('jwt'), ModerationAdminGuard)
   @ApiBearerAuth()
   @Get()
@@ -63,7 +63,7 @@ export class VolunteerRequestsController {
   }
 
   @ApiTags('Volunteer Requests')
-  @ApiOkResponse()
+  @ApiOkResponse({ type: () => VolunteerRequest })
   @UseGuards(AuthGuard('jwt'), ModerationAdminGuard)
   @ApiBearerAuth()
   @Get('/:id')
@@ -84,14 +84,14 @@ export class VolunteerRequestsController {
   }
 
   @ApiTags('Volunteer Requests')
-  @ApiCreatedResponse()
+  @ApiOkResponse({ type: () => VolunteerRequest })
   @UseGuards(AuthGuard('jwt'), ModerationAdminGuard)
   @ApiBearerAuth()
   @Put('/:id')
   updateVolunteerRequest(
     @Param() params: VolunteerRequestIdDto,
     @Body() body: UpdateVolunteerRequestBodyDto,
-  ) {
+  ): Promise<VolunteerRequest> {
     return this.volunteerRequestService.updateRequest(params, body);
   }
 

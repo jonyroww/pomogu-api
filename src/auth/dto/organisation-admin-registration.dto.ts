@@ -20,12 +20,12 @@ export class OrganisationAdminRegistrationDto {
   @IsNumber()
   verification_id: number;
 
-  @ApiProperty({ type: 'varchar' })
+  @ApiProperty({ type: 'string' })
   @IsString()
   @IsAlphanumeric()
   verification_key: string;
 
-  @ApiPropertyOptional({ type: 'varchar' })
+  @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsString()
   inn: string;
@@ -45,16 +45,16 @@ export class OrganisationAdminRegistrationDto {
   @IsString()
   address: string;
 
-  @ApiProperty({ type: 'varchar' })
+  @ApiProperty({ type: 'string' })
   @IsString()
   work_schedule: string;
 
-  @ApiProperty({ type: 'varchar' })
+  @ApiProperty({ type: 'string' })
   @IsString()
   @IsEmail()
   email: string;
 
-  @ApiPropertyOptional({ type: 'varchar' })
+  @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsString()
   city: string;
@@ -64,12 +64,12 @@ export class OrganisationAdminRegistrationDto {
   @IsString()
   appeal_to_volunteer: string;
 
-  @ApiProperty({ type: 'varchar' })
+  @ApiProperty({ type: 'string', isArray: true })
   @IsArray()
   @IsString({ each: true })
   phone_numbers: Array<string>;
 
-  @ApiProperty({ type: 'varchar' })
+  @ApiProperty({ type: 'string', isArray: true })
   @IsArray()
   @IsString({ each: true })
   websites: Array<string>;
@@ -78,7 +78,7 @@ export class OrganisationAdminRegistrationDto {
   @IsBoolean()
   publish_agreement: boolean;
 
-  @ApiProperty({ type: 'varchar' })
+  @ApiProperty({ type: 'string' })
   @IsString()
   full_name: string;
 
@@ -100,7 +100,7 @@ export class OrganisationAdminRegistrationDto {
   @Transform(TransformInt)
   location_long: number;
 
-  @ApiPropertyOptional({ type: 'varchar' })
+  @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsString()
   @IsUrl()
@@ -130,7 +130,7 @@ export class OrganisationAdminRegistrationDto {
   @Transform(TransformIntArray)
   citizen_type_ids: Array<number>;
 
-  @ApiProperty({ type: 'varchar' })
+  @ApiProperty({ type: 'string' })
   @IsString()
   password: string;
 }

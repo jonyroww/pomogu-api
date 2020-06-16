@@ -11,37 +11,37 @@ import { Transform } from 'class-transformer';
 import { TransformIntArray } from '../../common/utils/transform-array-int.util';
 
 export class BodyValidationDto {
-  @ApiPropertyOptional({ type: 'varchar' })
+  @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsString()
   first_name: string;
 
-  @ApiPropertyOptional({ type: 'varchar' })
+  @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsString()
   middle_name: string;
 
-  @ApiPropertyOptional({ type: 'varchar' })
+  @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsString()
   last_name: string;
 
-  @ApiProperty({ type: 'varchar' })
+  @ApiProperty({ type: 'string' })
   @IsString()
   city: string;
 
-  @ApiPropertyOptional({ type: 'varchar' })
+  @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsString()
   @IsEmail()
   email: string;
 
-  @ApiProperty({ type: 'varchar' })
+  @ApiProperty({ type: 'string' })
   @IsString()
   @IsPhoneNumber('RU')
   phone: string;
 
-  @ApiPropertyOptional({ type: 'varchar' })
+  @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsString()
   comment: string;

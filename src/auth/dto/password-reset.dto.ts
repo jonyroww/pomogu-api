@@ -10,12 +10,12 @@ export class PasswordResetDto {
   @IsInt()
   verification_id: number;
 
-  @ApiProperty({ type: 'varchar' })
+  @ApiProperty({ type: 'string' })
   @IsString()
   @IsAlphanumeric()
   verification_key: string;
 
-  @ApiProperty({ type: 'varchar' })
+  @ApiProperty({ type: 'string' })
   @IsString()
   password: string;
 }

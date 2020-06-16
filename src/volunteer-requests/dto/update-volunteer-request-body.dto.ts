@@ -13,33 +13,33 @@ import { TransformIntArray } from '../../common/utils/transform-array-int.util';
 import { TransformDate } from '../../common/utils/transform-date.util';
 
 export class UpdateVolunteerRequestBodyDto {
-  @ApiPropertyOptional({ type: 'varchar' })
+  @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsString()
   first_name: string;
 
-  @ApiPropertyOptional({ type: 'varchar' })
+  @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsString()
   middle_name: string;
 
-  @ApiPropertyOptional({ type: 'varchar' })
+  @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsString()
   last_name: string;
 
-  @ApiPropertyOptional({ type: 'Date' })
+  @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsDate()
   @Transform(TransformDate)
   birth_date: Date;
 
-  @ApiPropertyOptional({ type: 'varchar' })
+  @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsString()
   city: string;
 
-  @ApiPropertyOptional({ type: 'varchar' })
+  @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsString()
   @IsEmail()
@@ -65,7 +65,7 @@ export class UpdateVolunteerRequestBodyDto {
   @IsBoolean()
   with_fund: boolean;
 
-  @ApiPropertyOptional({ type: 'varchar' })
+  @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsString()
   comment: string;
@@ -75,12 +75,12 @@ export class UpdateVolunteerRequestBodyDto {
   @IsBoolean()
   allow_search_in_messengers: boolean;
 
-  @ApiPropertyOptional({ type: 'varchar' })
+  @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsString()
   avatar: string;
 
-  @ApiPropertyOptional({ type: 'varchar' })
+  @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsString()
   gender: string;

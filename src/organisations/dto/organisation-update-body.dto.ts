@@ -13,7 +13,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { TransformIntArray } from '../../common/utils/transform-array-int.util';
 
 export class OrganisationUpdateBodyDto {
-  @ApiPropertyOptional({ type: 'varchar' })
+  @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsString()
   inn: string;
@@ -33,35 +33,35 @@ export class OrganisationUpdateBodyDto {
   @IsString()
   address: string;
 
-  @ApiProperty({ type: 'varchar' })
+  @ApiProperty({ type: 'string' })
   @IsOptional()
   @IsString()
   work_schedule: string;
 
-  @ApiProperty({ type: 'varchar' })
+  @ApiProperty({ type: 'string' })
   @IsOptional()
   @IsString()
   @IsEmail()
   email: string;
 
-  @ApiProperty({ type: 'varchar' })
+  @ApiProperty({ type: 'string' })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
   phone_numbers: Array<string>;
 
-  @ApiProperty({ type: 'varchar' })
+  @ApiProperty({ type: 'string' })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
   websites: Array<string>;
 
-  @ApiProperty({ type: 'varchar' })
+  @ApiProperty({ type: 'string' })
   @IsOptional()
   @IsString()
   full_name: string;
 
-  @ApiProperty({ type: 'varchar' })
+  @ApiProperty({ type: 'string' })
   @IsOptional()
   @IsString()
   city: string;
@@ -85,7 +85,7 @@ export class OrganisationUpdateBodyDto {
   @Transform(TransformInt)
   location_long: number;
 
-  @ApiPropertyOptional({ type: 'varchar' })
+  @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsString()
   @IsUrl()
