@@ -3,28 +3,16 @@ import {
   IsArray,
   IsNumber,
   IsString,
-  IsAlphanumeric,
   IsDate,
   IsEmail,
   IsBoolean,
 } from 'class-validator';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { TransformIntArray } from '../../common/utils/transform-array-int.util';
-import { TransformInt } from '../../common/utils/transform-int.util';
 import { TransformDate } from '../../common/utils/transform-date.util';
 
-export class RegistrationBodyDto {
-  @ApiProperty({ type: 'number' })
-  @Transform(TransformInt)
-  @IsNumber()
-  verification_id: number;
-
-  @ApiProperty({ type: 'string' })
-  @IsString()
-  @IsAlphanumeric()
-  verification_key: string;
-
+export class UpdateVolunteerRequestBodyDto {
   @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsString()
@@ -58,18 +46,22 @@ export class RegistrationBodyDto {
   email: string;
 
   @ApiProperty({ type: 'boolean' })
+  @IsOptional()
   @IsBoolean()
   is_individual: boolean;
 
   @ApiProperty({ type: 'boolean' })
+  @IsOptional()
   @IsBoolean()
   hide_contacts: boolean;
 
   @ApiPropertyOptional({ type: 'boolean' })
+  @IsOptional()
   @IsBoolean()
   need_expert_help: boolean;
 
   @ApiProperty({ type: 'boolean' })
+  @IsOptional()
   @IsBoolean()
   with_fund: boolean;
 
@@ -79,6 +71,7 @@ export class RegistrationBodyDto {
   comment: string;
 
   @ApiProperty({ type: 'boolean' })
+  @IsOptional()
   @IsBoolean()
   allow_search_in_messengers: boolean;
 
@@ -92,10 +85,6 @@ export class RegistrationBodyDto {
   @IsString()
   gender: string;
 
-  @ApiProperty({ type: 'string' })
-  @IsString()
-  password: string;
-
   @ApiProperty({ type: 'number', isArray: true })
   @IsArray()
   @IsOptional()
@@ -108,7 +97,7 @@ export class RegistrationBodyDto {
   @IsOptional()
   @IsNumber({}, { each: true })
   @Transform(TransformIntArray)
-  citizen_type_ids: Array<number>;
+  citezen_type_ids: Array<number>;
 
   @ApiProperty({ type: 'number', isArray: true })
   @IsArray()

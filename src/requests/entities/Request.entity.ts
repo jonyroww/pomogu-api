@@ -81,7 +81,7 @@ export class Request {
   @Column({ type: 'int' })
   user_id: number;
 
-  @ApiPropertyOptional({ type: 'varchar' })
+  @ApiPropertyOptional({ type: 'string' })
   @Column({ type: 'varchar' })
   status: string;
 

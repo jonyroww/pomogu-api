@@ -31,7 +31,7 @@ export class GetAllQueryFilterDto extends PaginationFilterDto {
   @IsEnum(ModerationStatus)
   moderation_status: ModerationStatus;
 
-  @ApiPropertyOptional({ type: 'varchar' })
+  @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsString()
   city: string;

@@ -19,6 +19,8 @@ import { ModerationBodyDto } from './dto/moderate-body.dto';
 import { GetAllQueryDto } from './dto/get-all-query.dto';
 import { AuthService } from '../auth/auth.service';
 import _ from 'lodash';
+import { UpdateVolunteerRequestBodyDto } from './dto/update-volunteer-request-body.dto';
+import { setTypesFilters } from '../common/utils/types-filters.util';
 
 @Injectable()
 export class VolunteerRequestsService {
@@ -114,32 +116,11 @@ export class VolunteerRequestsService {
     const qb = this.volunteerRequestRepository.createQueryBuilder(
       'volunteer_requests',
     );
-    qb.leftJoinAndSelect(
-      'volunteer_requests.helpTypes',
-      'helpTypes',
-    ).leftJoinAndSelect('volunteer_requests.citezenTypes', 'citezenTypes');
+    qb.leftJoinAndSelect('volunteer_requests.helpTypes', 'helpTypes')
+      .leftJoinAndSelect('volunteer_requests.citezenTypes', 'citezenTypes')
+      .leftJoinAndSelect('volunteer_requests.organisations', 'organisations');
 
-    if (!_.isEmpty(query.help_type_ids) || !_.isEmpty(query.citizen_type_ids)) {
-      qb.where('FALSE');
-    }
-
-    if (!_.isEmpty(query.help_type_ids)) {
-      qb.leftJoin(
-        'volunteer_requests.helpTypes',
-        'volunteer_requests_help_types',
-      ).orWhere('volunteer_requests_help_types.id IN (:...helpTypesId)', {
-        helpTypesId: query.help_type_ids,
-      });
-    }
-
-    if (!_.isEmpty(query.citizen_type_ids)) {
-      qb.leftJoin(
-        'volunteer_requests.citezenTypes',
-        'volunteer_requests_citezen_types',
-      ).orWhere('volunteer_requests_citezen_types.id IN (:...citezenTypes)', {
-        citezenTypes: query.citizen_type_ids,
-      });
-    }
+    setTypesFilters(qb, query.help_type_ids, query.citizen_type_ids);
 
     qb.andWhere('volunteer_requests.moderation_status = :moderation_status', {
       moderation_status: query.moderation_status || ModerationStatus.APPROVED,
@@ -163,6 +144,46 @@ export class VolunteerRequestsService {
     } else {
       return volunteerRequest;
     }
+  }
+
+  async updateRequest(
+    params: VolunteerRequestIdDto,
+    {
+      help_type_ids,
+      citezen_type_ids,
+      organisation_ids,
+      ...body
+    }: UpdateVolunteerRequestBodyDto,
+  ): Promise<VolunteerRequest> {
+    const volunteerRequest = await this.volunteerRequestRepository.findOne({
+      id: params.id,
+      deleted_at: null,
+    });
+    if (!volunteerRequest) {
+      throw makeError('RECORD_NOT_FOUND');
+    }
+    this.volunteerRequestRepository.merge(volunteerRequest, body);
+
+    if (help_type_ids) {
+      const helpTypes = await this.helpTypesRepository.findByIds(help_type_ids);
+      volunteerRequest.helpTypes = helpTypes;
+    }
+
+    if (citezen_type_ids) {
+      const citizenTypes = await this.citezenTypesRepository.findByIds(
+        citezen_type_ids,
+      );
+      volunteerRequest.citezenTypes = citizenTypes;
+    }
+
+    if (organisation_ids) {
+      const organisations = await this.organisationRepository.findByIds(
+        organisation_ids,
+      );
+      volunteerRequest.organisations = organisations;
+    }
+    await this.volunteerRequestRepository.save(volunteerRequest);
+    return volunteerRequest;
   }
 
   async deleteVolunteerRequest(params: VolunteerRequestIdDto) {

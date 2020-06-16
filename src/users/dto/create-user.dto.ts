@@ -16,33 +16,33 @@ import { TransformDate } from '../../common/utils/transform-date.util';
 import { RoleName } from '../../constants/RoleName.enum';
 
 export class CreateUserDto {
-  @ApiPropertyOptional({ type: 'varchar' })
+  @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsString()
   first_name: string;
 
-  @ApiPropertyOptional({ type: 'varchar' })
+  @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsString()
   middle_name: string;
 
-  @ApiPropertyOptional({ type: 'varchar' })
+  @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsString()
   last_name: string;
 
-  @ApiPropertyOptional({ type: 'Date' })
+  @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsDate()
   @Transform(TransformDate)
   birth_date: Date;
 
-  @ApiProperty({ type: 'varchar' })
+  @ApiProperty({ type: 'string' })
   @IsString()
   @IsPhoneNumber('RU')
   phone: string;
 
-  @ApiPropertyOptional({ type: 'varchar' })
+  @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsString()
   city: string;
@@ -52,23 +52,23 @@ export class CreateUserDto {
   @IsEnum(RoleName)
   role: RoleName;
 
-  @ApiPropertyOptional({ type: 'varchar' })
+  @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsString()
   @IsEmail()
   email: string;
 
-  @ApiPropertyOptional({ type: 'varchar' })
+  @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsString()
   comment: string;
 
-  @ApiPropertyOptional({ type: 'varchar' })
+  @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsString()
   avatar: string;
 
-  @ApiPropertyOptional({ type: 'varchar' })
+  @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsString()
   gender: string;

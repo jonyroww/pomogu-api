@@ -28,6 +28,7 @@ import { VolunteerRequestIdDto } from './dto/volunteer-request-id.dto';
 import { ModerationBodyDto } from './dto/moderate-body.dto';
 import { GetAllQueryDto } from './dto/get-all-query.dto';
 import { ModerationAdminGuard } from '../common/guards/moderation-admin.guard';
+import { UpdateVolunteerRequestBodyDto } from './dto/update-volunteer-request-body.dto';
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 @Controller('volunteer-requests')
@@ -53,7 +54,7 @@ export class VolunteerRequestsController {
   }
 
   @ApiTags('Volunteer Requests')
-  @ApiOkResponse()
+  @ApiOkResponse({ type: () => VolunteerRequest })
   @UseGuards(AuthGuard('jwt'), ModerationAdminGuard)
   @ApiBearerAuth()
   @Get()
@@ -62,7 +63,7 @@ export class VolunteerRequestsController {
   }
 
   @ApiTags('Volunteer Requests')
-  @ApiOkResponse()
+  @ApiOkResponse({ type: () => VolunteerRequest })
   @UseGuards(AuthGuard('jwt'), ModerationAdminGuard)
   @ApiBearerAuth()
   @Get('/:id')
@@ -80,6 +81,18 @@ export class VolunteerRequestsController {
     @Body() body: ModerationBodyDto,
   ) {
     return this.volunteerRequestService.moderateRequest(params, body);
+  }
+
+  @ApiTags('Volunteer Requests')
+  @ApiOkResponse({ type: () => VolunteerRequest })
+  @UseGuards(AuthGuard('jwt'), ModerationAdminGuard)
+  @ApiBearerAuth()
+  @Put('/:id')
+  updateVolunteerRequest(
+    @Param() params: VolunteerRequestIdDto,
+    @Body() body: UpdateVolunteerRequestBodyDto,
+  ): Promise<VolunteerRequest> {
+    return this.volunteerRequestService.updateRequest(params, body);
   }
 
   @ApiTags('Volunteer Requests')

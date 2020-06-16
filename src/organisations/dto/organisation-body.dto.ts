@@ -14,7 +14,7 @@ import { TransformIntArray } from '../../common/utils/transform-array-int.util';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class OrganisationBodyDto {
-  @ApiPropertyOptional({ type: 'varchar' })
+  @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsString()
   inn: string;
@@ -34,16 +34,16 @@ export class OrganisationBodyDto {
   @IsString()
   address: string;
 
-  @ApiProperty({ type: 'varchar' })
+  @ApiProperty({ type: 'string' })
   @IsString()
   work_schedule: string;
 
-  @ApiProperty({ type: 'varchar' })
+  @ApiProperty({ type: 'string' })
   @IsString()
   @IsEmail()
   email: string;
 
-  @ApiPropertyOptional({ type: 'varchar' })
+  @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsString()
   city: string;
@@ -53,12 +53,12 @@ export class OrganisationBodyDto {
   @IsString()
   appeal_to_volunteer: string;
 
-  @ApiProperty({ type: 'varchar' })
+  @ApiProperty({ type: 'string' })
   @IsArray()
   @IsString({ each: true })
   phone_numbers: Array<string>;
 
-  @ApiProperty({ type: 'varchar' })
+  @ApiProperty({ type: 'string' })
   @IsArray()
   @IsString({ each: true })
   websites: Array<string>;
@@ -67,7 +67,7 @@ export class OrganisationBodyDto {
   @IsBoolean()
   publish_agreement: boolean;
 
-  @ApiProperty({ type: 'varchar' })
+  @ApiProperty({ type: 'string' })
   @IsString()
   full_name: string;
 
@@ -89,7 +89,7 @@ export class OrganisationBodyDto {
   @Transform(TransformInt)
   location_long: number;
 
-  @ApiPropertyOptional({ type: 'varchar' })
+  @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsString()
   @IsUrl()
