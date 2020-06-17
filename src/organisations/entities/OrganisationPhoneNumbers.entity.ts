@@ -13,7 +13,6 @@ export class OrganisationPhoneNumber {
   @ApiProperty()
   @PrimaryGeneratedColumn({
     type: 'int',
-    readonly: true,
   })
   id: number;
 

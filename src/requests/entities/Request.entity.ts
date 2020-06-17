@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  DeleteDateColumn,
 } from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { HelpTypes } from '../../help-types/entities/help-types.entity';
@@ -20,7 +21,6 @@ export class Request {
   @ApiProperty()
   @PrimaryGeneratedColumn({
     type: 'int',
-    readonly: true,
   })
   id: number;
 
@@ -42,6 +42,7 @@ export class Request {
   updated_at: Date;
 
   @ApiPropertyOptional({ type: 'string', example: '2019-11-22T16:03:05Z' })
+  @DeleteDateColumn()
   @Column({ type: 'timestamp with time zone' })
   deleted_at: Date;
 

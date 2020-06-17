@@ -13,7 +13,6 @@ export class OrganisationWebsite {
   @ApiProperty()
   @PrimaryGeneratedColumn({
     type: 'int',
-    readonly: true,
   })
   id: number;
 

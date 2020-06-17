@@ -22,7 +22,6 @@ export class User {
   @ApiProperty()
   @PrimaryGeneratedColumn({
     type: 'int',
-    readonly: true,
   })
   id: number;
 

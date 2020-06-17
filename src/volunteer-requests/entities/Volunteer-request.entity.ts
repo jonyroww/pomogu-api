@@ -16,7 +16,6 @@ export class VolunteerRequest {
   @ApiProperty()
   @PrimaryGeneratedColumn({
     type: 'int',
-    readonly: true,
   })
   id: number;
 

@@ -12,7 +12,6 @@ export class CitezenTypes {
   @ApiProperty()
   @PrimaryGeneratedColumn({
     type: 'int',
-    readonly: true,
   })
   id: number;
 
