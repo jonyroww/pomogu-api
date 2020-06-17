@@ -10,6 +10,8 @@ import {
   Get,
   Query,
   Delete,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { VolunteerRequestsService } from './volunteer-requests.service';
@@ -31,6 +33,7 @@ import { ModerationAdminGuard } from '../common/guards/moderation-admin.guard';
 import { UpdateVolunteerRequestBodyDto } from './dto/update-volunteer-request-body.dto';
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('volunteer-requests')
 export class VolunteerRequestsController {
   constructor(private volunteerRequestService: VolunteerRequestsService) {}

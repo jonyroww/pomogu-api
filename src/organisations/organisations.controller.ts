@@ -10,6 +10,8 @@ import {
   Put,
   Delete,
   UseGuards,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { OrganisationsService } from './organisations.service';
 import { Organisation } from './entities/Organisation.entity';
@@ -29,6 +31,7 @@ import { FindAllResponseDto } from './dto/find-all-response.dto';
 import { OrganisationWriteAccessGuard } from '../common/guards/organisation-write-access.guard';
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('organisations')
 export class OrganisationsController {
   constructor(private readonly organisationsService: OrganisationsService) {}

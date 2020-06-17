@@ -3,6 +3,9 @@ import {
   Post,
   UseInterceptors,
   UploadedFile,
+  UsePipes,
+  ValidationPipe,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { PhotosService } from './photos.service';
@@ -12,6 +15,7 @@ import multer from 'multer';
 import uuid from 'uuid/v4';
 import mime from 'mime';
 
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('upload-photo')
 export class PhotosController {
   constructor(

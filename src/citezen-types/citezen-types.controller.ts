@@ -7,6 +7,10 @@ import {
   UseGuards,
   Delete,
   Put,
+  UsePipes,
+  ValidationPipe,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { CitezenTypesService } from './citezen-types.service';
 import { CitezenTypes } from './entities/citezen-types.entity';
@@ -21,6 +25,8 @@ import { CitezenTypeIdDto } from './dto/citezen-type-id.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { IsAdminGuard } from '../common/guards/is-admin.guard';
 
+@UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('citezen-types')
 export class CitezenTypesController {
   constructor(private readonly citezenTypesService: CitezenTypesService) {}

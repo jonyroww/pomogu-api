@@ -9,6 +9,8 @@ import {
   UseGuards,
   Put,
   Query,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import {
   ApiOkResponse,
@@ -33,6 +35,7 @@ import { ReportBodyDto } from './dto/report-body.dto';
 import { ModerationAdminGuard } from '../common/guards/moderation-admin.guard';
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller()
 export class RequestsController {
   constructor(private requestsService: RequestsService) {}

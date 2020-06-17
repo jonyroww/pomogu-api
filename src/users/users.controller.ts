@@ -10,6 +10,8 @@ import {
   Put,
   UseGuards,
   Delete,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { User } from './entities/User.entity';
 import { UsersService } from './users.service';
@@ -33,6 +35,7 @@ import { UpdateUserParamsDto } from './dto/update-phone-params.dto';
 import { ModerationAdminGuard } from '../common/guards/moderation-admin.guard';
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}

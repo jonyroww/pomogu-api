@@ -9,6 +9,8 @@ import {
   Param,
   Put,
   Query,
+  ClassSerializerInterceptor,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -31,6 +33,7 @@ import { User } from 'src/users/entities/User.entity';
 import { UserWriteAccessGuard } from 'src/common/guards/user-write-access-guard';
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller()
 export class NotificationsController {
   constructor(private readonly notificationsService: NotificationsService) {}
