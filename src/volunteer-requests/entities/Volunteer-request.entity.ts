@@ -1,4 +1,10 @@
-import { Entity, PrimaryColumn, Column, ManyToMany, JoinTable } from 'typeorm';
+import {
+  Entity,
+  Column,
+  ManyToMany,
+  JoinTable,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Organisation } from '../../organisations/entities/Organisation.entity';
 import { HelpTypes } from '../../help-types/entities/help-types.entity';
@@ -8,9 +14,8 @@ import { ModerationStatus } from '../../constants/ModerationStatus.enum';
 @Entity({ name: 'volunteer_requests' })
 export class VolunteerRequest {
   @ApiProperty()
-  @PrimaryColumn({
+  @PrimaryGeneratedColumn({
     type: 'int',
-    generated: true,
     readonly: true,
   })
   id: number;

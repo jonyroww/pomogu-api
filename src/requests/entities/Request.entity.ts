@@ -1,11 +1,11 @@
 import {
   Entity,
-  PrimaryColumn,
   Column,
   ManyToMany,
   JoinColumn,
   ManyToOne,
   JoinTable,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { HelpTypes } from '../../help-types/entities/help-types.entity';
@@ -16,9 +16,8 @@ import { ModerationStatus } from '../../constants/ModerationStatus.enum';
 @Entity({ name: 'requests' })
 export class Request {
   @ApiProperty()
-  @PrimaryColumn({
+  @PrimaryGeneratedColumn({
     type: 'int',
-    generated: true,
     readonly: true,
   })
   id: number;

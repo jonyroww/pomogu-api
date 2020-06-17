@@ -1,12 +1,11 @@
-import { Entity, PrimaryColumn, Column } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 
 @Entity({ name: 'help_types' })
 export class HelpTypes {
   @ApiProperty()
-  @PrimaryColumn({
+  @PrimaryGeneratedColumn({
     type: 'int',
-    generated: true,
     readonly: true,
   })
   id: number;

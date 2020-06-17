@@ -1,12 +1,12 @@
 import {
   Entity,
-  PrimaryColumn,
   Column,
   OneToMany,
   ManyToMany,
   JoinTable,
   Index,
   OneToOne,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { PhoneVerification } from './../../auth/entities/Phone-verification.entity';
@@ -20,9 +20,8 @@ import { ModerationStatus } from '../../constants/ModerationStatus.enum';
 @Entity({ name: 'users' })
 export class User {
   @ApiProperty()
-  @PrimaryColumn({
+  @PrimaryGeneratedColumn({
     type: 'int',
-    generated: true,
     readonly: true,
   })
   id: number;

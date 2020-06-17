@@ -1,12 +1,12 @@
 import {
   Entity,
-  PrimaryColumn,
   Column,
   OneToMany,
   ManyToMany,
   JoinTable,
   OneToOne,
   JoinColumn,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { HelpTypes } from '../../help-types/entities/help-types.entity';
 import { CitezenTypes } from '../../citezen-types/entities/citezen-types.entity';
@@ -18,9 +18,8 @@ import { User } from '../../users/entities/User.entity';
 @Entity({ name: 'organisations' })
 export class Organisation {
   @ApiProperty()
-  @PrimaryColumn({
+  @PrimaryGeneratedColumn({
     type: 'int',
-    generated: true,
     readonly: true,
   })
   id: number;

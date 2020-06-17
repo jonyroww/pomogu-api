@@ -1,4 +1,13 @@
-import { Entity, PrimaryColumn, Column, OneToOne, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryColumn,
+  Column,
+  OneToOne,
+  JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { User } from './../../users/entities/User.entity';
 import { PurposeType } from '../../constants/PurposeType.enum';
@@ -7,9 +16,8 @@ import { Exclude } from 'class-transformer';
 @Entity({ name: 'phone_verifications' })
 export class PhoneVerification {
   @ApiProperty()
-  @PrimaryColumn({
+  @PrimaryGeneratedColumn({
     type: 'int',
-    generated: true,
     readonly: true,
   })
   id: number;
@@ -19,6 +27,7 @@ export class PhoneVerification {
     example: '2019-11-22T16:03:05Z',
     nullable: false,
   })
+  @CreateDateColumn()
   @Column({
     nullable: false,
     type: 'timestamp with time zone',
@@ -26,6 +35,7 @@ export class PhoneVerification {
   created_at: Date;
 
   @ApiPropertyOptional({ type: 'string', example: '2019-11-22T16:03:05Z' })
+  @UpdateDateColumn()
   @Column({ type: 'timestamp with time zone' })
   updated_at: Date;
 
