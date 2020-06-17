@@ -41,27 +41,29 @@ export class AuthController {
   @Post('/phone-verification')
   @ApiTags('Phone verification')
   @ApiCreatedResponse({ type: PhoneVerification })
-  createPhoneVerification(@Body() body: PhoneVerificationRequestDto) {
+  createPhoneVerification(
+    @Body() body: PhoneVerificationRequestDto,
+  ): Promise<object> {
     return this.authService.createPhoneVerification(body);
   }
 
   @Put('/phone-verification/:id')
   @ApiTags('Phone verification')
-  @ApiCreatedResponse({ type: PhoneVerification })
+  @ApiOkResponse({ type: PhoneVerification })
   verificationPhone(
     @Body() body: VerificationPhoneDto,
     @Param() params: ParamsValidationDto,
-  ) {
+  ): Promise<PhoneVerification> {
     return this.authService.verificationPhone(body, params);
   }
 
   @Put('/phone-verification/:id/resend')
   @ApiTags('Phone verification')
-  @ApiCreatedResponse({ type: PhoneVerification })
+  @ApiOkResponse({ type: PhoneVerification })
   verificationPhoneResend(
     @Body() body: VerificationResendDto,
     @Param() params: ParamsValidationDto,
-  ) {
+  ): Promise<PhoneVerification> {
     return this.authService.verificationPhoneResend(body, params);
   }
 

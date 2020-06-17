@@ -6,6 +6,8 @@ import {
   ManyToOne,
   JoinTable,
   PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { HelpTypes } from '../../help-types/entities/help-types.entity';
@@ -27,6 +29,7 @@ export class Request {
     example: '2019-11-22T16:03:05Z',
     nullable: false,
   })
+  @CreateDateColumn()
   @Column({
     nullable: false,
     type: 'timestamp with time zone',
@@ -34,6 +37,7 @@ export class Request {
   created_at: Date;
 
   @ApiPropertyOptional({ type: 'string', example: '2019-11-22T16:03:05Z' })
+  @UpdateDateColumn()
   @Column({ type: 'timestamp with time zone', nullable: false })
   updated_at: Date;
 

@@ -45,7 +45,9 @@ export class AuthService {
     private organisationWebsiteRepository: OrganisationWebsiteRepository,
   ) {}
   @Transactional()
-  async createPhoneVerification(body: PhoneVerificationRequestDto) {
+  async createPhoneVerification(
+    body: PhoneVerificationRequestDto,
+  ): Promise<object> {
     const phoneVerificationRequest = this.phoneVerificationRepository.create(
       body,
     );
@@ -85,7 +87,7 @@ export class AuthService {
   async verificationPhone(
     body: VerificationPhoneDto,
     params: ParamsValidationDto,
-  ) {
+  ): Promise<PhoneVerification> {
     const phoneVerification = await this.phoneVerificationRepository.findOne(
       params.id,
     );
@@ -118,7 +120,7 @@ export class AuthService {
   async verificationPhoneResend(
     body: VerificationResendDto,
     params: ParamsValidationDto,
-  ) {
+  ): Promise<PhoneVerification> {
     const phoneVerification = await this.phoneVerificationRepository.findOne(
       params.id,
     );
