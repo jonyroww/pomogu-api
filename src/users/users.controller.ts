@@ -33,6 +33,7 @@ import { UpdatePhoneNumberDto } from './dto/update-phone-number.dto';
 import { UserWriteAccessGuard } from '../common/guards/user-write-access-guard';
 import { UpdateUserParamsDto } from './dto/update-phone-params.dto';
 import { ModerationAdminGuard } from '../common/guards/moderation-admin.guard';
+import { Paginated } from '../common/interfaces/paginated-entity.interface';
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 @UseInterceptors(ClassSerializerInterceptor)
@@ -40,16 +41,16 @@ import { ModerationAdminGuard } from '../common/guards/moderation-admin.guard';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
   @ApiTags('Users')
-  @ApiOkResponse({ type: User })
+  @ApiOkResponse({ type: () => User })
   @Get()
-  findAll(@Query() query: GetAllQueryDto) {
+  findAll(@Query() query: GetAllQueryDto): Promise<Paginated<User>> {
     return this.usersService.findAll(query);
   }
 
   @ApiTags('Users')
   @ApiOkResponse({ type: User })
   @Get('/:id')
-  findOne(@Param() params: UserIdDto) {
+  findOne(@Param() params: UserIdDto): Promise<User> {
     return this.usersService.findOne(params);
   }
 
@@ -63,14 +64,17 @@ export class UsersController {
   }
 
   @ApiTags('Users')
-  @ApiCreatedResponse()
+  @ApiOkResponse({ type: User })
   @Put('/:id')
-  updateUser(@Param() params: UserIdDto, @Body() body: UpdateUserDto) {
+  updateUser(
+    @Param() params: UserIdDto,
+    @Body() body: UpdateUserDto,
+  ): Promise<User> {
     return this.usersService.updateUser(params, body);
   }
 
   @ApiTags('Users')
-  @ApiCreatedResponse()
+  @ApiOkResponse()
   @UseGuards(AuthGuard('jwt'), UserWriteAccessGuard)
   @ApiBearerAuth()
   @Put('/:volunteerId/change-phone')
@@ -83,7 +87,7 @@ export class UsersController {
   }
 
   @ApiTags('Users')
-  @ApiCreatedResponse()
+  @ApiOkResponse()
   @UseGuards(AuthGuard('jwt'), IsAdminGuard)
   @ApiBearerAuth()
   @Delete('/:id')
@@ -92,11 +96,14 @@ export class UsersController {
   }
 
   @ApiTags('Users')
-  @ApiCreatedResponse()
+  @ApiOkResponse({ type: User })
   @UseGuards(AuthGuard('jwt'), ModerationAdminGuard)
   @ApiBearerAuth()
   @Put('/:id/moderate')
-  moderateUser(@Param() params: UserIdDto, @Body() body: ModerationBodyDto) {
+  moderateUser(
+    @Param() params: UserIdDto,
+    @Body() body: ModerationBodyDto,
+  ): Promise<User> {
     return this.usersService.moderateUser(params, body);
   }
 }

@@ -42,14 +42,14 @@ export class CitezenTypesController {
   @ApiBearerAuth()
   @ApiCreatedResponse({ type: CitezenTypes })
   @Post()
-  createCitezenType(@Body() body: CitezenTypeBodyDto) {
+  createCitezenType(@Body() body: CitezenTypeBodyDto): Promise<CitezenTypes> {
     return this.citezenTypesService.createCitezenType(body);
   }
 
   @ApiTags('CitezenTypes')
   @ApiOkResponse({ type: CitezenTypes })
   @Get('/:id')
-  getOneCitezenType(@Param() params: CitezenTypeIdDto) {
+  getOneCitezenType(@Param() params: CitezenTypeIdDto): Promise<CitezenTypes> {
     return this.citezenTypesService.getOneCitezenType(params);
   }
 
@@ -61,7 +61,7 @@ export class CitezenTypesController {
   updateCitezenType(
     @Param() params: CitezenTypeIdDto,
     @Body() body: CitezenTypeBodyDto,
-  ) {
+  ): Promise<CitezenTypes> {
     return this.citezenTypesService.updateCitezenType(params, body);
   }
 

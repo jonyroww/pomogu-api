@@ -21,7 +21,10 @@ export class NotificationsService {
     private userRepository: UserRepository,
   ) {}
 
-  async createNotification({ user_id, ...body }: NotificationBodyDto) {
+  async createNotification({
+    user_id,
+    ...body
+  }: NotificationBodyDto): Promise<Notification> {
     const notification = this.notificationRepository.create(body);
 
     const user = await this.userRepository.findOne(user_id);
@@ -40,7 +43,7 @@ export class NotificationsService {
   async getUserNotifications(
     params: VolunteerIdDto,
     filters: GetNotificationsFiltersDto,
-  ) {
+  ): Promise<Notification[]> {
     const qb = this.notificationRepository.createQueryBuilder('notifications');
 
     qb.where('user_id = :user_id', {
@@ -66,7 +69,7 @@ export class NotificationsService {
   async updateNotification(
     body: NotificationUpdateBodyDto,
     params: NotificationIdDto,
-  ) {
+  ): Promise<Notification> {
     const notification = await this.notificationRepository.findOne({
       id: params.notificationId,
     });
@@ -86,7 +89,10 @@ export class NotificationsService {
     return notification;
   }
 
-  async setReadNotification(params: NotificationSetReadParamsDto, user: User) {
+  async setReadNotification(
+    params: NotificationSetReadParamsDto,
+    user: User,
+  ): Promise<Notification> {
     const notification = await this.notificationRepository.findOne({
       id: params.notificationId,
       user_id: user.id,

@@ -36,18 +36,18 @@ import { OrganisationWriteAccessGuard } from '../common/guards/organisation-writ
 export class OrganisationsController {
   constructor(private readonly organisationsService: OrganisationsService) {}
   @ApiTags('Organisations')
-  @ApiOkResponse({ type: Organisation })
+  @ApiOkResponse({ type: () => Organisation })
   @Get()
   findAll(@Query() params: QueryFilterDto): Promise<FindAllResponseDto> {
     return this.organisationsService.findAll(params);
   }
 
   @ApiTags('Organisations')
-  @ApiCreatedResponse()
+  @ApiCreatedResponse({ type: Organisation })
   @Post()
   @UseGuards(AuthGuard('jwt'), IsAdminGuard)
   @ApiBearerAuth()
-  createOrganisation(@Body() body: OrganisationBodyDto) {
+  createOrganisation(@Body() body: OrganisationBodyDto): Promise<Organisation> {
     return this.organisationsService.createOrganisation(body);
   }
 

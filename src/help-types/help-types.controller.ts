@@ -31,7 +31,7 @@ import { HelpTypeIdDto } from './dto/help-type-id.dto';
 export class HelpTypesController {
   constructor(private readonly helpTypesService: HelpTypesService) {}
   @ApiTags('HelpTypes')
-  @ApiOkResponse({ type: HelpTypes })
+  @ApiOkResponse({ type: () => HelpTypes })
   @Get()
   findAll(): Promise<HelpTypes[]> {
     return this.helpTypesService.findAll();
@@ -42,14 +42,14 @@ export class HelpTypesController {
   @ApiBearerAuth()
   @ApiCreatedResponse({ type: HelpTypes })
   @Post()
-  createHelpType(@Body() body: HelpTypeBodyDto) {
+  createHelpType(@Body() body: HelpTypeBodyDto): Promise<HelpTypes> {
     return this.helpTypesService.createHelpType(body);
   }
 
   @ApiTags('HelpTypes')
   @ApiOkResponse({ type: HelpTypes })
   @Get('/:id')
-  getOneHelpType(@Param() params: HelpTypeIdDto) {
+  getOneHelpType(@Param() params: HelpTypeIdDto): Promise<HelpTypes> {
     return this.helpTypesService.getOneHelpType(params);
   }
 
@@ -61,7 +61,7 @@ export class HelpTypesController {
   updateHelpType(
     @Param() params: HelpTypeIdDto,
     @Body() body: HelpTypeBodyDto,
-  ) {
+  ): Promise<HelpTypes> {
     return this.helpTypesService.updateHelpType(params, body);
   }
 

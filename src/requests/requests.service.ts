@@ -18,6 +18,8 @@ import { MailerService } from '@nest-modules/mailer';
 import { ConfigService } from '../config/config.service';
 import { UserRepository } from '../users/repositories/User.repository';
 import { setTypesFilters } from '../common/utils/types-filters.util';
+import { Paginated } from '../common/interfaces/paginated-entity.interface';
+import { Request } from './entities/Request.entity';
 
 @Injectable()
 export class RequestsService {
@@ -35,7 +37,7 @@ export class RequestsService {
     help_type_ids,
     citizen_type_ids,
     ...body
-  }: BodyValidationDto) {
+  }: BodyValidationDto): Promise<Request> {
     const request = this.requestRepository.create(body);
     const helpTypes = await this.helpTypesRepository.findByIds(help_type_ids);
     const citezenTypes = await this.citezenTypesRepository.findByIds(
@@ -49,7 +51,9 @@ export class RequestsService {
     return request;
   }
 
-  async getAllRequests(query: GetAllQueryFilterDto) {
+  async getAllRequests(
+    query: GetAllQueryFilterDto,
+  ): Promise<Paginated<Request>> {
     const qb = this.requestRepository.createQueryBuilder('requests');
 
     qb.leftJoinAndSelect('requests.helpTypes', 'helpTypes').leftJoinAndSelect(
@@ -59,10 +63,9 @@ export class RequestsService {
 
     setTypesFilters(qb, query.help_type_ids, query.citizen_type_ids);
 
-    
-    qb.andWhere("requests.moderation_status = :moderation_status", {
-      moderation_status: query.moderation_status || ModerationStatus.APPROVED
-    }); 
+    qb.andWhere('requests.moderation_status = :moderation_status', {
+      moderation_status: query.moderation_status || ModerationStatus.APPROVED,
+    });
 
     if (query.city) {
       qb.andWhere('requests.city = :city', { city: query.city });
@@ -80,14 +83,17 @@ export class RequestsService {
     return { total: total, data: requests };
   }
 
-  async getOneRequest(params: RequestIdParamsDto) {
+  async getOneRequest(params: RequestIdParamsDto): Promise<Request> {
     const request = await this.requestRepository.findOne({
       id: params.requestId,
     });
     return request;
   }
 
-  async getUsersRequest(query: GetUserRequestDto, user: User) {
+  async getUsersRequest(
+    query: GetUserRequestDto,
+    user: User,
+  ): Promise<Paginated<Request>> {
     const qb = this.requestRepository.createQueryBuilder('requests');
     qb.where('requests.user_id = :user_id', {
       user_id: user.id,
@@ -104,12 +110,15 @@ export class RequestsService {
     return { total: total, data: requests };
   }
 
-  async acceptRequest(params: AcceptRequestParamsDto, user: User) {
-    if (user.moderation_status === ModerationStatus.REJECTED){
-      throw makeError('USER_IS_REJECTED')
+  async acceptRequest(
+    params: AcceptRequestParamsDto,
+    user: User,
+  ): Promise<Request> {
+    if (user.moderation_status === ModerationStatus.REJECTED) {
+      throw makeError('USER_IS_REJECTED');
     }
-    if (user.moderation_status === ModerationStatus.NOT_MODERATED){
-      throw makeError('USER_MUST_BE_APPROVED')
+    if (user.moderation_status === ModerationStatus.NOT_MODERATED) {
+      throw makeError('USER_MUST_BE_APPROVED');
     }
     const request = await this.requestRepository.findOne({
       id: params.requestId,
@@ -127,7 +136,10 @@ export class RequestsService {
     return request;
   }
 
-  async declineRequest(params: RequestIdParamsDto, user: User) {
+  async declineRequest(
+    params: RequestIdParamsDto,
+    user: User,
+  ): Promise<Request> {
     const request = await this.requestRepository.findOne({
       id: params.requestId,
     });
@@ -147,7 +159,7 @@ export class RequestsService {
     return request;
   }
 
-  async doneRequest(params: RequestIdParamsDto, user: User) {
+  async doneRequest(params: RequestIdParamsDto, user: User): Promise<Request> {
     const request = await this.requestRepository.findOne({
       id: params.requestId,
     });
@@ -171,7 +183,7 @@ export class RequestsService {
   async moderateRequest(
     params: RequestIdParamsDto,
     body: ModerateRequestBodyDto,
-  ) {
+  ): Promise<Request> {
     const request = await this.requestRepository.findOne({
       id: params.requestId,
     });

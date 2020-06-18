@@ -20,13 +20,13 @@ export class CitezenTypesService {
     return citezenTypes;
   }
 
-  async createCitezenType(body: CitezenTypeBodyDto) {
+  async createCitezenType(body: CitezenTypeBodyDto): Promise<CitezenTypes> {
     const citezenType = this.citezenTypesRepository.create(body);
     await this.citezenTypesRepository.save(citezenType);
     return citezenType;
   }
 
-  async getOneCitezenType(params: CitezenTypeIdDto) {
+  async getOneCitezenType(params: CitezenTypeIdDto): Promise<CitezenTypes> {
     const citezenType = await this.citezenTypesRepository.findOne({
       id: params.id,
     });
@@ -37,7 +37,10 @@ export class CitezenTypesService {
     }
   }
 
-  async updateCitezenType(params: CitezenTypeIdDto, body: CitezenTypeBodyDto) {
+  async updateCitezenType(
+    params: CitezenTypeIdDto,
+    body: CitezenTypeBodyDto,
+  ): Promise<CitezenTypes> {
     const citezenType = await this.citezenTypesRepository.findOne({
       id: params.id,
     });

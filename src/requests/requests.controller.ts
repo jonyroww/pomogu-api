@@ -33,6 +33,8 @@ import { RequestAccessGuard } from '../common/guards/request-access.guard';
 import { GetUserRequestDto } from './dto/get-user-requests.dto';
 import { ReportBodyDto } from './dto/report-body.dto';
 import { ModerationAdminGuard } from '../common/guards/moderation-admin.guard';
+import { Request } from './entities/Request.entity';
+import { Paginated } from '../common/interfaces/paginated-entity.interface';
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 @UseInterceptors(ClassSerializerInterceptor)
@@ -42,8 +44,8 @@ export class RequestsController {
 
   @Post('requests')
   @ApiTags('Requests')
-  @ApiCreatedResponse()
-  createRequest(@Body() body: BodyValidationDto) {
+  @ApiCreatedResponse({ type: Request })
+  createRequest(@Body() body: BodyValidationDto): Promise<Request> {
     return this.requestsService.createRequest(body);
   }
 
@@ -51,8 +53,10 @@ export class RequestsController {
   @UseGuards(AuthGuard('jwt'), RequestsReadAccessGuard)
   @ApiBearerAuth()
   @ApiTags('Requests')
-  @ApiOkResponse()
-  getAllRequests(@Query() query: GetAllQueryFilterDto) {
+  @ApiOkResponse({ type: () => Request })
+  getAllRequests(
+    @Query() query: GetAllQueryFilterDto,
+  ): Promise<Paginated<Request>> {
     return this.requestsService.getAllRequests(query);
   }
 
@@ -60,8 +64,8 @@ export class RequestsController {
   @UseGuards(AuthGuard('jwt'), UserWriteAccessGuard)
   @ApiBearerAuth()
   @ApiTags('Requests')
-  @ApiOkResponse()
-  getOneRequest(@Param() params: RequestIdParamsDto) {
+  @ApiOkResponse({ type: Request })
+  getOneRequest(@Param() params: RequestIdParamsDto): Promise<Request> {
     return this.requestsService.getOneRequest(params);
   }
 
@@ -69,8 +73,11 @@ export class RequestsController {
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
   @ApiTags('Requests')
-  @ApiOkResponse()
-  getUsersRequest(@Query() query: GetUserRequestDto, @GetUser() user: User) {
+  @ApiOkResponse({ type: () => Request })
+  getUsersRequest(
+    @Query() query: GetUserRequestDto,
+    @GetUser() user: User,
+  ): Promise<Paginated<Request>> {
     return this.requestsService.getUsersRequest(query, user);
   }
 
@@ -78,11 +85,11 @@ export class RequestsController {
   @ApiTags('Requests')
   @UseGuards(AuthGuard('jwt'), RequestAccessGuard)
   @ApiBearerAuth()
-  @ApiCreatedResponse()
+  @ApiOkResponse({ type: Request })
   acceptRequest(
     @Param() params: AcceptRequestParamsDto,
     @GetUser() user: User,
-  ) {
+  ): Promise<Request> {
     return this.requestsService.acceptRequest(params, user);
   }
 
@@ -90,8 +97,11 @@ export class RequestsController {
   @ApiTags('Requests')
   @UseGuards(AuthGuard('jwt'), RequestAccessGuard)
   @ApiBearerAuth()
-  @ApiCreatedResponse()
-  declineRequest(@Param() params: RequestIdParamsDto, @GetUser() user: User) {
+  @ApiOkResponse({ type: Request })
+  declineRequest(
+    @Param() params: RequestIdParamsDto,
+    @GetUser() user: User,
+  ): Promise<Request> {
     return this.requestsService.declineRequest(params, user);
   }
 
@@ -99,8 +109,11 @@ export class RequestsController {
   @ApiTags('Requests')
   @UseGuards(AuthGuard('jwt'), RequestAccessGuard)
   @ApiBearerAuth()
-  @ApiCreatedResponse()
-  doneRequest(@Param() params: RequestIdParamsDto, @GetUser() user: User) {
+  @ApiOkResponse({ type: Request })
+  doneRequest(
+    @Param() params: RequestIdParamsDto,
+    @GetUser() user: User,
+  ): Promise<Request> {
     return this.requestsService.doneRequest(params, user);
   }
 
@@ -108,11 +121,11 @@ export class RequestsController {
   @ApiTags('Requests')
   @UseGuards(AuthGuard('jwt'), ModerationAdminGuard)
   @ApiBearerAuth()
-  @ApiCreatedResponse()
+  @ApiOkResponse({ type: Request })
   moderateRequest(
     @Param() params: RequestIdParamsDto,
     @Body() body: ModerateRequestBodyDto,
-  ) {
+  ): Promise<Request> {
     return this.requestsService.moderateRequest(params, body);
   }
 

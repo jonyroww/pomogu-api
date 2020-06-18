@@ -43,7 +43,7 @@ export class NotificationsController {
   @ApiBearerAuth()
   @ApiTags('Notifications')
   @ApiCreatedResponse({ type: Notification })
-  createUser(@Body() body: NotificationBodyDto) {
+  createUser(@Body() body: NotificationBodyDto): Promise<Notification> {
     return this.notificationsService.createNotification(body);
   }
 
@@ -51,7 +51,7 @@ export class NotificationsController {
   @UseGuards(AuthGuard('jwt'), UserWriteAccessGuard)
   @ApiBearerAuth()
   @ApiTags('Notifications')
-  @ApiOkResponse({ type: Notification })
+  @ApiOkResponse({ type: () => Notification })
   getUserNotifications(
     @Param() params: VolunteerIdDto,
     @Query() filters: GetNotificationsFiltersDto,
@@ -63,11 +63,11 @@ export class NotificationsController {
   @UseGuards(AuthGuard('jwt'), IsAdminGuard)
   @ApiBearerAuth()
   @ApiTags('Notifications')
-  @ApiOkResponse()
+  @ApiOkResponse({ type: Notification })
   updateNotification(
     @Param() params: NotificationIdDto,
     @Body() body: NotificationUpdateBodyDto,
-  ) {
+  ): Promise<Notification> {
     return this.notificationsService.updateNotification(body, params);
   }
 
@@ -75,11 +75,11 @@ export class NotificationsController {
   @UseGuards(AuthGuard('jwt'), UserWriteAccessGuard)
   @ApiBearerAuth()
   @ApiTags('Notifications')
-  @ApiOkResponse()
+  @ApiOkResponse({ type: Notification })
   setReadNotification(
     @Param() params: NotificationSetReadParamsDto,
     @GetUser() user: User,
-  ) {
+  ): Promise<Notification> {
     return this.notificationsService.setReadNotification(params, user);
   }
 }
