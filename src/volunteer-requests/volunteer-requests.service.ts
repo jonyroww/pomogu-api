@@ -18,7 +18,6 @@ import { ModerationStatus } from 'src/constants/ModerationStatus.enum';
 import { ModerationBodyDto } from './dto/moderate-body.dto';
 import { GetAllQueryDto } from './dto/get-all-query.dto';
 import { AuthService } from '../auth/auth.service';
-import _ from 'lodash';
 import { UpdateVolunteerRequestBodyDto } from './dto/update-volunteer-request-body.dto';
 import { setTypesFilters } from '../common/utils/types-filters.util';
 import { Paginated } from '../common/interfaces/paginated-entity.interface';
