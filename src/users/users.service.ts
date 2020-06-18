@@ -22,6 +22,7 @@ import { UpdateUserParamsDto } from './dto/update-phone-params.dto';
 import { MailerService } from '@nest-modules/mailer';
 import cryptoRandomString from 'crypto-random-string';
 import { Paginated } from '../common/interfaces/paginated-entity.interface';
+import { use } from 'passport';
 
 @Injectable()
 export class UsersService {
@@ -194,13 +195,11 @@ export class UsersService {
   async deleteUser(params: UserIdDto) {
     const user = await this.userRepository.findOne({
       id: params.id,
-      deleted_at: null,
     });
     if (!user) {
       throw makeError('USER_NOT_FOUND');
     } else {
-      user.deleted_at = new Date();
-      await this.userRepository.save(user);
+      await this.userRepository.softDelete({ id: user.id });
       return;
     }
   }

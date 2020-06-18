@@ -196,11 +196,10 @@ export class VolunteerRequestsService {
       id: params.id,
     });
 
-    if (!volunteerRequest || volunteerRequest.deleted_at) {
+    if (!volunteerRequest) {
       throw makeError('RECORD_NOT_FOUND');
     } else {
-      volunteerRequest.deleted_at = new Date();
-      await this.volunteerRequestRepository.save(volunteerRequest);
+      await this.volunteerRequestRepository.softDelete({ id: params.id });
       return;
     }
   }

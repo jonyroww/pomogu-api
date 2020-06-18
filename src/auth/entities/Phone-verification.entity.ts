@@ -78,6 +78,7 @@ export class PhoneVerification {
   @Column({ type: 'int' })
   user_id: number;
 
+  @ApiProperty({ type: () => User })
   @OneToOne(
     () => User,
     (user: User) => user.registration,

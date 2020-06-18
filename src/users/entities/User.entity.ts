@@ -34,21 +34,21 @@ export class User {
     nullable: false,
   })
   @Index()
-  @CreateDateColumn()
   @Column({
     nullable: false,
     type: 'timestamp with time zone',
   })
+  @CreateDateColumn()
   created_at: Date;
 
   @ApiPropertyOptional({ type: 'string', example: '2019-11-22T16:03:05Z' })
-  @UpdateDateColumn()
   @Column({ type: 'timestamp with time zone' })
+  @UpdateDateColumn()
   updated_at: Date;
 
   @ApiPropertyOptional({ type: 'string', example: '2019-11-22T16:03:05Z' })
-  @DeleteDateColumn()
   @Column({ type: 'timestamp with time zone' })
+  @DeleteDateColumn()
   deleted_at: Date;
 
   @ApiPropertyOptional({ type: 'string' })
@@ -131,7 +131,7 @@ export class User {
   @Column({ type: 'varchar' })
   role: string;
 
-  @ApiProperty()
+  @ApiProperty({ type: () => Request })
   @OneToMany(
     () => Request,
     (request: Request) => request.user_id,
@@ -151,7 +151,7 @@ export class User {
   )
   own_organisation: Organisation;
 
-  @ApiProperty()
+  @ApiProperty({ type: () => Notification })
   @OneToMany(
     () => Notification,
     (notification: Notification) => notification.user,

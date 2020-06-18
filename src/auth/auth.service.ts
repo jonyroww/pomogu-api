@@ -29,6 +29,8 @@ import { OrganisationPhoneNumberRepository } from '../organisations/repositories
 import { OrganisationWebsiteRepository } from '../organisations/repositories/OrganisationWebsite.repository';
 import { createWebsites } from '../common/utils/create-organisation-websites.util';
 import { createPhoneNumbers } from '../common/utils/create-organisation-phone-numbers.util';
+import { AccessToken } from 'src/common/interfaces/access-token.interface';
+import { PhoneVerificationKey } from './interfaces/phone-verification-key.interface';
 
 @Injectable()
 export class AuthService {
@@ -47,7 +49,7 @@ export class AuthService {
   @Transactional()
   async createPhoneVerification(
     body: PhoneVerificationRequestDto,
-  ): Promise<object> {
+  ): Promise<PhoneVerificationKey> {
     const phoneVerificationRequest = this.phoneVerificationRepository.create(
       body,
     );
@@ -169,7 +171,7 @@ export class AuthService {
     verification_id,
     verification_key,
     ...body
-  }: RegistrationBodyDto) {
+  }: RegistrationBodyDto): Promise<AccessToken> {
     const phoneVerification = await this.phoneVerificationRepository.findOne(
       verification_id,
     );
@@ -214,7 +216,7 @@ export class AuthService {
     citizen_type_ids,
     help_type_ids,
     ...body
-  }: OrganisationAdminRegistrationDto) {
+  }: OrganisationAdminRegistrationDto): Promise<AccessToken> {
     const phoneVerification = await this.phoneVerificationRepository.findOne(
       verification_id,
     );
@@ -273,7 +275,7 @@ export class AuthService {
     }
   }
 
-  async userLogin(user: User) {
+  async userLogin(user: User): Promise<AccessToken> {
     const payload: IJwtPayload = {
       sub: user.id,
       exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7,
@@ -330,7 +332,7 @@ export class AuthService {
     }
   }
 
-  async hashPassword(password) {
+  async hashPassword(password): Promise<string> {
     const salt = await bcrypt.genSalt();
     return await bcrypt.hash(password, salt);
   }

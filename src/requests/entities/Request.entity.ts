@@ -115,7 +115,7 @@ export class Request {
   })
   citezenTypes: CitezenTypes[];
 
-  @ApiProperty()
+  @ApiProperty({ type: () => User })
   @ManyToOne(
     () => User,
     (user: User) => user.requests,

@@ -27,16 +27,16 @@ export class Organisation {
   id: number;
 
   @ApiProperty({ type: 'string', example: '2019-11-22T16:03:05Z' })
-  @CreateDateColumn()
   @Column({
     nullable: false,
     type: 'timestamp with time zone',
   })
+  @CreateDateColumn()
   created_at: Date;
 
   @ApiProperty({ type: 'string', example: '2019-11-22T16:03:05Z' })
-  @UpdateDateColumn()
   @Column({ type: 'timestamp with time zone' })
+  @UpdateDateColumn()
   updated_at: Date;
 
   @ApiPropertyOptional({ example: 123456789 })
@@ -149,11 +149,11 @@ export class Organisation {
   owner_id: number;
 
   @ApiProperty({ type: 'string', example: '2019-11-22T16:03:05Z' })
-  @DeleteDateColumn()
   @Column({
     nullable: false,
     type: 'timestamp with time zone',
   })
+  @DeleteDateColumn()
   deleted_at: Date;
 
   @OneToOne(

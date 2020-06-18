@@ -22,11 +22,11 @@ export class Notification {
     example: '2019-11-22T16:03:05Z',
     nullable: false,
   })
-  @CreateDateColumn()
   @Column({
     nullable: false,
     type: 'timestamp with time zone',
   })
+  @CreateDateColumn()
   created_at: Date;
 
   @ApiProperty({ example: 'Заголовок' })

@@ -157,10 +157,9 @@ export class OrganisationsService {
 
   async deleteOrganisation(params: OrganisationIdDto) {
     const organisation = await this.organisationsRepository.findOne(params.id);
-    if (organisation && organisation.deleted_at === null) {
-      organisation.deleted_at = new Date();
-      await this.organisationsRepository.save(organisation);
-      return organisation;
+    if (organisation) {
+      await this.organisationsRepository.softDelete({ id: params.id });
+      return;
     } else {
       throw makeError('NO_SUCH_ORGANISATION');
     }

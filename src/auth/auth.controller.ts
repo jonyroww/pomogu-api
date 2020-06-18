@@ -31,6 +31,8 @@ import { GetUser } from '../common/decorators/get-user.decorator';
 import { User } from '../users/entities/User.entity';
 import { PasswordResetDto } from '../auth/dto/password-reset.dto';
 import { OrganisationAdminRegistrationDto } from './dto/organisation-admin-registration.dto';
+import { PhoneVerificationKey } from './interfaces/phone-verification-key.interface';
+import { AccessToken } from 'src/common/interfaces/access-token.interface';
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 @UseInterceptors(ClassSerializerInterceptor)
@@ -43,7 +45,7 @@ export class AuthController {
   @ApiCreatedResponse({ type: PhoneVerification })
   createPhoneVerification(
     @Body() body: PhoneVerificationRequestDto,
-  ): Promise<object> {
+  ): Promise<PhoneVerificationKey> {
     return this.authService.createPhoneVerification(body);
   }
 
@@ -70,14 +72,16 @@ export class AuthController {
   @Post('/registration')
   @ApiTags('Auth')
   @ApiCreatedResponse({ type: PhoneVerification })
-  registrationUser(@Body() body: RegistrationBodyDto) {
+  registrationUser(@Body() body: RegistrationBodyDto): Promise<AccessToken> {
     return this.authService.registrationUser(body);
   }
 
   @Post('/organisations/registration')
   @ApiTags('Auth')
   @ApiCreatedResponse({ type: PhoneVerification })
-  registrationOrganisation(@Body() body: OrganisationAdminRegistrationDto) {
+  registrationOrganisation(
+    @Body() body: OrganisationAdminRegistrationDto,
+  ): Promise<AccessToken> {
     return this.authService.registrationOrganisationAdmin(body);
   }
 
@@ -91,7 +95,7 @@ export class AuthController {
   }
 
   @ApiTags('Auth')
-  @ApiCreatedResponse()
+  @ApiOkResponse()
   @Put('/password-reset')
   passwordReset(@Body() body: PasswordResetDto) {
     return this.authService.passwordReset(body);
