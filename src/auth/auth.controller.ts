@@ -42,7 +42,7 @@ export class AuthController {
 
   @Post('/phone-verification')
   @ApiTags('Phone verification')
-  @ApiCreatedResponse({ type: PhoneVerification })
+  @ApiCreatedResponse({ type: () => PhoneVerification })
   createPhoneVerification(
     @Body() body: PhoneVerificationRequestDto,
   ): Promise<PhoneVerificationKey> {
@@ -51,7 +51,7 @@ export class AuthController {
 
   @Put('/phone-verification/:id')
   @ApiTags('Phone verification')
-  @ApiOkResponse({ type: PhoneVerification })
+  @ApiOkResponse({ type: () => PhoneVerification })
   verificationPhone(
     @Body() body: VerificationPhoneDto,
     @Param() params: ParamsValidationDto,
@@ -61,7 +61,7 @@ export class AuthController {
 
   @Put('/phone-verification/:id/resend')
   @ApiTags('Phone verification')
-  @ApiOkResponse({ type: PhoneVerification })
+  @ApiOkResponse({ type: () => PhoneVerification })
   verificationPhoneResend(
     @Body() body: VerificationResendDto,
     @Param() params: ParamsValidationDto,
@@ -71,14 +71,14 @@ export class AuthController {
 
   @Post('/registration')
   @ApiTags('Auth')
-  @ApiCreatedResponse({ type: PhoneVerification })
+  @ApiCreatedResponse({ type: () => PhoneVerification })
   registrationUser(@Body() body: RegistrationBodyDto): Promise<AccessToken> {
     return this.authService.registrationUser(body);
   }
 
   @Post('/organisations/registration')
   @ApiTags('Auth')
-  @ApiCreatedResponse({ type: PhoneVerification })
+  @ApiCreatedResponse({ type: () => PhoneVerification })
   registrationOrganisation(
     @Body() body: OrganisationAdminRegistrationDto,
   ): Promise<AccessToken> {
@@ -88,7 +88,7 @@ export class AuthController {
   @Post('/login')
   @ApiTags('Auth')
   @ApiOkResponse()
-  @ApiBody({ type: UserLoginDto })
+  @ApiBody({ type: () => UserLoginDto })
   @UseGuards(AuthGuard('local'))
   async userLogin(@GetUser() user: User) {
     return await this.authService.userLogin(user);

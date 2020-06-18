@@ -40,14 +40,14 @@ export class HelpTypesController {
   @ApiTags('HelpTypes')
   @UseGuards(AuthGuard('jwt'), IsAdminGuard)
   @ApiBearerAuth()
-  @ApiCreatedResponse({ type: HelpTypes })
+  @ApiCreatedResponse({ type: () => HelpTypes })
   @Post()
   createHelpType(@Body() body: HelpTypeBodyDto): Promise<HelpTypes> {
     return this.helpTypesService.createHelpType(body);
   }
 
   @ApiTags('HelpTypes')
-  @ApiOkResponse({ type: HelpTypes })
+  @ApiOkResponse({ type: () => HelpTypes })
   @Get('/:id')
   getOneHelpType(@Param() params: HelpTypeIdDto): Promise<HelpTypes> {
     return this.helpTypesService.getOneHelpType(params);
@@ -56,7 +56,7 @@ export class HelpTypesController {
   @ApiTags('HelpTypes')
   @UseGuards(AuthGuard('jwt'), IsAdminGuard)
   @ApiBearerAuth()
-  @ApiOkResponse({ type: HelpTypes })
+  @ApiOkResponse({ type: () => HelpTypes })
   @Put('/:id')
   updateHelpType(
     @Param() params: HelpTypeIdDto,

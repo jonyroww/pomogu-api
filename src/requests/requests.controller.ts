@@ -44,7 +44,7 @@ export class RequestsController {
 
   @Post('requests')
   @ApiTags('Requests')
-  @ApiCreatedResponse({ type: Request })
+  @ApiCreatedResponse({ type: () => Request })
   createRequest(@Body() body: BodyValidationDto): Promise<Request> {
     return this.requestsService.createRequest(body);
   }
@@ -64,7 +64,7 @@ export class RequestsController {
   @UseGuards(AuthGuard('jwt'), UserWriteAccessGuard)
   @ApiBearerAuth()
   @ApiTags('Requests')
-  @ApiOkResponse({ type: Request })
+  @ApiOkResponse({ type: () => Request })
   getOneRequest(@Param() params: RequestIdParamsDto): Promise<Request> {
     return this.requestsService.getOneRequest(params);
   }
@@ -85,7 +85,7 @@ export class RequestsController {
   @ApiTags('Requests')
   @UseGuards(AuthGuard('jwt'), RequestAccessGuard)
   @ApiBearerAuth()
-  @ApiOkResponse({ type: Request })
+  @ApiOkResponse({ type: () => Request })
   acceptRequest(
     @Param() params: AcceptRequestParamsDto,
     @GetUser() user: User,
@@ -97,7 +97,7 @@ export class RequestsController {
   @ApiTags('Requests')
   @UseGuards(AuthGuard('jwt'), RequestAccessGuard)
   @ApiBearerAuth()
-  @ApiOkResponse({ type: Request })
+  @ApiOkResponse({ type: () => Request })
   declineRequest(
     @Param() params: RequestIdParamsDto,
     @GetUser() user: User,
@@ -109,7 +109,7 @@ export class RequestsController {
   @ApiTags('Requests')
   @UseGuards(AuthGuard('jwt'), RequestAccessGuard)
   @ApiBearerAuth()
-  @ApiOkResponse({ type: Request })
+  @ApiOkResponse({ type: () => Request })
   doneRequest(
     @Param() params: RequestIdParamsDto,
     @GetUser() user: User,
@@ -121,7 +121,7 @@ export class RequestsController {
   @ApiTags('Requests')
   @UseGuards(AuthGuard('jwt'), ModerationAdminGuard)
   @ApiBearerAuth()
-  @ApiOkResponse({ type: Request })
+  @ApiOkResponse({ type: () => Request })
   moderateRequest(
     @Param() params: RequestIdParamsDto,
     @Body() body: ModerateRequestBodyDto,

@@ -47,7 +47,7 @@ export class CitezenTypesController {
   }
 
   @ApiTags('CitezenTypes')
-  @ApiOkResponse({ type: CitezenTypes })
+  @ApiOkResponse({ type: () => CitezenTypes })
   @Get('/:id')
   getOneCitezenType(@Param() params: CitezenTypeIdDto): Promise<CitezenTypes> {
     return this.citezenTypesService.getOneCitezenType(params);
@@ -56,7 +56,7 @@ export class CitezenTypesController {
   @ApiTags('CitezenTypes')
   @UseGuards(AuthGuard('jwt'), IsAdminGuard)
   @ApiBearerAuth()
-  @ApiOkResponse({ type: CitezenTypes })
+  @ApiOkResponse({ type: () => CitezenTypes })
   @Put('/:id')
   updateCitezenType(
     @Param() params: CitezenTypeIdDto,

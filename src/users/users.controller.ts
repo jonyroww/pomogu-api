@@ -48,14 +48,14 @@ export class UsersController {
   }
 
   @ApiTags('Users')
-  @ApiOkResponse({ type: User })
+  @ApiOkResponse({ type: () => User })
   @Get('/:id')
   findOne(@Param() params: UserIdDto): Promise<User> {
     return this.usersService.findOne(params);
   }
 
   @ApiTags('Users')
-  @ApiCreatedResponse({ type: User })
+  @ApiCreatedResponse({ type: () => User })
   @UseGuards(AuthGuard('jwt'), IsAdminGuard)
   @ApiBearerAuth()
   @Post()
@@ -64,7 +64,7 @@ export class UsersController {
   }
 
   @ApiTags('Users')
-  @ApiOkResponse({ type: User })
+  @ApiOkResponse({ type: () => User })
   @Put('/:id')
   updateUser(
     @Param() params: UserIdDto,
@@ -96,7 +96,7 @@ export class UsersController {
   }
 
   @ApiTags('Users')
-  @ApiOkResponse({ type: User })
+  @ApiOkResponse({ type: () => User })
   @UseGuards(AuthGuard('jwt'), ModerationAdminGuard)
   @ApiBearerAuth()
   @Put('/:id/moderate')

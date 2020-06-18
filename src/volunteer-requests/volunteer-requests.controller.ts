@@ -39,7 +39,7 @@ import { Paginated } from '../common/interfaces/paginated-entity.interface';
 export class VolunteerRequestsController {
   constructor(private volunteerRequestService: VolunteerRequestsService) {}
   @ApiTags('Volunteer Requests')
-  @ApiCreatedResponse({ type: VolunteerRequest })
+  @ApiCreatedResponse({ type: () => VolunteerRequest })
   @Post()
   createVolunteerRequest(
     @Body() body: VolunteerRequestBodyDto,
@@ -48,7 +48,7 @@ export class VolunteerRequestsController {
   }
 
   @ApiTags('Volunteer Requests')
-  @ApiCreatedResponse({ type: VolunteerRequest })
+  @ApiCreatedResponse({ type: () => VolunteerRequest })
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
   @Post('/auth')
@@ -71,7 +71,7 @@ export class VolunteerRequestsController {
   }
 
   @ApiTags('Volunteer Requests')
-  @ApiOkResponse({ type: VolunteerRequest })
+  @ApiOkResponse({ type: () => VolunteerRequest })
   @UseGuards(AuthGuard('jwt'), ModerationAdminGuard)
   @ApiBearerAuth()
   @Get('/:id')
@@ -82,7 +82,7 @@ export class VolunteerRequestsController {
   }
 
   @ApiTags('Volunteer Requests')
-  @ApiOkResponse({ type: VolunteerRequest })
+  @ApiOkResponse({ type: () => VolunteerRequest })
   @UseGuards(AuthGuard('jwt'), ModerationAdminGuard)
   @ApiBearerAuth()
   @Put('/:id/moderate')
@@ -94,7 +94,7 @@ export class VolunteerRequestsController {
   }
 
   @ApiTags('Volunteer Requests')
-  @ApiOkResponse({ type: VolunteerRequest })
+  @ApiOkResponse({ type: () => VolunteerRequest })
   @UseGuards(AuthGuard('jwt'), ModerationAdminGuard)
   @ApiBearerAuth()
   @Put('/:id')

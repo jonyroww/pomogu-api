@@ -43,7 +43,7 @@ export class OrganisationsController {
   }
 
   @ApiTags('Organisations')
-  @ApiCreatedResponse({ type: Organisation })
+  @ApiCreatedResponse({ type: () => Organisation })
   @Post()
   @UseGuards(AuthGuard('jwt'), IsAdminGuard)
   @ApiBearerAuth()
@@ -52,7 +52,7 @@ export class OrganisationsController {
   }
 
   @ApiTags('Organisations')
-  @ApiOkResponse({ type: Organisation })
+  @ApiOkResponse({ type: () => Organisation })
   @Get('/:id')
   findOne(@Param() params: OrganisationIdDto): Promise<Organisation> {
     return this.organisationsService.findOne(params);
