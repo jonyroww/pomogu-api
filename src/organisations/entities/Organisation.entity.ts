@@ -7,6 +7,9 @@ import {
   OneToOne,
   JoinColumn,
   PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
 } from 'typeorm';
 import { HelpTypes } from '../../help-types/entities/help-types.entity';
 import { CitezenTypes } from '../../citezen-types/entities/citezen-types.entity';
@@ -24,6 +27,7 @@ export class Organisation {
   id: number;
 
   @ApiProperty({ type: 'string', example: '2019-11-22T16:03:05Z' })
+  @CreateDateColumn()
   @Column({
     nullable: false,
     type: 'timestamp with time zone',
@@ -31,6 +35,7 @@ export class Organisation {
   created_at: Date;
 
   @ApiProperty({ type: 'string', example: '2019-11-22T16:03:05Z' })
+  @UpdateDateColumn()
   @Column({ type: 'timestamp with time zone' })
   updated_at: Date;
 
@@ -144,6 +149,7 @@ export class Organisation {
   owner_id: number;
 
   @ApiProperty({ type: 'string', example: '2019-11-22T16:03:05Z' })
+  @DeleteDateColumn()
   @Column({
     nullable: false,
     type: 'timestamp with time zone',

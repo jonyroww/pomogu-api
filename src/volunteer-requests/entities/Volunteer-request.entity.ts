@@ -4,6 +4,9 @@ import {
   ManyToMany,
   JoinTable,
   PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
 } from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Organisation } from '../../organisations/entities/Organisation.entity';
@@ -24,6 +27,7 @@ export class VolunteerRequest {
     example: '2019-11-22T16:03:05Z',
     nullable: false,
   })
+  @CreateDateColumn()
   @Column({
     nullable: false,
     type: 'timestamp with time zone',
@@ -31,10 +35,12 @@ export class VolunteerRequest {
   created_at: Date;
 
   @ApiPropertyOptional({ type: 'string', example: '2019-11-22T16:03:05Z' })
+  @UpdateDateColumn()
   @Column({ type: 'timestamp with time zone' })
   updated_at: Date;
 
   @ApiPropertyOptional({ type: 'string', example: '2019-11-22T16:03:05Z' })
+  @DeleteDateColumn()
   @Column({ type: 'timestamp with time zone' })
   deleted_at: Date;
 

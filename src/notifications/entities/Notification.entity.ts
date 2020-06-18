@@ -4,6 +4,7 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  CreateDateColumn,
 } from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { User } from './../../users/entities/User.entity';
@@ -21,6 +22,7 @@ export class Notification {
     example: '2019-11-22T16:03:05Z',
     nullable: false,
   })
+  @CreateDateColumn()
   @Column({
     nullable: false,
     type: 'timestamp with time zone',

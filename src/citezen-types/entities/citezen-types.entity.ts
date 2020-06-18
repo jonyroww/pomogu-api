@@ -4,6 +4,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   PrimaryGeneratedColumn,
+  DeleteDateColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -29,6 +30,7 @@ export class CitezenTypes {
   updated_at: Date;
 
   @ApiProperty({ type: 'string', example: '2019-11-22T16:03:05Z' })
+  @DeleteDateColumn()
   @Column({ type: 'timestamp with time zone' })
   deleted_at: Date;
 

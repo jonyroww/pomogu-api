@@ -7,6 +7,9 @@ import {
   Index,
   OneToOne,
   PrimaryGeneratedColumn,
+  DeleteDateColumn,
+  UpdateDateColumn,
+  CreateDateColumn,
 } from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { PhoneVerification } from './../../auth/entities/Phone-verification.entity';
@@ -31,6 +34,7 @@ export class User {
     nullable: false,
   })
   @Index()
+  @CreateDateColumn()
   @Column({
     nullable: false,
     type: 'timestamp with time zone',
@@ -38,10 +42,12 @@ export class User {
   created_at: Date;
 
   @ApiPropertyOptional({ type: 'string', example: '2019-11-22T16:03:05Z' })
+  @UpdateDateColumn()
   @Column({ type: 'timestamp with time zone' })
   updated_at: Date;
 
   @ApiPropertyOptional({ type: 'string', example: '2019-11-22T16:03:05Z' })
+  @DeleteDateColumn()
   @Column({ type: 'timestamp with time zone' })
   deleted_at: Date;
 
