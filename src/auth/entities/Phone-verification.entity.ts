@@ -25,16 +25,14 @@ export class PhoneVerification {
     example: '2019-11-22T16:03:05Z',
     nullable: false,
   })
-  @CreateDateColumn()
-  @Column({
+  @CreateDateColumn({
     nullable: false,
     type: 'timestamp with time zone',
   })
   created_at: Date;
 
   @ApiPropertyOptional({ type: 'string', example: '2019-11-22T16:03:05Z' })
-  @UpdateDateColumn()
-  @Column({ type: 'timestamp with time zone' })
+  @UpdateDateColumn({ type: 'timestamp with time zone' })
   updated_at: Date;
 
   @ApiProperty({ type: 'string', nullable: false })

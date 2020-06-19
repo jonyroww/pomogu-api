@@ -29,21 +29,18 @@ export class Request {
     example: '2019-11-22T16:03:05Z',
     nullable: false,
   })
-  @CreateDateColumn()
-  @Column({
+  @CreateDateColumn({
     nullable: false,
     type: 'timestamp with time zone',
   })
   created_at: Date;
 
   @ApiPropertyOptional({ type: 'string', example: '2019-11-22T16:03:05Z' })
-  @UpdateDateColumn()
-  @Column({ type: 'timestamp with time zone', nullable: false })
+  @UpdateDateColumn({ type: 'timestamp with time zone', nullable: false })
   updated_at: Date;
 
   @ApiPropertyOptional({ type: 'string', example: '2019-11-22T16:03:05Z' })
-  @DeleteDateColumn()
-  @Column({ type: 'timestamp with time zone' })
+  @DeleteDateColumn({ type: 'timestamp with time zone' })
   deleted_at: Date;
 
   @ApiPropertyOptional({ type: 'string' })

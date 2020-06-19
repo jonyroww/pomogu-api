@@ -27,21 +27,18 @@ export class VolunteerRequest {
     example: '2019-11-22T16:03:05Z',
     nullable: false,
   })
-  @Column({
+  @CreateDateColumn({
     nullable: false,
     type: 'timestamp with time zone',
   })
-  @CreateDateColumn()
   created_at: Date;
 
   @ApiPropertyOptional({ type: 'string', example: '2019-11-22T16:03:05Z' })
-  @Column({ type: 'timestamp with time zone' })
-  @UpdateDateColumn()
+  @UpdateDateColumn({ type: 'timestamp with time zone' })
   updated_at: Date;
 
   @ApiPropertyOptional({ type: 'string', example: '2019-11-22T16:03:05Z' })
-  @Column({ type: 'timestamp with time zone' })
-  @DeleteDateColumn()
+  @DeleteDateColumn({ type: 'timestamp with time zone' })
   deleted_at: Date;
 
   @ApiPropertyOptional({ type: 'string' })
