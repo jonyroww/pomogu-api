@@ -105,7 +105,7 @@ export class AuthController {
   @ApiTags('Auth')
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
-  @ApiOkResponse({ type: User })
+  @ApiOkResponse({ type: () => User })
   async me(@GetUser() user: User) {
     return user;
   }
