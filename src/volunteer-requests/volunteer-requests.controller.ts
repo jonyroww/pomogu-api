@@ -60,7 +60,7 @@ export class VolunteerRequestsController {
   }
 
   @ApiTags('Volunteer Requests')
-  @ApiOkResponse({ type: () => VolunteerRequest })
+  @ApiOkResponse()
   @UseGuards(AuthGuard('jwt'), ModerationAdminGuard)
   @ApiBearerAuth()
   @Get()

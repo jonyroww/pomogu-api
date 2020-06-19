@@ -41,7 +41,7 @@ import { Paginated } from '../common/interfaces/paginated-entity.interface';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
   @ApiTags('Users')
-  @ApiOkResponse({ type: () => User })
+  @ApiOkResponse()
   @Get()
   findAll(@Query() query: GetAllQueryDto): Promise<Paginated<User>> {
     return this.usersService.findAll(query);

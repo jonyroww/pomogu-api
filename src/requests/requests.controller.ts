@@ -53,7 +53,7 @@ export class RequestsController {
   @UseGuards(AuthGuard('jwt'), RequestsReadAccessGuard)
   @ApiBearerAuth()
   @ApiTags('Requests')
-  @ApiOkResponse({ type: () => Request })
+  @ApiOkResponse()
   getAllRequests(
     @Query() query: GetAllQueryFilterDto,
   ): Promise<Paginated<Request>> {

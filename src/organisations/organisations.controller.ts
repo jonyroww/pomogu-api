@@ -36,7 +36,7 @@ import { OrganisationWriteAccessGuard } from '../common/guards/organisation-writ
 export class OrganisationsController {
   constructor(private readonly organisationsService: OrganisationsService) {}
   @ApiTags('Organisations')
-  @ApiOkResponse({ type: () => FindAllResponseDto })
+  @ApiOkResponse()
   @Get()
   findAll(@Query() params: QueryFilterDto): Promise<FindAllResponseDto> {
     return this.organisationsService.findAll(params);
