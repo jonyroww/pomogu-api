@@ -31,7 +31,7 @@ import { IsAdminGuard } from '../common/guards/is-admin.guard';
 export class CitezenTypesController {
   constructor(private readonly citezenTypesService: CitezenTypesService) {}
   @ApiTags('CitezenTypes')
-  @ApiOkResponse({ type: () => CitezenTypes })
+  @ApiOkResponse({ type: () => [CitezenTypes] })
   @Get()
   findAll(): Promise<CitezenTypes[]> {
     return this.citezenTypesService.findAll();

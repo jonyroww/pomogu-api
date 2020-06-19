@@ -31,7 +31,7 @@ import { HelpTypeIdDto } from './dto/help-type-id.dto';
 export class HelpTypesController {
   constructor(private readonly helpTypesService: HelpTypesService) {}
   @ApiTags('HelpTypes')
-  @ApiOkResponse({ type: () => HelpTypes })
+  @ApiOkResponse({ type: () => [HelpTypes] })
   @Get()
   findAll(): Promise<HelpTypes[]> {
     return this.helpTypesService.findAll();
