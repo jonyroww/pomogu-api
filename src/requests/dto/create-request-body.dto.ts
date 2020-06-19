@@ -33,7 +33,6 @@ export class BodyValidationDto {
   @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsString()
-  @IsEmail()
   email: string;
 
   @ApiProperty({ type: 'string' })
