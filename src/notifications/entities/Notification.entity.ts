@@ -1,14 +1,19 @@
-import { Entity, PrimaryColumn, Column, JoinColumn, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  Column,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+} from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { User } from './../../users/entities/User.entity';
 
 @Entity({ name: 'notifications' })
 export class Notification {
   @ApiProperty()
-  @PrimaryColumn({
+  @PrimaryGeneratedColumn({
     type: 'int',
-    generated: true,
-    readonly: true,
   })
   id: number;
 
@@ -17,7 +22,7 @@ export class Notification {
     example: '2019-11-22T16:03:05Z',
     nullable: false,
   })
-  @Column({
+  @CreateDateColumn({
     nullable: false,
     type: 'timestamp with time zone',
   })

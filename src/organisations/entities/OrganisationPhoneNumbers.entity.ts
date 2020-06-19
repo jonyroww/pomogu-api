@@ -1,14 +1,18 @@
-import { Entity, PrimaryColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  ManyToOne,
+  JoinColumn,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Organisation } from './Organisation.entity';
 
 @Entity({ name: 'organisation_phone_numbers' })
 export class OrganisationPhoneNumber {
   @ApiProperty()
-  @PrimaryColumn({
+  @PrimaryGeneratedColumn({
     type: 'int',
-    generated: true,
-    readonly: true,
   })
   id: number;
 

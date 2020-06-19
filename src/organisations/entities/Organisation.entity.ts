@@ -1,12 +1,15 @@
 import {
   Entity,
-  PrimaryColumn,
   Column,
   OneToMany,
   ManyToMany,
   JoinTable,
   OneToOne,
   JoinColumn,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
 } from 'typeorm';
 import { HelpTypes } from '../../help-types/entities/help-types.entity';
 import { CitezenTypes } from '../../citezen-types/entities/citezen-types.entity';
@@ -18,22 +21,20 @@ import { User } from '../../users/entities/User.entity';
 @Entity({ name: 'organisations' })
 export class Organisation {
   @ApiProperty()
-  @PrimaryColumn({
+  @PrimaryGeneratedColumn({
     type: 'int',
-    generated: true,
-    readonly: true,
   })
   id: number;
 
   @ApiProperty({ type: 'string', example: '2019-11-22T16:03:05Z' })
-  @Column({
+  @CreateDateColumn({
     nullable: false,
     type: 'timestamp with time zone',
   })
   created_at: Date;
 
   @ApiProperty({ type: 'string', example: '2019-11-22T16:03:05Z' })
-  @Column({ type: 'timestamp with time zone' })
+  @UpdateDateColumn({ type: 'timestamp with time zone' })
   updated_at: Date;
 
   @ApiPropertyOptional({ example: 123456789 })
@@ -146,7 +147,7 @@ export class Organisation {
   owner_id: number;
 
   @ApiProperty({ type: 'string', example: '2019-11-22T16:03:05Z' })
-  @Column({
+  @DeleteDateColumn({
     nullable: false,
     type: 'timestamp with time zone',
   })

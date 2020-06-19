@@ -18,9 +18,9 @@ import { ModerationStatus } from 'src/constants/ModerationStatus.enum';
 import { ModerationBodyDto } from './dto/moderate-body.dto';
 import { GetAllQueryDto } from './dto/get-all-query.dto';
 import { AuthService } from '../auth/auth.service';
-import _ from 'lodash';
 import { UpdateVolunteerRequestBodyDto } from './dto/update-volunteer-request-body.dto';
 import { setTypesFilters } from '../common/utils/types-filters.util';
+import { Paginated } from '../common/interfaces/paginated-entity.interface';
 
 @Injectable()
 export class VolunteerRequestsService {
@@ -41,7 +41,7 @@ export class VolunteerRequestsService {
     citizen_type_ids,
     organisation_ids,
     ...body
-  }: VolunteerRequestBodyDto) {
+  }: VolunteerRequestBodyDto): Promise<VolunteerRequest> {
     const phoneVerification = await this.phoneVerificationRepository.findOne(
       body.verification_id,
     );
@@ -76,7 +76,7 @@ export class VolunteerRequestsService {
   async createVolunteerRequestAuth(
     body: VolunteerRequestAuthBodyDto,
     user: User,
-  ) {
+  ): Promise<VolunteerRequest> {
     const helpTypes = await this.helpTypesRepository.findByIds(
       body.help_type_ids,
     );
@@ -99,7 +99,7 @@ export class VolunteerRequestsService {
   async moderateRequest(
     params: VolunteerRequestIdDto,
     body: ModerationBodyDto,
-  ) {
+  ): Promise<VolunteerRequest> {
     const volunteerRequest = await this.volunteerRequestRepository.findOne({
       id: params.id,
     });
@@ -112,7 +112,9 @@ export class VolunteerRequestsService {
     }
   }
 
-  async getAllVolunteerRequests(query: GetAllQueryDto) {
+  async getAllVolunteerRequests(
+    query: GetAllQueryDto,
+  ): Promise<Paginated<VolunteerRequest>> {
     const qb = this.volunteerRequestRepository.createQueryBuilder(
       'volunteer_requests',
     );
@@ -134,7 +136,9 @@ export class VolunteerRequestsService {
     return { total: total, data: volunteerRequests };
   }
 
-  async getOneRequest(params: VolunteerRequestIdDto) {
+  async getOneRequest(
+    params: VolunteerRequestIdDto,
+  ): Promise<VolunteerRequest> {
     const volunteerRequest = await this.volunteerRequestRepository.findOne({
       id: params.id,
     });
@@ -191,12 +195,11 @@ export class VolunteerRequestsService {
       id: params.id,
     });
 
-    if (!volunteerRequest || volunteerRequest.deleted_at) {
+    if (!volunteerRequest) {
       throw makeError('RECORD_NOT_FOUND');
     } else {
-      volunteerRequest.deleted_at = new Date();
-      await this.volunteerRequestRepository.save(volunteerRequest);
-      return volunteerRequest;
+      await this.volunteerRequestRepository.softDelete({ id: params.id });
+      return;
     }
   }
 

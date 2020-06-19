@@ -1,4 +1,13 @@
-import { Entity, PrimaryColumn, Column, ManyToMany, JoinTable } from 'typeorm';
+import {
+  Entity,
+  Column,
+  ManyToMany,
+  JoinTable,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+} from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Organisation } from '../../organisations/entities/Organisation.entity';
 import { HelpTypes } from '../../help-types/entities/help-types.entity';
@@ -8,10 +17,8 @@ import { ModerationStatus } from '../../constants/ModerationStatus.enum';
 @Entity({ name: 'volunteer_requests' })
 export class VolunteerRequest {
   @ApiProperty()
-  @PrimaryColumn({
+  @PrimaryGeneratedColumn({
     type: 'int',
-    generated: true,
-    readonly: true,
   })
   id: number;
 
@@ -20,18 +27,18 @@ export class VolunteerRequest {
     example: '2019-11-22T16:03:05Z',
     nullable: false,
   })
-  @Column({
+  @CreateDateColumn({
     nullable: false,
     type: 'timestamp with time zone',
   })
   created_at: Date;
 
   @ApiPropertyOptional({ type: 'string', example: '2019-11-22T16:03:05Z' })
-  @Column({ type: 'timestamp with time zone' })
+  @UpdateDateColumn({ type: 'timestamp with time zone' })
   updated_at: Date;
 
   @ApiPropertyOptional({ type: 'string', example: '2019-11-22T16:03:05Z' })
-  @Column({ type: 'timestamp with time zone' })
+  @DeleteDateColumn({ type: 'timestamp with time zone' })
   deleted_at: Date;
 
   @ApiPropertyOptional({ type: 'string' })

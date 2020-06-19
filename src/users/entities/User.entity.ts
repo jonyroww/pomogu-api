@@ -1,12 +1,15 @@
 import {
   Entity,
-  PrimaryColumn,
   Column,
   OneToMany,
   ManyToMany,
   JoinTable,
   Index,
   OneToOne,
+  PrimaryGeneratedColumn,
+  DeleteDateColumn,
+  UpdateDateColumn,
+  CreateDateColumn,
 } from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { PhoneVerification } from './../../auth/entities/Phone-verification.entity';
@@ -20,10 +23,8 @@ import { ModerationStatus } from '../../constants/ModerationStatus.enum';
 @Entity({ name: 'users' })
 export class User {
   @ApiProperty()
-  @PrimaryColumn({
+  @PrimaryGeneratedColumn({
     type: 'int',
-    generated: true,
-    readonly: true,
   })
   id: number;
 
@@ -33,18 +34,18 @@ export class User {
     nullable: false,
   })
   @Index()
-  @Column({
+  @CreateDateColumn({
     nullable: false,
     type: 'timestamp with time zone',
   })
   created_at: Date;
 
   @ApiPropertyOptional({ type: 'string', example: '2019-11-22T16:03:05Z' })
-  @Column({ type: 'timestamp with time zone' })
+  @UpdateDateColumn({ type: 'timestamp with time zone' })
   updated_at: Date;
 
   @ApiPropertyOptional({ type: 'string', example: '2019-11-22T16:03:05Z' })
-  @Column({ type: 'timestamp with time zone' })
+  @DeleteDateColumn({ type: 'timestamp with time zone' })
   deleted_at: Date;
 
   @ApiPropertyOptional({ type: 'string' })
@@ -127,7 +128,7 @@ export class User {
   @Column({ type: 'varchar' })
   role: string;
 
-  @ApiProperty()
+  @ApiProperty({ type: () => Request })
   @OneToMany(
     () => Request,
     (request: Request) => request.user_id,
@@ -147,7 +148,7 @@ export class User {
   )
   own_organisation: Organisation;
 
-  @ApiProperty()
+  @ApiProperty({ type: () => Notification })
   @OneToMany(
     () => Notification,
     (notification: Notification) => notification.user,

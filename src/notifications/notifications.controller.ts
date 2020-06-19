@@ -9,6 +9,8 @@ import {
   Param,
   Put,
   Query,
+  ClassSerializerInterceptor,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -31,6 +33,7 @@ import { User } from 'src/users/entities/User.entity';
 import { UserWriteAccessGuard } from 'src/common/guards/user-write-access-guard';
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller()
 export class NotificationsController {
   constructor(private readonly notificationsService: NotificationsService) {}
@@ -39,8 +42,8 @@ export class NotificationsController {
   @UseGuards(AuthGuard('jwt'), IsAdminGuard)
   @ApiBearerAuth()
   @ApiTags('Notifications')
-  @ApiCreatedResponse({ type: Notification })
-  createUser(@Body() body: NotificationBodyDto) {
+  @ApiCreatedResponse({ type: () => Notification })
+  createUser(@Body() body: NotificationBodyDto): Promise<Notification> {
     return this.notificationsService.createNotification(body);
   }
 
@@ -48,7 +51,7 @@ export class NotificationsController {
   @UseGuards(AuthGuard('jwt'), UserWriteAccessGuard)
   @ApiBearerAuth()
   @ApiTags('Notifications')
-  @ApiOkResponse({ type: Notification })
+  @ApiOkResponse({ type: () => Notification })
   getUserNotifications(
     @Param() params: VolunteerIdDto,
     @Query() filters: GetNotificationsFiltersDto,
@@ -60,11 +63,11 @@ export class NotificationsController {
   @UseGuards(AuthGuard('jwt'), IsAdminGuard)
   @ApiBearerAuth()
   @ApiTags('Notifications')
-  @ApiOkResponse()
+  @ApiOkResponse({ type: () => Notification })
   updateNotification(
     @Param() params: NotificationIdDto,
     @Body() body: NotificationUpdateBodyDto,
-  ) {
+  ): Promise<Notification> {
     return this.notificationsService.updateNotification(body, params);
   }
 
@@ -72,11 +75,11 @@ export class NotificationsController {
   @UseGuards(AuthGuard('jwt'), UserWriteAccessGuard)
   @ApiBearerAuth()
   @ApiTags('Notifications')
-  @ApiOkResponse()
+  @ApiOkResponse({ type: () => Notification })
   setReadNotification(
     @Param() params: NotificationSetReadParamsDto,
     @GetUser() user: User,
-  ) {
+  ): Promise<Notification> {
     return this.notificationsService.setReadNotification(params, user);
   }
 }

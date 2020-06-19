@@ -58,7 +58,7 @@ export class OrganisationsService {
     help_type_ids,
     citizen_type_ids,
     ...body
-  }: OrganisationBodyDto) {
+  }: OrganisationBodyDto): Promise<Organisation> {
     const organisation = this.organisationsRepository.create(body);
     const helpTypes = await this.helpTypesRepository.findByIds(help_type_ids);
     const citezenTypes = await this.citezenTypesRepository.findByIds(
@@ -78,7 +78,7 @@ export class OrganisationsService {
     return organisation;
   }
 
-  async findOne(params: OrganisationIdDto) {
+  async findOne(params: OrganisationIdDto): Promise<Organisation> {
     const organisation = await this.organisationsRepository.findOne(params.id);
     if (organisation && organisation.deleted_at === null) {
       return organisation;
@@ -157,10 +157,9 @@ export class OrganisationsService {
 
   async deleteOrganisation(params: OrganisationIdDto) {
     const organisation = await this.organisationsRepository.findOne(params.id);
-    if (organisation && organisation.deleted_at === null) {
-      organisation.deleted_at = new Date();
-      await this.organisationsRepository.save(organisation);
-      return organisation;
+    if (organisation) {
+      await this.organisationsRepository.softDelete({ id: params.id });
+      return;
     } else {
       throw makeError('NO_SUCH_ORGANISATION');
     }

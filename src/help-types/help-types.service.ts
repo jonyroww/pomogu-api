@@ -21,13 +21,13 @@ export class HelpTypesService {
     return helpTypes;
   }
 
-  async createHelpType(body: HelpTypeBodyDto) {
+  async createHelpType(body: HelpTypeBodyDto): Promise<HelpTypes> {
     const helpType = this.helpTypesRepository.create(body);
     await this.helpTypesRepository.save(helpType);
     return helpType;
   }
 
-  async getOneHelpType(params: HelpTypeIdDto) {
+  async getOneHelpType(params: HelpTypeIdDto): Promise<HelpTypes> {
     const helpType = await this.helpTypesRepository.findOne({ id: params.id });
     if (helpType.deleted_at === null) {
       return helpType;
@@ -36,7 +36,10 @@ export class HelpTypesService {
     }
   }
 
-  async updateHelpType(params: HelpTypeIdDto, body: HelpTypeBodyDto) {
+  async updateHelpType(
+    params: HelpTypeIdDto,
+    body: HelpTypeBodyDto,
+  ): Promise<HelpTypes> {
     const helpType = await this.helpTypesRepository.findOne({ id: params.id });
     if (helpType.deleted_at === null) {
       helpType.title = body.title;

@@ -10,6 +10,8 @@ import {
   Get,
   Query,
   Delete,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { VolunteerRequestsService } from './volunteer-requests.service';
@@ -29,36 +31,42 @@ import { ModerationBodyDto } from './dto/moderate-body.dto';
 import { GetAllQueryDto } from './dto/get-all-query.dto';
 import { ModerationAdminGuard } from '../common/guards/moderation-admin.guard';
 import { UpdateVolunteerRequestBodyDto } from './dto/update-volunteer-request-body.dto';
+import { Paginated } from '../common/interfaces/paginated-entity.interface';
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('volunteer-requests')
 export class VolunteerRequestsController {
   constructor(private volunteerRequestService: VolunteerRequestsService) {}
   @ApiTags('Volunteer Requests')
-  @ApiCreatedResponse({ type: VolunteerRequest })
+  @ApiCreatedResponse({ type: () => VolunteerRequest })
   @Post()
-  createVolunteerRequest(@Body() body: VolunteerRequestBodyDto) {
+  createVolunteerRequest(
+    @Body() body: VolunteerRequestBodyDto,
+  ): Promise<VolunteerRequest> {
     return this.volunteerRequestService.createVolunteerRequest(body);
   }
 
   @ApiTags('Volunteer Requests')
-  @ApiCreatedResponse({ type: VolunteerRequest })
+  @ApiCreatedResponse({ type: () => VolunteerRequest })
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
   @Post('/auth')
   createVolunteerRequestAuth(
     @Body() body: VolunteerRequestAuthBodyDto,
     @GetUser() user: User,
-  ) {
+  ): Promise<VolunteerRequest> {
     return this.volunteerRequestService.createVolunteerRequestAuth(body, user);
   }
 
   @ApiTags('Volunteer Requests')
-  @ApiOkResponse({ type: () => VolunteerRequest })
+  @ApiOkResponse()
   @UseGuards(AuthGuard('jwt'), ModerationAdminGuard)
   @ApiBearerAuth()
   @Get()
-  getAllVolunteerRequests(@Query() query: GetAllQueryDto) {
+  getAllVolunteerRequests(
+    @Query() query: GetAllQueryDto,
+  ): Promise<Paginated<VolunteerRequest>> {
     return this.volunteerRequestService.getAllVolunteerRequests(query);
   }
 
@@ -67,19 +75,21 @@ export class VolunteerRequestsController {
   @UseGuards(AuthGuard('jwt'), ModerationAdminGuard)
   @ApiBearerAuth()
   @Get('/:id')
-  getOneVolunteerRequest(@Param() params: VolunteerRequestIdDto) {
+  getOneVolunteerRequest(
+    @Param() params: VolunteerRequestIdDto,
+  ): Promise<VolunteerRequest> {
     return this.volunteerRequestService.getOneRequest(params);
   }
 
   @ApiTags('Volunteer Requests')
-  @ApiCreatedResponse()
+  @ApiOkResponse({ type: () => VolunteerRequest })
   @UseGuards(AuthGuard('jwt'), ModerationAdminGuard)
   @ApiBearerAuth()
   @Put('/:id/moderate')
   moderateVolunteerRequest(
     @Param() params: VolunteerRequestIdDto,
     @Body() body: ModerationBodyDto,
-  ) {
+  ): Promise<VolunteerRequest> {
     return this.volunteerRequestService.moderateRequest(params, body);
   }
 

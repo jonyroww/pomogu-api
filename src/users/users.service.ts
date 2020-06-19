@@ -21,6 +21,8 @@ import { RoleName } from '../constants/RoleName.enum';
 import { UpdateUserParamsDto } from './dto/update-phone-params.dto';
 import { MailerService } from '@nest-modules/mailer';
 import cryptoRandomString from 'crypto-random-string';
+import { Paginated } from '../common/interfaces/paginated-entity.interface';
+import { use } from 'passport';
 
 @Injectable()
 export class UsersService {
@@ -35,7 +37,7 @@ export class UsersService {
   ) {}
 
   @Transactional()
-  async findAll(query: GetAllQueryDto) {
+  async findAll(query: GetAllQueryDto): Promise<Paginated<User>> {
     const qb = this.userRepository.createQueryBuilder('users');
 
     qb.leftJoinAndSelect('users.helpTypes', 'helpTypes')
@@ -59,7 +61,7 @@ export class UsersService {
     return { total: total, data: users };
   }
 
-  async findOne(params: UserIdDto) {
+  async findOne(params: UserIdDto): Promise<User> {
     const user = await this.userRepository.findOne({
       id: params.id,
       deleted_at: null,
@@ -75,7 +77,7 @@ export class UsersService {
     citizen_type_ids,
     help_type_ids,
     ...body
-  }: CreateUserDto) {
+  }: CreateUserDto): Promise<User> {
     const phoneExists = await this.userRepository.findOne({
       phone: body.phone,
     });
@@ -117,7 +119,7 @@ export class UsersService {
       help_type_ids,
       ...body
     }: UpdateUserDto,
-  ) {
+  ): Promise<User> {
     const user = await this.userRepository.findOne({
       id: params.id,
       deleted_at: null,
@@ -193,18 +195,19 @@ export class UsersService {
   async deleteUser(params: UserIdDto) {
     const user = await this.userRepository.findOne({
       id: params.id,
-      deleted_at: null,
     });
     if (!user) {
       throw makeError('USER_NOT_FOUND');
     } else {
-      user.deleted_at = new Date();
-      await this.userRepository.save(user);
-      return user;
+      await this.userRepository.softDelete({ id: user.id });
+      return;
     }
   }
 
-  async moderateUser(params: UserIdDto, body: ModerationBodyDto) {
+  async moderateUser(
+    params: UserIdDto,
+    body: ModerationBodyDto,
+  ): Promise<User> {
     const user = await this.userRepository.findOne({
       id: params.id,
       deleted_at: null,
