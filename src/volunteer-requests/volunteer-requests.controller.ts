@@ -32,6 +32,7 @@ import { GetAllQueryDto } from './dto/get-all-query.dto';
 import { ModerationAdminGuard } from '../common/guards/moderation-admin.guard';
 import { UpdateVolunteerRequestBodyDto } from './dto/update-volunteer-request-body.dto';
 import { Paginated } from '../common/interfaces/paginated-entity.interface';
+import { VolunteerRequestAdminBodyDto } from './dto/admin-body.dto';
 
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 @UseInterceptors(ClassSerializerInterceptor)
@@ -57,6 +58,18 @@ export class VolunteerRequestsController {
     @GetUser() user: User,
   ): Promise<VolunteerRequest> {
     return this.volunteerRequestService.createVolunteerRequestAuth(body, user);
+  }
+
+  @ApiTags('Volunteer Requests')
+  @ApiCreatedResponse({ type: () => VolunteerRequest })
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
+  @Post('/actions/createWithoutPhoneVerification')
+  createVolunteerRequestAdmin(
+    @Body() body: VolunteerRequestAdminBodyDto,
+    @GetUser() user: User,
+  ): Promise<VolunteerRequest> {
+    return this.volunteerRequestService.createVolunteerRequestAdmin(body, user);
   }
 
   @ApiTags('Volunteer Requests')
