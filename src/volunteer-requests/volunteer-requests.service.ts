@@ -21,6 +21,8 @@ import { AuthService } from '../auth/auth.service';
 import { UpdateVolunteerRequestBodyDto } from './dto/update-volunteer-request-body.dto';
 import { setTypesFilters } from '../common/utils/types-filters.util';
 import { Paginated } from '../common/interfaces/paginated-entity.interface';
+import { VolunteerRequestAdminBodyDto } from './dto/admin-body.dto';
+import { RoleName } from 'src/constants/RoleName.enum';
 
 @Injectable()
 export class VolunteerRequestsService {
@@ -51,7 +53,7 @@ export class VolunteerRequestsService {
       body.verification_key,
       PurposeType.NEW_VOLUNTEER_REQUEST,
     );
-
+    await this.isVolunteerRequestNotUnique(phoneVerification.phone, body.email);
     const helpTypes = await this.helpTypesRepository.findByIds(help_type_ids);
     const citezenTypes = await this.citezenTypesRepository.findByIds(
       citizen_type_ids,
@@ -91,6 +93,30 @@ export class VolunteerRequestsService {
     volunteerRequest.citezenTypes = citezenTypes;
     volunteerRequest.organisations = organisations;
     volunteerRequest.user_id = user.id;
+    await this.volunteerRequestRepository.save(volunteerRequest);
+    await this.sendEmail(volunteerRequest);
+    return volunteerRequest;
+  }
+
+  async createVolunteerRequestAdmin({
+    help_type_ids,
+    citizen_type_ids,
+    organisation_ids,
+    ...body
+  }: VolunteerRequestAdminBodyDto): Promise<VolunteerRequest> {
+    await this.isVolunteerRequestNotUnique(body.phone, body.email);
+    const helpTypes = await this.helpTypesRepository.findByIds(help_type_ids);
+    const citezenTypes = await this.citezenTypesRepository.findByIds(
+      citizen_type_ids,
+    );
+    const organisations = await this.organisationRepository.findByIds(
+      organisation_ids,
+    );
+
+    const volunteerRequest = this.volunteerRequestRepository.create(body);
+    volunteerRequest.helpTypes = helpTypes;
+    volunteerRequest.citezenTypes = citezenTypes;
+    volunteerRequest.organisations = organisations;
     await this.volunteerRequestRepository.save(volunteerRequest);
     await this.sendEmail(volunteerRequest);
     return volunteerRequest;
@@ -223,6 +249,20 @@ export class VolunteerRequestsService {
           organisations: volunteerRequest.organisations,
         },
       });
+    }
+  }
+
+  async isVolunteerRequestNotUnique(phone: string, email: string) {
+    const isPhoneNotUnique = await this.volunteerRequestRepository.findOne({
+      phone: phone,
+    });
+    const isEmailNotUnique = await this.volunteerRequestRepository.findOne({
+      email: email,
+    });
+    if (isPhoneNotUnique) {
+      throw makeError('PHONE_ALREADY_EXISTS');
+    } else if (isEmailNotUnique) {
+      throw makeError('EMAIL_ALREADY_EXISTS');
     }
   }
 }

@@ -13,7 +13,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { TransformIntArray } from '../../common/utils/transform-array-int.util';
 import { TransformDate } from '../../common/utils/transform-date.util';
 
-export class UpdateVolunteerRequestBodyDto {
+export class VolunteerRequestAdminBodyDto {
   @ApiPropertyOptional({ type: 'string' })
   @IsOptional()
   @IsString()
@@ -46,28 +46,19 @@ export class UpdateVolunteerRequestBodyDto {
   @IsEmail()
   email: string;
 
-  @ApiProperty({ type: 'string' })
-  @IsString()
-  @IsPhoneNumber('RU')
-  phone: string;
-
   @ApiProperty({ type: 'boolean' })
-  @IsOptional()
   @IsBoolean()
   is_individual: boolean;
 
   @ApiProperty({ type: 'boolean' })
-  @IsOptional()
   @IsBoolean()
   hide_contacts: boolean;
 
   @ApiPropertyOptional({ type: 'boolean' })
-  @IsOptional()
   @IsBoolean()
   need_expert_help: boolean;
 
   @ApiProperty({ type: 'boolean' })
-  @IsOptional()
   @IsBoolean()
   with_fund: boolean;
 
@@ -77,7 +68,6 @@ export class UpdateVolunteerRequestBodyDto {
   comment: string;
 
   @ApiProperty({ type: 'boolean' })
-  @IsOptional()
   @IsBoolean()
   allow_search_in_messengers: boolean;
 
@@ -103,7 +93,7 @@ export class UpdateVolunteerRequestBodyDto {
   @IsOptional()
   @IsNumber({}, { each: true })
   @Transform(TransformIntArray)
-  citezen_type_ids: Array<number>;
+  citizen_type_ids: Array<number>;
 
   @ApiProperty({ type: 'number', isArray: true })
   @IsArray()
@@ -111,4 +101,9 @@ export class UpdateVolunteerRequestBodyDto {
   @IsNumber({}, { each: true })
   @Transform(TransformIntArray)
   organisation_ids: Array<number>;
+
+  @ApiProperty({ type: 'string' })
+  @IsString()
+  @IsPhoneNumber('RU')
+  phone: string;
 }
