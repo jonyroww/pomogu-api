@@ -6,6 +6,7 @@ import {
   IsDate,
   IsEmail,
   IsBoolean,
+  IsPhoneNumber,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
@@ -44,6 +45,11 @@ export class UpdateVolunteerRequestBodyDto {
   @IsString()
   @IsEmail()
   email: string;
+
+  @ApiProperty({ type: 'string' })
+  @IsString()
+  @IsPhoneNumber('RU')
+  phone: string;
 
   @ApiProperty({ type: 'boolean' })
   @IsOptional()
