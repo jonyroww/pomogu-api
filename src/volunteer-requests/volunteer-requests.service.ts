@@ -98,18 +98,12 @@ export class VolunteerRequestsService {
     return volunteerRequest;
   }
 
-  async createVolunteerRequestAdmin(
-    {
-      help_type_ids,
-      citizen_type_ids,
-      organisation_ids,
-      ...body
-    }: VolunteerRequestAdminBodyDto,
-    user: User,
-  ): Promise<VolunteerRequest> {
-    if (user.role != RoleName.ADMIN) {
-      throw makeError('FORBIDDEN');
-    }
+  async createVolunteerRequestAdmin({
+    help_type_ids,
+    citizen_type_ids,
+    organisation_ids,
+    ...body
+  }: VolunteerRequestAdminBodyDto): Promise<VolunteerRequest> {
     await this.isVolunteerRequestNotUnique(body.phone, body.email);
     const helpTypes = await this.helpTypesRepository.findByIds(help_type_ids);
     const citezenTypes = await this.citezenTypesRepository.findByIds(
